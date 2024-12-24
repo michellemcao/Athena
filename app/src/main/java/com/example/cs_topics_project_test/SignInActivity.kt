@@ -5,24 +5,26 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.cs_topics_project_test.databinding.ActivitySignInBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class SignInActivity : AppCompatActivity() {
 
-    private lateinit var binding: com.example.cs_topics_project_test.databinding.ActivitySignInBinding
-    private lateinit var firebaseAuth: com.google.firebase.auth.FirebaseAuth
+    private lateinit var binding: ActivitySignInBinding
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // shows activity_sign_in.xml page
-        binding = com.example.cs_topics_project_test.databinding.ActivitySignInBinding.inflate(layoutInflater)
+        binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance()
+        firebaseAuth = FirebaseAuth.getInstance()
 
         // when signUpButton clicked, goes to SignUpActivity page
         binding.signUpButton.setOnClickListener {
-            startActivity(Intent(this, com.example.cs_topics_project_test.SignUpActivity::class.java))
+            startActivity(Intent(this, SignUpActivity::class.java))
 
         }
 
@@ -36,7 +38,7 @@ class SignInActivity : AppCompatActivity() {
                     if (it.isSuccessful) {
                         // (change MainActivity to the actual main page of the app later)
                         Toast.makeText(this, "Sign In Successful. ", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this, com.example.cs_topics_project_test.MainActivity::class.java))
+                        startActivity(Intent(this, MainActivity::class.java))
                     } else {
                         // if sign in fails, display message to user
                         Toast.makeText(this, "Authentication failed. ", Toast.LENGTH_SHORT).show()
@@ -53,7 +55,7 @@ class SignInActivity : AppCompatActivity() {
 
        // check if user is signed in (not null), should go to main part of app (i don't have that so rn just stuck at sign in page)
         if(firebaseAuth.currentUser != null){
-            startActivity(Intent(this, com.example.cs_topics_project_test.MainActivity::class.java))
+            startActivity(Intent(this, MainActivity::class.java))
         }
     }
 }

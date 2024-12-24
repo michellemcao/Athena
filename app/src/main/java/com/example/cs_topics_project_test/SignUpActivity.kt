@@ -4,22 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.cs_topics_project_test.databinding.ActivitySignUpBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class SignUpActivity : AppCompatActivity() {
 
-    private lateinit var binding: com.example.cs_topics_project_test.databinding.ActivitySignUpBinding
-    private lateinit var firebaseAuth: com.google.firebase.auth.FirebaseAuth
+    private lateinit var binding: ActivitySignUpBinding
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = com.example.cs_topics_project_test.databinding.ActivitySignUpBinding.inflate(layoutInflater)
+        binding =ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance()
+        firebaseAuth = FirebaseAuth.getInstance()
 
         binding.signInButton.setOnClickListener {
-            startActivity(Intent(this, com.example.cs_topics_project_test.SignInActivity::class.java))
+            startActivity(Intent(this, SignInActivity::class.java))
 
         }
         binding.signUpButton.setOnClickListener {
@@ -33,16 +35,10 @@ class SignUpActivity : AppCompatActivity() {
                     firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener {
                         if (it.isSuccessful) {
                             // redirect to sign in page
-                            startActivity(
-                                Intent(
-                                    this,
-                                    com.example.cs_topics_project_test.SignInActivity::class.java
-                                )
-                            )
+                            startActivity(Intent(this, SignInActivity::class.java))
 
                         } else { // if sign in fails
                             Toast.makeText(this, "Authentication failed. ", Toast.LENGTH_SHORT).show()
-
                         }
                     }
                 } else {
