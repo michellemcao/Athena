@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--calendar layout; CHANGE NAME TO fragment_calendar for consistency-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".MainActivity">
+        <CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:dateTextAppearance="@style/CalenderViewDateCustomText"
+            android:theme="@style/CustomCalendarView"
+            android:weekDayTextAppearance="@style/CalenderViewWeekCustomText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/dateView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="160dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="160dp"
+            android:text="Tasks for mm/dd/yyyy:"
+            android:textColor="@color/teal_200"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+
+        <ScrollView
+            android:id="@+id/listView"
+            android:layout_width="0dp"
+            android:layout_height="349dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="4dp"
+            android:background="@color/pink_200"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dateView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <CheckBox
+                    android:id="@+id/loginComplete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="Login Done"
+                    android:textSize="20sp" />
+
+                <CheckBox
+                    android:id="@+id/homePageComplete"
+                    android:layout_marginBottom="4dp"
+                    android:textSize="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Home Page Done" />
+
+                <CheckBox
+                    android:id="@+id/chatComplete"
+                    android:layout_marginBottom="4dp"
+                    android:textSize="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Chat Done" />
+
+                <CheckBox
+                    android:id="@+id/startMakingCalendar"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:textSize="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Start making the Calendar" />
+
+                <CheckBox
+                    android:id="@+id/fiftyPercentDoneCalendar"
+                    android:layout_marginBottom="4dp"
+                    android:textSize="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="50% done with the Calendar" />
+
+                <CheckBox
+                    android:id="@+id/hundredPercentDoneCalendar"
+                    android:layout_marginBottom="4dp"
+                    android:textSize="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="100% done with the Calendar" />
+
+                <CheckBox
+                    android:id="@+id/startMakingToDoList"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:textSize="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Start making the To-do List" />
+
+                <CheckBox
+                    android:id="@+id/fiftyPercentDoneToDoList"
+                    android:layout_marginBottom="4dp"
+                    android:textSize="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="50% done with the To-do List" />
+
+                <CheckBox
+                    android:id="@+id/hundredPercentDoneToDoList"
+                    android:layout_marginBottom="4dp"
+                    android:textSize="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="100% done with the To-do List" />
+
+                <CheckBox
+                    android:id="@+id/startIntegratingSQL"
+                    android:layout_marginBottom="4dp"
+                    android:textSize="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Start integrating SQL" />
+
+                <CheckBox
+                    android:id="@+id/fiftyPercentDoneIntegratingSQL"
+                    android:layout_marginBottom="4dp"
+                    android:textSize="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="50% done integrating SQL" />
+
+                <CheckBox
+                    android:id="@+id/hundredPercentDoneIntegratingSQL"
+                    android:layout_marginBottom="4dp"
+                    android:textSize="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="100% done integrating SQL" />
+
+
+            </LinearLayout>
+        </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--android:background="#ffe4e1"
+        android:dateTextAppearance="@style/CalenderViewDateCustomText"
+        android:weekDayTextAppearance="@style/CalenderViewWeekCustomText"
+        android:focusedMonthDateColor="@style/CalenderViewFocusedMonthDateCustomText"
+        android:unfocusedMonthDateColor="@style/CalenderViewUnfocusedMonthDateCustomText"-->
