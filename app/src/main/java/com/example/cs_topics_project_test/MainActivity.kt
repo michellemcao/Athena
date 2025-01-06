@@ -14,6 +14,8 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.cs_topics_project_test.ui.ChatActivity
+import com.example.cs_topics_project_test.ui.chat.Person
+import com.example.cs_topics_project_test.ui.ChatListActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,7 +39,8 @@ class MainActivity : AppCompatActivity() {
         binding.fab.imageTintList = ContextCompat.getColorStateList(this, android.R.color.white)
         binding.fab.setOnClickListener {
             // Navigate to ChatActivity
-            val intent = Intent(this, ChatActivity::class.java)
+            // Navigate to the List of Chats (ChatListActivity)
+            val intent = Intent(this, ChatListActivity::class.java)
             startActivity(intent)
         }
 

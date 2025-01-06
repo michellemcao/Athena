@@ -6,6 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
+import com.example.cs_topics_project_test.ui.chat.Person
+import com.example.cs_topics_project_test.ui.ChatActivity
+import android.content.Intent
+
 
 
 // Adapter for RecyclerView
@@ -22,9 +26,14 @@ class PersonAdapter(
         fun bind(person: Person) {
             nameTextView.text = person.name
             itemView.setOnClickListener {
-                onClick(person)
+                // On clicking the person, start the ChatActivity
+                val intent = Intent(itemView.context, ChatActivity::class.java).apply {
+                    putExtra("EXTRA_PERSON", person) // Pass the Person object
+                }
+                itemView.context.startActivity(intent) // Start ChatActivity
             }
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
