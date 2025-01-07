@@ -19,7 +19,7 @@ class Profile (firstName: String, lastName: String, email: String, start: DateAn
     init {
         this.name = Name(firstName, lastName)
         this.email = email
-        this.token = Random.nextInt(1000, 10000)
+        this.token = Random.nextInt(1000, 10000) // create own tokenizer? for security purposes
         // if token in unique token list stored in firebase, then regenerate
         this.start = start
     }
