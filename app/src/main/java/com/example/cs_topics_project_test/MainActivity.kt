@@ -2,25 +2,23 @@ package com.example.cs_topics_project_test
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.View
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.navigation.NavigationView
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.cs_topics_project_test.databinding.ActivityMainBinding
-import androidx.core.content.ContextCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 
 class MainActivity : AppCompatActivity() {
+    private var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startActivity(Intent(this, SignInActivity::class.java))
+        if (user != null) {
+            FirebaseAuth.getInstance().signOut(); //GET RID OF THIS LATER!!
+            // go to main activity page (dont have it here)
+        }
+            startActivity(Intent(this, SignInActivity::class.java))
+
     }
 /*
     private lateinit var appBarConfiguration: AppBarConfiguration
