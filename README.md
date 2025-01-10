@@ -20,9 +20,11 @@
 ## Problems Faced
 - a disappearing navigation bar
 - a scaling problem
+- a gradle mess
 
 ## The Method
 ### Process
 
 ## The Attribution
+### Meet the Team
 ### Citation
