@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
             // go to main activity page (dont have it here)
         }
             startActivity(Intent(this, SignInActivity::class.java))
-
     }
 /*
     private lateinit var appBarConfiguration: AppBarConfiguration
