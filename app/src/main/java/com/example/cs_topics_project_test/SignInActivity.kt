@@ -55,7 +55,7 @@ class SignInActivity : AppCompatActivity() {
 
        // check if user is signed in (not null), should go to main part of app (i don't have that so rn just stuck at sign in page)
         if(firebaseAuth.currentUser != null){
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, HomeActivity::class.java))
         }
     }
 }
