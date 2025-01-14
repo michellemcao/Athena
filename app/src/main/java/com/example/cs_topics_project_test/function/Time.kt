@@ -1,6 +1,6 @@
 package com.example.cs_topics_project_test.function
 
-class Time(hour: Int, min: Int, second: Int) {
+class Time(hour: Int, min: Int, second: Int) : Comparable<Time> {
     private val hour: Int
     private val min: Int
     private val second: Int
@@ -24,6 +24,19 @@ class Time(hour: Int, min: Int, second: Int) {
 
     fun getSecond(): Int {
         return this.second
+    }
+
+    override fun compareTo(other: Time): Int {
+        if (this.hour == other.hour && this.min == other.min && this.second == other.second) return 0;
+
+        if (this.hour > other.hour) return 1
+        else if (this.hour == other.hour) {
+            if (this.min > other.min) return 1
+            else if (this.min == other.min) {
+                if (this.second > other.second) return 1
+            }
+        }
+        return -1;
     }
 
     override fun toString(): String {
