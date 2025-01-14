@@ -15,23 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.cs_topics_project_test.databinding.ActivityMainBinding
 import androidx.core.content.ContextCompat
 import android.content.Intent
-import android.os.Bundle
-import android.view.Menu
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import com.example.cs_topics_project_test.databinding.ActivityMainBinding
-import com.google.android.material.navigation.NavigationView
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import com.example.cs_topics_project_test.ui.ChatActivity
-import com.example.cs_topics_project_test.ui.chat.Person
 import com.example.cs_topics_project_test.ui.ChatListActivity
 
-class MainActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
 
 
     private lateinit var appBarConfiguration: AppBarConfiguration
