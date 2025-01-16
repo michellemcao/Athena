@@ -21,6 +21,7 @@
 - a disappearing navigation bar
 - a scaling problem
 - a gradle mess
+- _json_
 
 ## The Method
 ### Process
