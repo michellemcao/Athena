@@ -10,13 +10,54 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:theme="?attr/actionBarTheme" />
+        android:theme="?attr/actionBarTheme"
+        android:title="Chat with John Doe"
+        android:padding="8dp" />
 
-    <!-- Container for the ChatFragment -->
-    <FrameLayout
-        android:id="@+id/container"
+    <!-- RecyclerView for displaying the messages -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewMessages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbarChat" />
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:layout_below="@id/toolbarChat"
+        android:layout_above="@id/messageInputLayout" />
+
+    <!-- Message Input Area -->
+    <LinearLayout
+        android:id="@+id/messageInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="#FFFFFF"
+        android:elevation="8dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="8dp">
+
+        <!-- EditText for typing the message -->
+        <EditText
+            android:id="@+id/editTextMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@android:color/black"
+            android:hint="Type a message"
+            android:textColorHint="@android:color/darker_gray"
+            android:inputType="text"
+            android:maxLines="4"
+            android:padding="8dp"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Send Button -->
+        <ImageView
+            android:id="@+id/sendButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_send"
+            android:contentDescription="Send Message"
+            android:layout_marginLeft="8dp" />
+    </LinearLayout>
 
 </RelativeLayout>

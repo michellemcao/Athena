@@ -1,4 +1,7 @@
-package com.example.cs_topics_project_test.function
+package com.example.cs_topics_project_test.function.tasks
+
+import com.example.cs_topics_project_test.function.Date
+import com.example.cs_topics_project_test.function.Time
 
 interface TaskOutline {
     fun getTaskName(): String // the name of the task

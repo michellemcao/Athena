@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">cs_topics_project_test</string>
+    <string name="app_name">Athena Productivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">User</string>
-    <string name="nav_header_subtitle">example@email.com</string>
+    <string name="nav_header_user_name">User</string>
+    <string name="nav_header_email">example@email.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 

@@ -1,5 +1,12 @@
 package com.example.cs_topics_project_test.ui.chat
 
-import java.io.Serializable
+import android.os.Parcel
+import kotlinx.parcelize.Parcelize
+import android.os.Parcelable
 
-data class Person(val name: String, val id: Int) : Serializable
+@Parcelize
+data class Person(
+    val name: String,
+    val id: Int
+) : Parcelable
+

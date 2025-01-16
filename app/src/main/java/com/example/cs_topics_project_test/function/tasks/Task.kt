@@ -1,4 +1,7 @@
-package com.example.cs_topics_project_test.function
+package com.example.cs_topics_project_test.function.tasks
+
+import com.example.cs_topics_project_test.function.Date
+import com.example.cs_topics_project_test.function.Time
 
 class Task (
     private var taskName: String,
