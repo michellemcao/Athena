@@ -8,8 +8,7 @@ data class Task (
     private var dueDate: Date,
     private var dueTime: Time,
     private var taskDescription: String
-) :
-    TaskOutline {
+) : TaskOutline {
     private var isCompleted = false
 
     // return whether task is completed and modify it

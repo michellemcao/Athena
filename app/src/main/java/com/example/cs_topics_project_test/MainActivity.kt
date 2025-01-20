@@ -13,10 +13,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //if (user != null) {
+        if (user != null) {
             FirebaseAuth.getInstance().signOut(); //GET RID OF THIS LATER!!
             // go to main activity page (dont have it here)
-        //}
+        }
         startActivity(Intent(this, SignInActivity::class.java))
     }
 }

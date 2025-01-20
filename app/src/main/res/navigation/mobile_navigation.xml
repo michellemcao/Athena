@@ -18,9 +18,9 @@
         android:label="@string/menu_calendar"
         tools:layout="@layout/fragment_calendar" />
 
-    <fragment
+    <activity
         android:id="@+id/nav_tasks"
-        android:name="com.example.cs_topics_project_test.ui.tasks.TasksFragment"
+        android:name="com.example.cs_topics_project_test.TaskActivity"
         android:label="@string/menu_tasks"
         tools:layout="@layout/fragment_tasks" />
 </navigation>

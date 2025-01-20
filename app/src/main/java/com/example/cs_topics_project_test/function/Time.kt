@@ -40,6 +40,6 @@ class Time(hour: Int, min: Int, second: Int) : Comparable<Time> {
     }
 
     override fun toString(): String {
-        return this.hour.toString() + ":" + this.min + ":" + this.second
+        return this.hour.toString() + ":" + this.min
     }
 }
