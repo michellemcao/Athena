@@ -1,6 +1,6 @@
 package com.example.cs_topics_project_test.function
 
-class DateAndTime(year: Int, month: Int, dateNum: Int, hour: Int, min: Int, sec: Int) : Comparable<DateAndTime> {
+data class DateAndTime(val year: Int, val month: Int, val dateNum: Int, val hour: Int, val min: Int, val sec: Int) : Comparable<DateAndTime> {
     // Using 24 hour clock system
     private val date: Date = Date(year, month, dateNum)
     private val time: Time = Time(hour, min, sec)

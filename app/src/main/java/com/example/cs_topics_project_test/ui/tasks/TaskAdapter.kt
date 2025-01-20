@@ -16,6 +16,7 @@ class TaskAdapter(private val tasks: MutableList<Task>, private val context: Con
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val taskName: TextView = itemView.findViewById(R.id.textViewTaskName)
         val taskCheckBox: CheckBox = itemView.findViewById(R.id.checkBoxTask)
+        val taskDescription: TextView = itemView.findViewById(R.id.textViewTaskDescription)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -27,6 +28,7 @@ class TaskAdapter(private val tasks: MutableList<Task>, private val context: Con
         val task = tasks[position]
         holder.taskName.text = task.getTaskName()
         holder.taskCheckBox.isChecked = task.isTaskCompleted()
+        holder.taskDescription.text = task.getTaskDescription()
         holder.taskCheckBox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) task.taskCompleted()
             else task.taskNotCompleted()

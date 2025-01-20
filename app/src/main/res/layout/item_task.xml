@@ -40,7 +40,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/taskDescription"
+                    android:id="@+id/textViewTaskDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Task Description"
