@@ -4,27 +4,45 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.HomeActivity
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.TaskActivity
 import com.example.cs_topics_project_test.function.tasks.Task
+import com.example.cs_topics_project_test.function.tasks.TaskManager
 
+// to view added tasks
 class TaskView : AppCompatActivity() {
 
+    private lateinit var taskAdapter: TaskAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_tasks)
+        setContentView(R.layout.fragment_tasks) // opening up the appropriate layout page
 
-        val tasks = mutableListOf<Task>()
+        taskAdapter = TaskAdapter(TaskManager.tasks, this)
+
+        // variable declaration
         val buttonNewTaskToggle: Button = findViewById(R.id.buttonNewTaskToggle)
         val buttonBack: Button = findViewById(R.id.buttonBack)
+        val recyclerViewTaskView : RecyclerView = findViewById(R.id.recyclerViewTaskView) // recyclerView to display tasks
 
+        recyclerViewTaskView.adapter = taskAdapter
+        recyclerViewTaskView.layoutManager = LinearLayoutManager(this)
+
+        // button functionality
         buttonNewTaskToggle.setOnClickListener {
             startActivity(Intent(this, TaskActivity::class.java))
         }
         buttonBack.setOnClickListener {
-            startActivity(Intent(this, HomeActivity::class.java)) // change to go to previous slide, not to Home
+            finish()
+            //startActivity(Intent(this, HomeActivity::class.java)) // change to go to previous slide, not to Home
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        taskAdapter.notifyDataSetChanged() // Notify the adapter to refresh the RecyclerView
     }
 }

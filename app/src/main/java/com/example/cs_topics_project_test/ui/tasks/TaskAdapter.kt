@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.function.tasks.Task
+import com.example.cs_topics_project_test.function.tasks.TaskManager
 
 class TaskAdapter(private val tasks: MutableList<Task>, private val context: Context) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
@@ -37,9 +38,9 @@ class TaskAdapter(private val tasks: MutableList<Task>, private val context: Con
 
     override fun getItemCount(): Int = tasks.size
 
-    fun addTask(task: Task) {
+    /*fun addTask(task: Task) {
         tasks.add(task)
         notifyItemInserted(tasks.size - 1)
         Toast.makeText(context, "Task ${task.getTaskName()} in TaskAdapter; Number of tasks: ${tasks.size}", Toast.LENGTH_SHORT).show()
-    }
+    }*/
 }

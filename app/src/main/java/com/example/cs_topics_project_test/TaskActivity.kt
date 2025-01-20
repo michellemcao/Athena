@@ -11,20 +11,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.function.Date
 import com.example.cs_topics_project_test.function.Time
 import com.example.cs_topics_project_test.function.tasks.Task
+import com.example.cs_topics_project_test.function.tasks.TaskManager
 import com.example.cs_topics_project_test.ui.tasks.TaskAdapter
 import com.example.cs_topics_project_test.ui.tasks.TaskView
 
+// to add new task
 class TaskActivity : AppCompatActivity() {
 
     private lateinit var taskAdapter: TaskAdapter
-
+    private val localTasks = mutableListOf<Task>() // local tasks
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task)
 
-        val tasks = mutableListOf<Task>()
-        taskAdapter = TaskAdapter(tasks, this)
+        // val tasks = mutableListOf<Task>()
+        taskAdapter = TaskAdapter(localTasks, this)
 
         val recyclerViewTasks: RecyclerView = findViewById(R.id.recyclerViewTasks)
         val editTextTaskName: EditText = findViewById(R.id.editTextTaskName)
@@ -46,7 +48,9 @@ class TaskActivity : AppCompatActivity() {
                     taskDescription
                 )
                 Toast.makeText(this, "Adding task: $taskName", Toast.LENGTH_SHORT).show()
-                taskAdapter.addTask(task)
+                localTasks.add(task)
+                TaskManager.tasks.add(task)
+                taskAdapter.notifyDataSetChanged() // do we need it?
                 editTextTaskName.text.clear()
                 editTextTaskDescription.text.clear()
             } else {
@@ -54,7 +58,8 @@ class TaskActivity : AppCompatActivity() {
             }
         }
         buttonBack.setOnClickListener {
-            startActivity(Intent(this, TaskView::class.java)) // change to go to previous slide, not to Home
+            finish()
+            //startActivity(Intent(this, TaskView::class.java)) // change to go to previous slide, not to Home
         }
     }
 }
