@@ -1,4 +1,4 @@
-package com.example.cs_topics_project_test.ui.tasks
+package com.example.cs_topics_project_test.task
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,11 +6,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cs_topics_project_test.HomeActivity
 import com.example.cs_topics_project_test.R
-import com.example.cs_topics_project_test.TaskActivity
-import com.example.cs_topics_project_test.function.tasks.Task
-import com.example.cs_topics_project_test.function.tasks.TaskManager
 
 // to view added tasks
 class TaskView : AppCompatActivity() {

@@ -1,4 +1,6 @@
-package com.example.cs_topics_project_test.function.tasks
+package com.example.cs_topics_project_test.function
+
+import com.example.cs_topics_project_test.task.Task
 
 class TaskDataStructure {
     private val tasks: MutableList<Task> = mutableListOf()

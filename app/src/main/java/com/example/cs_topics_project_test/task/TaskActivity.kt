@@ -1,6 +1,5 @@
-package com.example.cs_topics_project_test
+package com.example.cs_topics_project_test.task
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -8,12 +7,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.function.Date
 import com.example.cs_topics_project_test.function.Time
-import com.example.cs_topics_project_test.function.tasks.Task
-import com.example.cs_topics_project_test.function.tasks.TaskManager
-import com.example.cs_topics_project_test.ui.tasks.TaskAdapter
-import com.example.cs_topics_project_test.ui.tasks.TaskView
 
 // to add new task
 class TaskActivity : AppCompatActivity() {

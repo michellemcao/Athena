@@ -1,4 +1,4 @@
-package com.example.cs_topics_project_test.function.tasks
+package com.example.cs_topics_project_test.task
 
 import com.example.cs_topics_project_test.function.Date
 import com.example.cs_topics_project_test.function.Time

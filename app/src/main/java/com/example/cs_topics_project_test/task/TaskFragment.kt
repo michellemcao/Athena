@@ -1,4 +1,4 @@
-package com.example.cs_topics_project_test.ui.tasks
+package com.example.cs_topics_project_test.task
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.cs_topics_project_test.R
 
-class TasksFragment : Fragment() {
+class TaskFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

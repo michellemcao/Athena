@@ -1,4 +1,4 @@
-package com.example.cs_topics_project_test.ui.tasks
+package com.example.cs_topics_project_test.task
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,11 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.CheckBox
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
-import com.example.cs_topics_project_test.function.tasks.Task
-import com.example.cs_topics_project_test.function.tasks.TaskManager
 
 class TaskAdapter(private val tasks: MutableList<Task>, private val context: Context) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
