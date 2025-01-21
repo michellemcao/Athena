@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "287269368046",
+    "firebase_url": "https://cs-topics-project-test-default-rtdb.firebaseio.com",
     "project_id": "cs-topics-project-test",
     "storage_bucket": "cs-topics-project-test.firebasestorage.app"
   },

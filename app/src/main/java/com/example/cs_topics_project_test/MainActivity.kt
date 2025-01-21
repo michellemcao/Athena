@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 
 
 class MainActivity : AppCompatActivity() {
@@ -18,5 +19,7 @@ class MainActivity : AppCompatActivity() {
             // go to main activity page (dont have it here)
         //}
         startActivity(Intent(this, SignInActivity::class.java))
+        val database = FirebaseDatabase.getInstance()
+        val chatReference = database.reference.child("chats")
     }
 }

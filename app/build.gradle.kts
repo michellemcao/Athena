@@ -57,7 +57,11 @@ dependencies {
     implementation(libs.androidx.constraintlayout.v220) // do we need line 53-57
     implementation(libs.firebase.auth)
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.database.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(platform(libs.firebase.bom)) // Adjust version as needed
+    implementation(libs.firebase.database)
+
 }
