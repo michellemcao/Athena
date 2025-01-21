@@ -22,7 +22,7 @@ class TaskActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_task)
 
         // val tasks = mutableListOf<Task>()
-        taskAdapter = TaskAdapter(localTasks, this)
+        taskAdapter = TaskAdapter(localTasks)
 
         val recyclerViewTasks: RecyclerView = findViewById(R.id.recyclerViewTasks)
         val editTextTaskName: EditText = findViewById(R.id.editTextTaskName)

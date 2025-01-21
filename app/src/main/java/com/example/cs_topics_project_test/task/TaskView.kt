@@ -15,9 +15,9 @@ class TaskView : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_tasks) // opening up the appropriate layout page
+        setContentView(R.layout.fragment_task) // opening up the appropriate layout page
 
-        taskAdapter = TaskAdapter(TaskManager.tasks, this)
+        taskAdapter = TaskAdapter(TaskManager.tasks)
 
         // variable declaration
         val buttonNewTaskToggle: Button = findViewById(R.id.buttonNewTaskToggle)
