@@ -41,23 +41,23 @@
             android:gravity="end"
             android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/editTextDate"
+            <TextView
+                android:id="@+id/textViewDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Enter due date"
-                android:inputType="date"
-                android:textSize="10sp" />
+                android:hint="Select due date"
+                android:padding="8dp"
+                android:textSize="10sp"
+                android:background="@android:drawable/editbox_background_normal"/>
 
-            <EditText
-                android:id="@+id/editTextTime"
+            <TextView
+                android:id="@+id/textViewTime"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:ems="10"
-                android:hint="Enter due time"
-                android:inputType="time"
-                android:textSize="10sp" />
+                android:hint="Select due time"
+                android:padding="8dp"
+                android:textSize="10sp"
+                android:background="@android:drawable/editbox_background_normal"/>
         </LinearLayout>
     </LinearLayout>
 

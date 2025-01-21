@@ -21,7 +21,7 @@ class TaskView : AppCompatActivity() {
 
         // variable declaration
         val buttonNewTaskToggle: Button = findViewById(R.id.buttonNewTaskToggle)
-        val buttonBack: Button = findViewById(R.id.buttonBack)
+        // val buttonBack: Button = findViewById(R.id.buttonBack)
         val recyclerViewTaskView : RecyclerView = findViewById(R.id.recyclerViewTaskView) // recyclerView to display tasks
 
         recyclerViewTaskView.adapter = taskAdapter
@@ -31,10 +31,10 @@ class TaskView : AppCompatActivity() {
         buttonNewTaskToggle.setOnClickListener {
             startActivity(Intent(this, TaskActivity::class.java))
         }
-        buttonBack.setOnClickListener {
+        /*buttonBack.setOnClickListener {
             finish()
             //startActivity(Intent(this, HomeActivity::class.java)) // change to go to previous slide, not to Home
-        }
+        }*/
     }
 
     override fun onResume() {

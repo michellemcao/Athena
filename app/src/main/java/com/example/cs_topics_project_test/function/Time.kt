@@ -1,17 +1,14 @@
 package com.example.cs_topics_project_test.function
 
-class Time(hour: Int, min: Int, second: Int) : Comparable<Time> {
+class Time(hour: Int, min: Int, private val isPM: Boolean) : Comparable<Time> {
     private val hour: Int
     private val min: Int
-    private val second: Int
 
     init {
         if (hour > 24) throw IllegalArgumentException("invalid hour as input")
         else this.hour = hour
         if (min > 60) throw IllegalArgumentException("invalid minute as input")
         else this.min = min
-        if (second > 60) throw IllegalArgumentException("invalid minute as input")
-        else this.second = second
     }
 
     fun getHour(): Int {
@@ -22,11 +19,11 @@ class Time(hour: Int, min: Int, second: Int) : Comparable<Time> {
         return this.min
     }
 
-    fun getSecond(): Int {
-        return this.second
+    fun isPM(): Boolean {
+        return this.isPM
     }
 
-    override fun compareTo(other: Time): Int {
+    /*override fun compareTo(other: Time): Int {
         if (this.hour == other.hour && this.min == other.min && this.second == other.second) return 0;
 
         if (this.hour > other.hour) return 1
@@ -37,9 +34,22 @@ class Time(hour: Int, min: Int, second: Int) : Comparable<Time> {
             }
         }
         return -1;
+    }*/
+
+    override fun compareTo(other: Time): Int {
+        if (this.hour == other.hour && this.min == other.min) return 0;
+        if (this.hour > other.hour) return 1
+        else if (this.hour == other.hour) {
+            if (this.min > other.min) return 1
+        }
+        return -1;
     }
 
+
     override fun toString(): String {
-        return this.hour.toString() + ":" + this.min
+        val addZero : String
+        if (this.min < 10) {addZero = "0"}
+        else addZero = ""
+        return this.hour.toString() + ":" + addZero + this.min + " " +  if (isPM) "PM" else "AM"
     }
 }

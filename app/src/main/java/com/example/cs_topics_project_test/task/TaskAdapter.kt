@@ -15,6 +15,8 @@ class TaskAdapter(private val tasks: MutableList<Task>) : RecyclerView.Adapter<T
         val taskName: TextView = itemView.findViewById(R.id.textViewTaskName)
         val taskCheckBox: CheckBox = itemView.findViewById(R.id.checkBoxTask)
         val taskDescription: TextView = itemView.findViewById(R.id.textViewTaskDescription)
+        val taskDueDate: TextView = itemView.findViewById(R.id.textViewTaskDate)
+        val taskDueTime: TextView = itemView.findViewById(R.id.textViewTaskTime)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -25,8 +27,10 @@ class TaskAdapter(private val tasks: MutableList<Task>) : RecyclerView.Adapter<T
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = tasks[position]
         holder.taskName.text = task.getTaskName()
-        holder.taskCheckBox.isChecked = task.isTaskCompleted()
         holder.taskDescription.text = task.getTaskDescription()
+        holder.taskCheckBox.isChecked = task.isTaskCompleted()
+        holder.taskDueDate.text = task.getDueDate().toString()
+        holder.taskDueTime.text = task.getDueTime().toString()
         holder.taskCheckBox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) task.taskCompleted()
             else task.taskNotCompleted()
