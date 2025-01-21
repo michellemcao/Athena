@@ -38,10 +38,7 @@
             android:name=".HomeActivity">
         </activity>
         <activity
-            android:name=".TaskActivity">
-        </activity>
-        <activity
-            android:name=".ui.tasks.TaskView">
+            android:name=".task.TaskActivity">
         </activity>
     </application>
 
