@@ -5,11 +5,14 @@
 ### Completed: 
 - Preliminary UI
 - Calendar
+- Firebase User Profiles
+- To-do List (UI + Local Data)
+- Chat Feature (UI + Firebase Data integration)
 
 ### In-Progress
-- To-do list feature
-- Firebase User Profiles
-- Chat Feature
+- To-do list feature (Firebase Data integration)
+- Chat Feature (Storing Chat Data)
+- Calendar (sync with to-do list based on due dates)
 
 ### To-do:
 - Data Storage w/ SQL
