@@ -1,15 +1,14 @@
-package com.example.cs_topics_project_test.function.tasks
+package com.example.cs_topics_project_test.task
 
 import com.example.cs_topics_project_test.function.Date
 import com.example.cs_topics_project_test.function.Time
 
-class Task (
+data class Task (
     private var taskName: String,
     private var dueDate: Date,
     private var dueTime: Time,
     private var taskDescription: String
-) :
-    TaskOutline {
+) : TaskOutline {
     private var isCompleted = false
 
     // return whether task is completed and modify it
