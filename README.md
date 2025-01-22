@@ -27,7 +27,7 @@
 - a scaling problem
 - a gradle mess
 - _json_
-- a gradle mess, pt.2 (_local.properties auto deleted? huh??_)
+- a gradle mess, pt.2 (_local.properties deleted? huh??_)
 
 ## The Method
 ### Process
