@@ -66,7 +66,7 @@ class TaskActivity : AppCompatActivity() {
                 localTasks.add(task)
 
                 // TaskManager.tasks.add(task) // previous TaskManager
-                TaskDataStructure.addTask(DateAndTime(dueDate!!, dueTime!!), task)
+                TaskDataStructure.addTask(DateAndTime(dueDate!!, dueTime!!), TaskDetail(taskName, taskDescription))
 
                 // notify adapter that tasks has been update
                 // taskListAdapter.notifyDataSetChanged() // do we need it?
