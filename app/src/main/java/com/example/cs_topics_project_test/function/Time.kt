@@ -45,6 +45,11 @@ class Time(hour: Int, min: Int, private val isPM: Boolean) : Comparable<Time> {
         return -1;
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Time) return false // checks if they are of same class
+        return this.compareTo(other) == 0
+    }
 
     override fun toString(): String {
         val addZero : String

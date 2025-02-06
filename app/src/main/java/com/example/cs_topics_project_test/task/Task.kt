@@ -5,9 +5,9 @@ import com.example.cs_topics_project_test.function.Time
 
 data class Task (
     private var taskName: String,
+    private var taskDescription: String,
     private var dueDate: Date,
-    private var dueTime: Time,
-    private var taskDescription: String
+    private var dueTime: Time
 ) : TaskOutline {
     private var isCompleted = false
 

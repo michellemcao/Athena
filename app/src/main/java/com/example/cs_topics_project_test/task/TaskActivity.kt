@@ -20,6 +20,7 @@ class TaskActivity : AppCompatActivity() {
 
     private lateinit var taskAdapter: TaskAdapter
     private val localTasks = mutableListOf<Task>() // local tasks
+    private var tCount = 0 // number of tasks in local task list
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +29,7 @@ class TaskActivity : AppCompatActivity() {
         // val tasks = mutableListOf<Task>()
         taskAdapter = TaskAdapter(localTasks)
 
+        // retrieve data from ui feature to add into task manager
         val recyclerViewTasks: RecyclerView = findViewById(R.id.recyclerViewTasks) // to display recently added tasks
         val buttonAddTask: Button = findViewById(R.id.buttonAddTask) // to add the task into TaskManager
         val editTextTaskName: EditText = findViewById(R.id.editTextTaskName) // the task name
@@ -35,8 +37,10 @@ class TaskActivity : AppCompatActivity() {
         val textViewDate: TextView = findViewById(R.id.textViewDate) // the task due date
         val textViewTime: TextView = findViewById(R.id.textViewTime) // the task due time
         val buttonBack: Button = findViewById(R.id.buttonBack) // to go back to TaskFragment page
-        var dueDate: Date = Date(2025, 1, 1)
-        var dueTime: Time = Time(12, 0, true)
+
+        // egregious date and time values to make sure the change actually happens
+        var dueDate: Date? = null
+        var dueTime: Time? = null
 
         // setting up recyclerView
         recyclerViewTasks.adapter = taskAdapter
@@ -47,22 +51,33 @@ class TaskActivity : AppCompatActivity() {
             val taskName = editTextTaskName.text.toString()
             val taskDescription = editTextTaskDescription.text.toString()
             if (taskName.isNotBlank() && taskDescription.isNotBlank()) {
+                if (dueDate == null || dueTime == null) {
+                    Toast.makeText(this, "Set a due date & time for better user experience!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
                 val task = Task(
                     taskName,
-                    dueDate,
-                    dueTime,
-                    taskDescription
+                    taskDescription,
+                    dueDate!!,
+                    dueTime!!
                 )
                 Toast.makeText(this, "Adding task: $taskName", Toast.LENGTH_SHORT).show()
                 localTasks.add(task)
                 TaskManager.tasks.add(task)
-                taskAdapter.notifyDataSetChanged() // do we need it?
+
+                // notify adapter that tasks has been update
+                // taskAdapter.notifyDataSetChanged() // do we need it?
+                taskAdapter.notifyItemInserted(tCount++)
+                // Toast.makeText(this, "Number of tasks in local: $tCount", Toast.LENGTH_SHORT).show()
 
                 // resetting all the fields
                 editTextTaskName.text.clear()
                 editTextTaskDescription.text.clear()
                 textViewDate.text = "Select due date"
                 textViewTime.text = "Select due time"
+                dueDate = null
+                dueTime = null
+
             } else {
                 Toast.makeText(this, "Oopsie! Required field is blank.", Toast.LENGTH_SHORT).show()
             }
@@ -90,6 +105,7 @@ class TaskActivity : AppCompatActivity() {
         }
     }
 
+    // method to pick the due date using ui + kotlin backend
     private fun showDatePickerDialog(onDateSelected: (Date) -> Unit) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -105,6 +121,7 @@ class TaskActivity : AppCompatActivity() {
         datePickerDialog.show()
     }
 
+    // method to pick the due time using ui feature + kotlin backend
     private fun showTimePickerDialog(onTimeSelected: (Time) -> Unit) {
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)

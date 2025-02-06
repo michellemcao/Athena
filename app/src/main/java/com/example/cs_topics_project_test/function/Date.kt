@@ -36,6 +36,12 @@ class Date(private val year: Int, month: Int, date: Int) : Comparable<Date> {
         return -1;
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Date) return false // checks if they are of same class
+        return this.compareTo(other) == 0
+    }
+
     override fun toString(): String {
         return "$month/$date/$year"
     }
