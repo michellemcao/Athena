@@ -1,6 +1,5 @@
 package com.example.cs_topics_project_test.task
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 
-class TaskAdapter(private val tasks: MutableList<Task>) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
+class TaskListAdapter(private val tasks: MutableList<Task>) : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val taskName: TextView = itemView.findViewById(R.id.textViewTaskName)
@@ -42,6 +41,6 @@ class TaskAdapter(private val tasks: MutableList<Task>) : RecyclerView.Adapter<T
     /*fun addTask(task: Task) {
         tasks.add(task)
         notifyItemInserted(tasks.size - 1)
-        Toast.makeText(context, "Task ${task.getTaskName()} in TaskAdapter; Number of tasks: ${tasks.size}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Task ${task.getTaskName()} in TaskListAdapter; Number of tasks: ${tasks.size}", Toast.LENGTH_SHORT).show()
     }*/
 }

@@ -12,13 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.function.Date
+import com.example.cs_topics_project_test.function.DateAndTime
 import com.example.cs_topics_project_test.function.Time
 import java.util.Calendar
 
 // to add new task
 class TaskActivity : AppCompatActivity() {
 
-    private lateinit var taskAdapter: TaskAdapter
+    private lateinit var taskListAdapter: TaskListAdapter
     private val localTasks = mutableListOf<Task>() // local tasks
     private var tCount = 0 // number of tasks in local task list
 
@@ -27,7 +28,7 @@ class TaskActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_task)
 
         // val tasks = mutableListOf<Task>()
-        taskAdapter = TaskAdapter(localTasks)
+        taskListAdapter = TaskListAdapter(localTasks)
 
         // retrieve data from ui feature to add into task manager
         val recyclerViewTasks: RecyclerView = findViewById(R.id.recyclerViewTasks) // to display recently added tasks
@@ -43,7 +44,7 @@ class TaskActivity : AppCompatActivity() {
         var dueTime: Time? = null
 
         // setting up recyclerView
-        recyclerViewTasks.adapter = taskAdapter
+        recyclerViewTasks.adapter = taskListAdapter
         recyclerViewTasks.layoutManager = LinearLayoutManager(this)
 
         // adding tasks
@@ -61,13 +62,15 @@ class TaskActivity : AppCompatActivity() {
                     dueDate!!,
                     dueTime!!
                 )
-                Toast.makeText(this, "Adding task: $taskName", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Adding task: $taskName to local", Toast.LENGTH_SHORT).show()
                 localTasks.add(task)
-                TaskManager.tasks.add(task)
+
+                // TaskManager.tasks.add(task) // previous TaskManager
+                TaskDataStructure.addTask(DateAndTime(dueDate!!, dueTime!!), task)
 
                 // notify adapter that tasks has been update
-                // taskAdapter.notifyDataSetChanged() // do we need it?
-                taskAdapter.notifyItemInserted(tCount++)
+                // taskListAdapter.notifyDataSetChanged() // do we need it?
+                taskListAdapter.notifyItemInserted(tCount++)
                 // Toast.makeText(this, "Number of tasks in local: $tCount", Toast.LENGTH_SHORT).show()
 
                 // resetting all the fields
@@ -79,7 +82,7 @@ class TaskActivity : AppCompatActivity() {
                 dueTime = null
 
             } else {
-                Toast.makeText(this, "Oopsie! Required field is blank.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Oops! Required field is blank.", Toast.LENGTH_SHORT).show()
             }
         }
 

@@ -13,4 +13,6 @@
     <string name="menu_calendar">Calendar</string>
     <string name="menu_tasks">Tasks</string>
     <string name="task">Your tasks for</string>
+
+    <string name="add_task">+ ADD TASK</string>
 </resources>

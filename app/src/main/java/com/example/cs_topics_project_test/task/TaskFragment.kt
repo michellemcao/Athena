@@ -14,7 +14,7 @@ import com.example.cs_topics_project_test.R
 // to view tasks
 class TaskFragment : Fragment() {
 
-    private lateinit var taskAdapter: TaskAdapter
+    private lateinit var taskListAdapter: TaskListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,13 +28,13 @@ class TaskFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        taskAdapter = TaskAdapter(TaskManager.tasks)
+        taskListAdapter = TaskListAdapter(TaskManager.tasks)
 
         // variable declaration
         val buttonNewTaskToggle: Button = view.findViewById(R.id.buttonNewTaskToggle)
         val recyclerViewTaskView : RecyclerView = view.findViewById(R.id.recyclerViewTaskView) // recyclerView to display tasks
 
-        recyclerViewTaskView.adapter = taskAdapter
+        recyclerViewTaskView.adapter = taskListAdapter
         recyclerViewTaskView.layoutManager = LinearLayoutManager(activity)
 
         // button functionality
@@ -45,7 +45,7 @@ class TaskFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        taskAdapter.notifyDataSetChanged() // Notify the adapter to refresh the RecyclerView
+        taskListAdapter.notifyDataSetChanged() // Notify the adapter to refresh the RecyclerView
     }
 
 }

@@ -11,20 +11,20 @@ import com.example.cs_topics_project_test.R
 // to view added tasks
 class TaskView : AppCompatActivity() {
 
-    private lateinit var taskAdapter: TaskAdapter
+    private lateinit var taskListAdapter: TaskListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_task) // opening up the appropriate layout page
 
-        taskAdapter = TaskAdapter(TaskManager.tasks)
+        taskListAdapter = TaskListAdapter(TaskManager.tasks)
 
         // variable declaration
         val buttonNewTaskToggle: Button = findViewById(R.id.buttonNewTaskToggle)
         // val buttonBack: Button = findViewById(R.id.buttonBack)
         val recyclerViewTaskView : RecyclerView = findViewById(R.id.recyclerViewTaskView) // recyclerView to display tasks
 
-        recyclerViewTaskView.adapter = taskAdapter
+        recyclerViewTaskView.adapter = taskListAdapter
         recyclerViewTaskView.layoutManager = LinearLayoutManager(this)
 
         // button functionality
@@ -39,6 +39,6 @@ class TaskView : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        taskAdapter.notifyDataSetChanged() // Notify the adapter to refresh the RecyclerView
+        taskListAdapter.notifyDataSetChanged() // Notify the adapter to refresh the RecyclerView
     }
 }
