@@ -14,7 +14,7 @@ import com.example.cs_topics_project_test.R
 // to view tasks
 class TaskFragment : Fragment() {
 
-    private lateinit var taskListAdapter: TaskListAdapter
+    private lateinit var taskListAdapter: TaskListAdapter // tasks that are due today
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,23 +22,23 @@ class TaskFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // inflate layout for task view
-        return inflater.inflate(R.layout.fragment_task, container, false)
+        return inflater.inflate(R.layout.fragment_task_upgrade, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        taskListAdapter = TaskListAdapter(TaskManager.tasks)
+        taskListAdapter = TaskListAdapter(TaskManager.tasks) // takes task from global TaskManager
 
         // variable declaration
-        val buttonNewTaskToggle: Button = view.findViewById(R.id.buttonNewTaskToggle)
-        val recyclerViewTaskView : RecyclerView = view.findViewById(R.id.recyclerViewTaskView) // recyclerView to display tasks
+        val buttonNewTaskToggle: Button = view.findViewById(R.id.buttonNewTaskToggle) // opens up TaskActivity to add tasks
+        val recyclerViewDueToday : RecyclerView = view.findViewById(R.id.recyclerViewDueToday) // recyclerView to display tasks that are due today
 
-        recyclerViewTaskView.adapter = taskListAdapter
-        recyclerViewTaskView.layoutManager = LinearLayoutManager(activity)
+        recyclerViewDueToday.adapter = taskListAdapter
+        recyclerViewDueToday.layoutManager = LinearLayoutManager(activity)
 
-        // button functionality
         buttonNewTaskToggle.setOnClickListener {
+        // button functionality
             startActivity(Intent(activity, TaskActivity::class.java))
         }
     }
