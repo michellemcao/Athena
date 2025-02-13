@@ -36,8 +36,39 @@
         android:backgroundTint="#E6A4BB"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view" />
+        app:layout_constraintTop_toBottomOf="@id/view"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#000000"
+        android:backgroundTint="#050505"
+        android:text="d"
+        android:textColor="#1D1A1A"
+        android:textColorHighlight="#101010"
+        android:textColorHint="#101010"
+        android:textColorLink="#211F1F"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="@+id/button"
+        app:layout_constraintStart_toStartOf="@+id/button"
+        app:layout_constraintTop_toTopOf="@+id/button" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#D98EAA"
+        android:backgroundTint="#E6A4BB"
+        android:onClick="buttonPressed"
+        app:layout_constraintBottom_toBottomOf="@id/view6"
+        app:layout_constraintEnd_toEndOf="@id/view6"
+        app:layout_constraintStart_toStartOf="@+id/view6"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <View
         android:id="@+id/view2"
