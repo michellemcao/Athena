@@ -41,23 +41,6 @@
         app:layout_constraintTop_toBottomOf="@id/view"
         app:layout_constraintVertical_bias="0.0" />
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#000000"
-        android:backgroundTint="#050505"
-        android:text="d"
-        android:textColor="#1D1A1A"
-        android:textColorHighlight="#101010"
-        android:textColorHint="#101010"
-        android:textColorLink="#211F1F"
-        android:textSize="8sp"
-        app:layout_constraintBottom_toBottomOf="@+id/button"
-        app:layout_constraintEnd_toEndOf="@+id/button"
-        app:layout_constraintStart_toStartOf="@+id/button"
-        app:layout_constraintTop_toTopOf="@+id/button" />
-
     <Button
         android:id="@+id/button"
         android:layout_width="0dp"
@@ -65,10 +48,27 @@
         android:background="#D98EAA"
         android:backgroundTint="#E6A4BB"
         android:onClick="buttonPressed"
+        android:text="dfdsdffd"
         app:layout_constraintBottom_toBottomOf="@id/view6"
         app:layout_constraintEnd_toEndOf="@id/view6"
         app:layout_constraintStart_toStartOf="@+id/view6"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/pink_200"
+        android:fontFamily="sans-serif"
+        android:text="jjj"
+        android:textColor="#050505"
+        android:textSize="10sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="@+id/button"
+        app:layout_constraintStart_toStartOf="@+id/button"
+        app:layout_constraintTop_toTopOf="@+id/button"
+        tools:visibility="visible" />
 
     <View
         android:id="@+id/view2"
@@ -92,7 +92,6 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="240dp"
-        android:fontFamily="sans-serif"
         android:text="Most Recent Activities:"
         android:textSize="24sp"
         android:textStyle="bold"

@@ -39,4 +39,7 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    fun buttonPressed(view: View) {}
+    fun buttonPressed(view: View) {}
 }
