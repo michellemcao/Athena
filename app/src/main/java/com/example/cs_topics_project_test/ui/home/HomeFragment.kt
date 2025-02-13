@@ -40,6 +40,4 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    fun buttonPressed(view: View) {}
-    fun buttonPressed(view: View) {}
 }
