@@ -15,7 +15,13 @@ class MainActivity : AppCompatActivity() {
     private var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 
     val list = listOf("What do you call a factory that makes okay products? ",
-        "How do you organize a space party?", "Where do pirates buy their hooks?", "What did the janitor say when he jumped out of the closet?", "What did the Buffalo say to his little boy when he left the house?", "Why is so great about Switzerland?"
+        "How do you organize a space party?",
+        "Where do pirates buy their hooks?",
+        "What did the janitor say when he jumped out of the closet?",
+        "What did the Buffalo say to his little boy when he left the house?",
+        "Why is so great about Switzerland?",
+        "Why did the pony need a drink of water?",
+        "What do you call a pig who knows how to use a knife?"
     )
 
 
