@@ -34,16 +34,24 @@ object TaskDataStructure {
         return taskMap.containsKey(key)
     }
 
-    fun rangeMap(lowerBound : DateAndTime,
-              lowerInclusive : Boolean,
-              upperBound : DateAndTime,
-              upperInclusive : Boolean) : NavigableMap<DateAndTime, TaskDetail> {
+    private fun rangeMap(lowerBound : DateAndTime,
+                         lowerInclusive : Boolean,
+                         upperBound : DateAndTime,
+                         upperInclusive : Boolean) : NavigableMap<DateAndTime, TaskDetail> {
         return taskMap.subMap(lowerBound, lowerInclusive, upperBound, upperInclusive)
     }
 
-    fun rangeList(taskMap : NavigableMap<DateAndTime, TaskDetail>) : MutableList<Task> {
+    fun rangeListFrom(lowerBound: DateAndTime, lowerInclusive: Boolean) : MutableList<Task> {
+        return rangeList(lowerBound, lowerInclusive, taskMap.lastKey(), true)
+    }
+
+    fun rangeList(lowerBound : DateAndTime,
+                  lowerInclusive : Boolean,
+                  upperBound : DateAndTime,
+                  upperInclusive : Boolean) : MutableList<Task> {
+        val rangeMap = rangeMap(lowerBound, lowerInclusive, upperBound, upperInclusive)
         val taskList = mutableListOf<Task>()
-        for ((key, value) in taskMap) {
+        for ((key, value) in rangeMap) {
             val task = Task(value.getTaskName(), value.getTaskDescription(), key.getDate(), key.getTime())
             taskList.add(task)
         }
