@@ -20,3 +20,13 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent(this, SignInActivity::class.java))
     }
 }
+
+
+/*
+ - to do maybe: add splash screen before sign in
+ - enter first name, last name, & username?? in sign-up page
+ - check if email actual exists (verify if email exists with google - prolly some firebase feature)
+ - have sign out feature in nav page
+ - edit name, email and user id in nav page
+ - make sure each has a unique username (store directly to firebase maybe)
+ */
