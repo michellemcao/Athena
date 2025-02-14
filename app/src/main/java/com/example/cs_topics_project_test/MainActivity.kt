@@ -35,6 +35,6 @@ class MainActivity : AppCompatActivity() {
     }
     fun buttonPressed(view: View){
         val myRandomInt = Random.nextInt(list.size)
-        findViewById<TextView>(R.id.button).text = list[myRandomInt].toString()
+        findViewById<TextView>(R.id.textView6).text = list[myRandomInt].toString()
     }
 }
