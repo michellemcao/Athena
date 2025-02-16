@@ -8,17 +8,22 @@ import android.widget.CalendarView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
+import com.example.cs_topics_project_test.task.TaskListAdapter
+import com.example.cs_topics_project_test.function.Date
+import com.example.cs_topics_project_test.task.TaskDataStructure
+import com.example.cs_topics_project_test.task.TaskManager
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
-
-
 
 class CalendarFragment : Fragment() {
 
     // private lateinit var calendarView: CalendarView
     // private lateinit var dateViewVar: TextView
+    private lateinit var calendarAdapter: CalendarAdapter
+    private var targetDate : Date = TaskManager.todayDate // place holder date
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,12 +40,13 @@ class CalendarFragment : Fragment() {
 
         val calendarView = view.findViewById<CalendarView>(R.id.calendarView)
         val dateViewVar = view.findViewById<TextView>(R.id.dateView)
+        val recyclerViewCalendar : RecyclerView = view.findViewById(R.id.recyclerViewCalendar)
 
         val todayDateLong = calendarView.date
 
         // Convert to a readable format
-        val sdf: SimpleDateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-        val todayDate: String = sdf.format(Date(todayDateLong))
+        val sdf = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+        val todayDate: String = sdf.format(java.util.Date(todayDateLong))
         //Toast.makeText(context, "Current date: " + currentDate, Toast.LENGTH_LONG).show();
         dateViewVar.text = buildString {
             append("Tasks for ")
@@ -50,7 +56,7 @@ class CalendarFragment : Fragment() {
 
         // to update the date on calendar
         calendarView.setOnDateChangeListener {_, year, month, day ->
-            var date = (buildString {
+            val date = (buildString {
                 append("Tasks for ")
                 append(month + 1)
                 append("/")
@@ -60,7 +66,19 @@ class CalendarFragment : Fragment() {
                 append(":")
             }) // date displayed in calendar_main in mm/dd/yyyy format
             dateViewVar.text = date
+
+            targetDate = Date(year, month + 1, day)
+            calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate))
+
+            recyclerViewCalendar.adapter = calendarAdapter
+            recyclerViewCalendar.layoutManager = LinearLayoutManager(activity)
+            // Toast.makeText(activity, "Target Date: $targetDate", Toast.LENGTH_SHORT).show()
         }
+
+        calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate))
+
+        recyclerViewCalendar.adapter = calendarAdapter
+        recyclerViewCalendar.layoutManager = LinearLayoutManager(activity)
     }
         //super.onCreate(savedInstanceState)
         // enableEdgeToEdge()

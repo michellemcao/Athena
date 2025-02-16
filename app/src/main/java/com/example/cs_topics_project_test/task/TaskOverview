@@ -1,7 +1,13 @@
+Task Data Type
 - TaskOutline: Interface for Task data type
 - Task: Task data type; implements TaskOutline; currently stores Task Name, Details, Due date and due time
-- TaskFragment: Fragment that shows all the tasks (was previously an activity called TaskView)
-- TaskActivity: Activity that adds tasks to global data structure (currently an array); Newly added tasks are shown inside the activity until page reloads/exits
-- TaskListAdapter: dynamically shows tasks added in the RecyclerView in TaskActivity
-- TaskManager: global task storage (TO-DO: STORE THIS DATA!)
-- TaskDataStructure: using TreeSet (Red-Black BST under the hood) to store tasks
+- TaskDetail: value in TreeSet that stores only task's name and description
+
+Task Data Structure
+- TaskManager: local task management using Mutable Lists to make viewing tasks quicker for the user
+- TaskDataStructure: global task storage using TreeSet (Red-Black BST under the hood) to store tasks
+
+Task Functionality
+- TaskFragment: Fragment that shows all the tasks categorized as past due, due today, due later and completed (was previously an activity called TaskView)
+- TaskActivity: Activity that adds tasks to global data structure (TreeSet implementation in TaskDataStructure) and updates stored local data (Multiple Mutable Lists in TaskManager); Newly added tasks are shown inside the activity until page reloads/exits
+- TaskListAdapter: dynamically shows tasks added in TaskActivity and TaskFragment
