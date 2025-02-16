@@ -66,7 +66,12 @@ class TaskActivity : AppCompatActivity() {
                 localTasks.add(task)
 
                 // TaskManager.tasks.add(task) // previous TaskManager
-                TaskDataStructure.addTask(DateAndTime(dueDate!!, dueTime!!), TaskDetail(taskName, taskDescription))
+                TaskDataStructure.addTask(DateAndTime(dueDate!!, dueTime!!), TaskDetail(taskName, taskDescription)) // for storage
+
+                // for viewing in app real-time
+                if (dueDate!! < TaskManager.todayDate) TaskManager.tasksPastDue.add(task)
+                else if (dueDate!! > TaskManager.todayDate) TaskManager.tasksDueLater.add(task)
+                else TaskManager.tasksDueToday.add(task)
 
                 // notify adapter that tasks has been update
                 // taskListAdapter.notifyDataSetChanged() // do we need it?

@@ -1,6 +1,8 @@
 package com.example.cs_topics_project_test.task
 
 import com.example.cs_topics_project_test.function.DateAndTime
+import com.example.cs_topics_project_test.function.Date
+import com.example.cs_topics_project_test.function.Time
 import java.util.NavigableMap
 import java.util.TreeMap
 
@@ -42,7 +44,21 @@ object TaskDataStructure {
     }
 
     fun rangeListFrom(lowerBound: DateAndTime, lowerInclusive: Boolean) : MutableList<Task> {
+        if (taskMap.isEmpty() || taskMap.lastKey() <= lowerBound) {
+            return rangeList(lowerBound, lowerInclusive,
+                DateAndTime(Date(2026, 1, 1), Time(0, 0, false)),
+                false)
+        }
         return rangeList(lowerBound, lowerInclusive, taskMap.lastKey(), true)
+    }
+
+    fun rangeListTo(upperBound: DateAndTime, upperInclusive: Boolean) : MutableList<Task> {
+        if (taskMap.isEmpty() || taskMap.firstKey() >= upperBound) {
+            return rangeList(
+                DateAndTime(Date(2025, 1, 1), Time(0, 0, false)),
+                true, upperBound, upperInclusive)
+        }
+        return rangeList(taskMap.firstKey(), true, upperBound, upperInclusive)
     }
 
     fun rangeList(lowerBound : DateAndTime,
