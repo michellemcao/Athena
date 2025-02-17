@@ -47,12 +47,14 @@ class TaskFragment : Fragment() {
 
 
         // taskListAdapter = TaskListAdapter(TaskManager.tasks) // takes task from global TaskManager
-        dueTodayAdapter = TaskListAdapter(TaskManager.tasksDueToday
-            /*TaskDataStructure.rangeList(
+        // tasks sorted by ascending name order
+        // val ascTask = (TaskManager.tasksDueToday).sortedWith(Task.taskNameComparatorAscending)
+        // dueTodayAdapter = TaskListAdapter(ascTask.toMutableList())
+        dueTodayAdapter = TaskListAdapter(TaskManager.tasksDueToday)
+        /*TaskDataStructure.rangeList(
                 DateAndTime(todayDate, midnight), true,
                 DateAndTime(todayDate, latenight), true
             )*/
-        )
 
         dueLaterAdapter = TaskListAdapter(TaskManager.tasksDueLater
             /*TaskDataStructure.rangeListFrom(

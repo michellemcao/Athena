@@ -14,22 +14,34 @@ object TaskDataStructure {
      */
 
     // private val taskMap = TreeMap<DateAndTime, MutableList<Task>>()
-    private val taskMap = TreeMap<DateAndTime, TaskDetail>()
-    // private val taskMap = TreeMap<DateAndTime, TaskNode>()
+    // private val taskMap = TreeMap<DateAndTime, TaskDetail>()
+    private val taskMap = TreeMap<DateAndTime, TaskNode>()
 
-    /*private class TaskNode {
-        lateinit var task: TaskDetail
-        lateinit var nextTask: TaskNode
-    }*/
+    private class TaskNode (
+        val task: TaskDetail,
+        val nextTask: TaskNode?
+    ) {}
 
     // adding task
-    fun addTask(key: DateAndTime, value: TaskDetail) {
+    fun addTask(key: DateAndTime, value: TaskDetail) : Boolean {
         /*if (keyExists(key)) {
             if (!taskMap[key]?.contains(value)!!) taskMap[key]?.add(value)
             Log.d("addTask", "duplicate task identified. task not re-added")
         }*/
         /*taskMap[key] = mutableListOf(value) // creates new list and inserts task*/
-        taskMap[key] = value // creates new list and inserts task
+        /*taskMap[key] = value // creates new list and inserts task*/
+        if (keyExists(key)) {
+            var current = taskMap[key]
+            while (current != null) {
+                if (current.task == value) return false // indicating to TaskActivity that adding failed cause duplicate exists
+                current = current.nextTask
+            }
+            val place = taskMap[key]
+            taskMap[key] = TaskNode(value, place)
+        } else {
+            taskMap[key] = TaskNode(value, null)
+        }
+        return true
     }
 
     private fun keyExists(key: DateAndTime) : Boolean {
@@ -39,24 +51,24 @@ object TaskDataStructure {
     private fun rangeMap(lowerBound : DateAndTime,
                          lowerInclusive : Boolean,
                          upperBound : DateAndTime,
-                         upperInclusive : Boolean) : NavigableMap<DateAndTime, TaskDetail> {
+                         upperInclusive : Boolean) : NavigableMap<DateAndTime, TaskNode> {
         return taskMap.subMap(lowerBound, lowerInclusive, upperBound, upperInclusive)
     }
 
     fun rangeListFrom(lowerBound: DateAndTime, lowerInclusive: Boolean) : MutableList<Task> {
         if (taskMap.isEmpty() || taskMap.lastKey() <= lowerBound) {
-            return rangeList(lowerBound, lowerInclusive,
+            return mutableListOf<Task>() /*rangeList(lowerBound, lowerInclusive,
                 DateAndTime(Date(2026, 1, 1), Time(0, 0, false)),
-                false)
+                false)*/
         }
         return rangeList(lowerBound, lowerInclusive, taskMap.lastKey(), true)
     }
 
     fun rangeListTo(upperBound: DateAndTime, upperInclusive: Boolean) : MutableList<Task> {
         if (taskMap.isEmpty() || taskMap.firstKey() >= upperBound) {
-            return rangeList(
+            return mutableListOf<Task>() /*rangeList(
                 DateAndTime(Date(2025, 1, 1), Time(0, 0, false)),
-                true, upperBound, upperInclusive)
+                true, upperBound, upperInclusive)*/
         }
         return rangeList(taskMap.firstKey(), true, upperBound, upperInclusive)
     }
@@ -68,8 +80,15 @@ object TaskDataStructure {
         val rangeMap = rangeMap(lowerBound, lowerInclusive, upperBound, upperInclusive)
         val taskList = mutableListOf<Task>()
         for ((key, value) in rangeMap) {
-            val task = Task(value.getTaskName(), value.getTaskDescription(), key.getDate(), key.getTime())
-            taskList.add(task)
+            var current = value
+            while (current != null) {
+                val task = Task(
+                    value.task.getTaskName(), value.task.getTaskDescription(), key.getDate(), key.getTime())
+                taskList.add(task)
+                current = current.nextTask
+            }
+            /*val task = Task(value.getTaskName(), value.getTaskDescription(), key.getDate(), key.getTime())
+            taskList.add(task)*/
         }
         return taskList
     }

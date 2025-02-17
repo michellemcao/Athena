@@ -8,7 +8,7 @@ data class Task (
     private var taskDescription: String,
     private var dueDate: Date,
     private var dueTime: Time
-) : TaskOutline {
+) : TaskOutline, Comparable<Task> {
     private var isCompleted = false
 
     // return whether task is completed and modify it
@@ -48,5 +48,22 @@ data class Task (
     }
     override fun setDueTime(time: Time) {
         this.dueTime = time
+    }
+
+    // Date and Time ascending order
+    override fun compareTo(other: Task): Int {
+        val dCompare = this.dueDate.compareTo(other.dueDate)
+        val tCompare = this.dueTime.compareTo(other.dueTime)
+        if (dCompare == 0) {
+            if (tCompare == 0) return 0
+            else if (tCompare == 1) return 1
+        } else if (dCompare == 1) return 1
+        return -1
+    }
+
+    companion object {
+        // Sorting by task name
+        val taskNameComparatorAscending = Comparator<Task> { t1, t2 -> t1.getTaskName().compareTo(t2.getTaskName()) }
+        val taskNameComparatorDescending = Comparator<Task> { t1, t2 -> t2.getTaskName().compareTo(t1.getTaskName()) }
     }
 }
