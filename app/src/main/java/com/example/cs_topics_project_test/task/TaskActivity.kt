@@ -19,7 +19,7 @@ import java.util.Calendar
 // to add new task
 class TaskActivity : AppCompatActivity() {
 
-    private lateinit var taskListAdapter: TaskListAdapter
+    private lateinit var taskAdapter: TaskAdapterActivity
     private val localTasks = mutableListOf<Task>() // local tasks
     private var tCount = 0 // number of tasks in local task list
 
@@ -28,7 +28,7 @@ class TaskActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_task)
 
         // val tasks = mutableListOf<Task>()
-        taskListAdapter = TaskListAdapter(localTasks)
+        taskAdapter = TaskAdapterActivity(localTasks)
 
         // retrieve data from ui feature to add into task manager
         val recyclerViewTasks: RecyclerView = findViewById(R.id.recyclerViewTasks) // to display recently added tasks
@@ -44,7 +44,7 @@ class TaskActivity : AppCompatActivity() {
         var dueTime: Time? = null
 
         // setting up recyclerView
-        recyclerViewTasks.adapter = taskListAdapter
+        recyclerViewTasks.adapter = taskAdapter
         recyclerViewTasks.layoutManager = LinearLayoutManager(this)
 
         // adding tasks
@@ -79,7 +79,7 @@ class TaskActivity : AppCompatActivity() {
 
                 // notify adapter that tasks has been update
                 // taskListAdapter.notifyDataSetChanged() // do we need it?
-                taskListAdapter.notifyItemInserted(tCount++)
+                taskAdapter.notifyItemInserted(tCount++)
                 // Toast.makeText(this, "Number of tasks in local: $tCount", Toast.LENGTH_SHORT).show()
 
                 // resetting all the fields

@@ -1,7 +1,10 @@
 package com.example.cs_topics_project_test.task
 
+import android.content.Context
+import android.widget.Toast
 import com.example.cs_topics_project_test.function.DateAndTime
 import com.example.cs_topics_project_test.function.Date
+import com.example.cs_topics_project_test.function.DateCompleted
 import com.example.cs_topics_project_test.function.Time
 import java.util.NavigableMap
 import java.util.TreeMap
@@ -16,13 +19,14 @@ object TaskDataStructure {
     // private val taskMap = TreeMap<DateAndTime, MutableList<Task>>()
     // private val taskMap = TreeMap<DateAndTime, TaskDetail>()
     private val taskMap = TreeMap<DateAndTime, TaskNode>()
+    private val completedMap = TreeMap<DateCompleted, TaskNode>()
 
     private class TaskNode (
         val task: TaskDetail,
-        val nextTask: TaskNode?
+        var nextTask: TaskNode?
     ) {}
 
-    // adding task
+    // adding task to taskMap
     fun addTask(key: DateAndTime, value: TaskDetail) : Boolean {
         /*if (keyExists(key)) {
             if (!taskMap[key]?.contains(value)!!) taskMap[key]?.add(value)
@@ -44,10 +48,12 @@ object TaskDataStructure {
         return true
     }
 
+    // checking is key exists in taskMap
     private fun keyExists(key: DateAndTime) : Boolean {
         return taskMap.containsKey(key)
     }
 
+    // taskMap helped functions
     private fun rangeMap(lowerBound : DateAndTime,
                          lowerInclusive : Boolean,
                          upperBound : DateAndTime,
@@ -101,7 +107,59 @@ object TaskDataStructure {
 
     // edit task
 
-    // remove task
-}
+    // complete task and process it
+    fun processCompletedTask(key: DateAndTime, value: TaskDetail) {
+        if (!keyExists(key)) return
 
-// Red-Black BST -> Getting the data???
+        var current = taskMap[key] // TaskNode
+        var prev : TaskNode? = null
+
+        while (current != null) {
+            if (current.task == value) {
+                if (prev == null) { // if the first node is what we are looking for
+                    if (current.nextTask == null) {
+                        taskMap.remove(key) // no more entries for that DateAndTime so remove altogether
+                    } else {
+                        taskMap[key] = current.nextTask!! // shift the keys entry to the nextTask node
+                    }
+                } else {
+                    prev.nextTask = current.nextTask
+                }
+                addCompletedTask(DateCompleted(TaskManager.todayDate, key), value)
+            }
+            prev = current
+            current = current.nextTask
+        }
+    }
+
+    private fun addCompletedTask(key: DateCompleted, value: TaskDetail) {
+        if (completedMap.containsKey(key)) {
+            var current = completedMap[key]
+            while (current != null) {
+                if (current.task == value) return
+                current = current.nextTask
+            }
+            val place = completedMap[key]
+            completedMap[key] = TaskNode(value, place)
+        } else {
+            completedMap[key] = TaskNode(value, null)
+        }
+    }
+
+    fun getTasksCompleted() : MutableList<TaskCompleted> {
+        val taskList = mutableListOf<TaskCompleted>()
+        for ((key, value) in completedMap) { //key = DateComplete; value = TaskNode
+            var current = value
+            while (current != null) {
+                val task = TaskCompleted(key.getDateCompleted(), key.getDueDate(), current.task)
+                taskList.add(task)
+                current = current.nextTask!!
+            }
+        }
+        return taskList // TaskCompleted = Date, DateAndTime, TaskDetail
+    }
+
+    fun clearUpTasks() {
+
+    }
+}

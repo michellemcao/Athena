@@ -30,6 +30,8 @@ object TaskManager {
     val tasksPastDue = TaskDataStructure.rangeListTo(
         DateAndTime(todayDate, midnight), false)
 
+    val tasksCompleted = TaskDataStructure.getTasksCompleted()
+
     /*private fun getTodayDate() : Date {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)

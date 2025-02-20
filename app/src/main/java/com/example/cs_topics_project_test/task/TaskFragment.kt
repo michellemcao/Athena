@@ -19,9 +19,10 @@ import com.example.cs_topics_project_test.function.Time
 // to view tasks
 class TaskFragment : Fragment() {
 
-    private lateinit var dueTodayAdapter: TaskListAdapter // tasks that are due today
-    private lateinit var dueLaterAdapter: TaskListAdapter
-    private lateinit var pastDueAdapter: TaskListAdapter
+    private lateinit var dueTodayAdapter: TaskAdapterList // tasks that are due today
+    private lateinit var dueLaterAdapter: TaskAdapterList
+    private lateinit var pastDueAdapter: TaskAdapterList
+    private lateinit var completedAdapter: TaskAdapterCompleted
 
     /*private val todayDate: Date = Date(
         Calendar.getInstance().get(Calendar.YEAR),
@@ -46,22 +47,23 @@ class TaskFragment : Fragment() {
         // Toast.makeText(activity, "Today's Date: $todayDate", Toast.LENGTH_SHORT).show()
 
 
+        completedAdapter = TaskAdapterCompleted(TaskManager.tasksCompleted)
         // taskListAdapter = TaskListAdapter(TaskManager.tasks) // takes task from global TaskManager
         // tasks sorted by ascending name order
         // val ascTask = (TaskManager.tasksDueToday).sortedWith(Task.taskNameComparatorAscending)
         // dueTodayAdapter = TaskListAdapter(ascTask.toMutableList())
-        dueTodayAdapter = TaskListAdapter(TaskManager.tasksDueToday)
+        dueTodayAdapter = TaskAdapterList(TaskManager.tasksDueToday, completedAdapter)
         /*TaskDataStructure.rangeList(
                 DateAndTime(todayDate, midnight), true,
                 DateAndTime(todayDate, latenight), true
             )*/
 
-        dueLaterAdapter = TaskListAdapter(TaskManager.tasksDueLater
+        dueLaterAdapter = TaskAdapterList(TaskManager.tasksDueLater, completedAdapter
             /*TaskDataStructure.rangeListFrom(
                 DateAndTime(todayDate, latenight), false)*/
         )
 
-        pastDueAdapter = TaskListAdapter(TaskManager.tasksPastDue
+        pastDueAdapter = TaskAdapterList(TaskManager.tasksPastDue, completedAdapter
             /*TaskDataStructure.rangeListTo(
                 DateAndTime(todayDate, midnight), false)*/
         )
@@ -71,6 +73,7 @@ class TaskFragment : Fragment() {
         val recyclerViewDueToday : RecyclerView = view.findViewById(R.id.recyclerViewDueToday) // recyclerView to display tasks that are due today
         val recyclerViewDueLater : RecyclerView = view.findViewById(R.id.recyclerViewDueLater)
         val recyclerViewPastDue : RecyclerView = view.findViewById(R.id.recyclerViewPastDue)
+        val recyclerViewCompleted : RecyclerView = view.findViewById(R.id.recyclerViewCompleted)
 
         recyclerViewDueToday.adapter = dueTodayAdapter
         recyclerViewDueToday.layoutManager = LinearLayoutManager(activity)
@@ -81,10 +84,15 @@ class TaskFragment : Fragment() {
         recyclerViewPastDue.adapter = pastDueAdapter
         recyclerViewPastDue.layoutManager = LinearLayoutManager(activity)
 
+        recyclerViewCompleted.adapter = completedAdapter
+        recyclerViewCompleted.layoutManager = LinearLayoutManager(activity)
+
         buttonNewTaskToggle.setOnClickListener {
         // button functionality
             startActivity(Intent(activity, TaskActivity::class.java))
         }
+
+
     }
 
     override fun onResume() {
