@@ -1,4 +1,4 @@
-package com.example.cs_topics_project_test.ui.calendar
+package com.example.cs_topics_project_test.calendar
 
 import android.view.LayoutInflater
 import android.view.View

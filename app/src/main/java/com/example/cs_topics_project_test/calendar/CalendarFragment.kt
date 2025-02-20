@@ -1,4 +1,4 @@
-package com.example.cs_topics_project_test.ui.calendar
+package com.example.cs_topics_project_test.calendar
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
-import com.example.cs_topics_project_test.task.TaskListAdapter
 import com.example.cs_topics_project_test.function.Date
 import com.example.cs_topics_project_test.task.TaskDataStructure
 import com.example.cs_topics_project_test.task.TaskManager
