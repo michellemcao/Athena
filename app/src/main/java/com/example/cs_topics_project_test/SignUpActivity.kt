@@ -15,7 +15,7 @@ class SignUpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding =ActivitySignUpBinding.inflate(layoutInflater)
+        binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         firebaseAuth = FirebaseAuth.getInstance()
@@ -34,8 +34,11 @@ class SignUpActivity : AppCompatActivity() {
 
                     firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener {
                         if (it.isSuccessful) {
+                            // ask about name and info stuff
                             // redirect to sign in page
-                            startActivity(Intent(this, SignInActivity::class.java))
+                            startActivity(
+                                Intent(this, SignInActivity::class.java)
+                            )
 
                         } else { // if sign in fails
                             Toast.makeText(this, "Authentication failed. ", Toast.LENGTH_SHORT).show()
@@ -48,6 +51,15 @@ class SignUpActivity : AppCompatActivity() {
                 Toast.makeText(this, "Empty fields are not allowed", Toast.LENGTH_SHORT).show()
 
             }
+
+            /*
+            firebaseAuth.sendSignInLinkToEmail(email, )
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Toast.makeText(this, "Verification Email Sent", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+             */
         }
     }
 }

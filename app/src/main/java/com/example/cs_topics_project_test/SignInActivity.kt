@@ -38,7 +38,7 @@ class SignInActivity : AppCompatActivity() {
                     if (it.isSuccessful) {
                         // (change MainActivity to the actual main page of the app later)
                         Toast.makeText(this, "Sign In Successful. ", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this, MainActivity::class.java))
+                             startActivity(Intent(this, HomeActivity::class.java))
                     } else {
                         // if sign in fails, display message to user
                         Toast.makeText(this, "Authentication failed. ", Toast.LENGTH_SHORT).show()
