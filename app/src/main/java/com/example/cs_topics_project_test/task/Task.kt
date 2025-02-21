@@ -61,9 +61,11 @@ data class Task (
         return -1
     }
 
+    // comparators for sorting tasks
     companion object {
-        // Sorting by task name
         val taskNameComparatorAscending = Comparator<Task> { t1, t2 -> t1.getTaskName().compareTo(t2.getTaskName()) }
         val taskNameComparatorDescending = Comparator<Task> { t1, t2 -> t2.getTaskName().compareTo(t1.getTaskName()) }
+        val taskDueComparatorAscending = Comparator<Task> { t1, t2 -> t1.compareTo(t2) }
+        val taskDueComparatorDescending = Comparator<Task> { t1, t2 -> t2.compareTo(t1) }
     }
 }

@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.cs_topics_project_test.databinding.ActivityMainBinding
 import androidx.core.content.ContextCompat
 import android.content.Intent
+import com.example.cs_topics_project_test.task.TaskDataStructure
 import com.example.cs_topics_project_test.ui.ChatListActivity
 
 class HomeActivity : AppCompatActivity() {
@@ -26,6 +27,8 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        TaskDataStructure.cleanUpTasks()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -49,6 +52,7 @@ class HomeActivity : AppCompatActivity() {
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
+        // leads to a fragment in content_main.xml that leads to the navigation set-up in mobile_navigation
 
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.nav_home, R.id.nav_calendar, R.id.nav_tasks),

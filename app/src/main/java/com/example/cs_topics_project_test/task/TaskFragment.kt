@@ -3,9 +3,13 @@ package com.example.cs_topics_project_test.task
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -85,6 +89,22 @@ class TaskFragment : Fragment() {
         val togglePastDue : TextView = view.findViewById(R.id.togglePastDue)
         val toggleCompleted : TextView = view.findViewById(R.id.toggleCompleted)
 
+        // buttons to sort and their listeners
+        val sortDueToday : ImageButton = view.findViewById(R.id.buttonDueTodaySort)
+        sortDueToday.setOnClickListener {
+            showSortOptions(sortDueToday, dueTodayAdapter, TaskManager.tasksDueToday)
+        }
+
+        val sortDueLater : ImageButton = view.findViewById(R.id.buttonDueLaterSort)
+        sortDueLater.setOnClickListener {
+            showSortOptions(sortDueLater, dueLaterAdapter, TaskManager.tasksDueLater)
+        }
+
+        val sortPastDue : ImageButton = view.findViewById(R.id.buttonPastDueSort)
+        sortPastDue.setOnClickListener {
+            showSortOptions(sortPastDue, pastDueAdapter, TaskManager.tasksPastDue)
+        }
+
         // connecting recyclerView to adapter
         recyclerViewDueToday.adapter = dueTodayAdapter
         recyclerViewDueToday.layoutManager = LinearLayoutManager(activity)
@@ -154,5 +174,42 @@ class TaskFragment : Fragment() {
         dueTodayAdapter.notifyDataSetChanged() // Notify the adapter to refresh the RecyclerView
         dueLaterAdapter.notifyDataSetChanged()
         pastDueAdapter.notifyDataSetChanged()
+    }
+
+    private fun showSortOptions(view : ImageButton, adapter : TaskAdapterList, tasks : MutableList<Task>) {
+        val popup = PopupMenu(activity, view)
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.sort_menu, popup.menu) // Reference a menu XML file
+
+        popup.setOnMenuItemClickListener { item: MenuItem ->
+            when (item.itemId) {
+                R.id.sortByNameAscending -> {
+                    // tasks sorted by ascending name order
+                    val sortedTask = (tasks/*TaskManager.tasksDueToday*/).sortedWith(Task.taskNameComparatorAscending)
+                    adapter.updateList(sortedTask.toMutableList())
+                    true
+                }
+                R.id.sortByNameDescending -> {
+                    // tasks sorted by descending name order
+                    val sortedTask = (tasks).sortedWith(Task.taskNameComparatorDescending)
+                    adapter.updateList(sortedTask.toMutableList())
+                    true
+                }
+                R.id.sortByDueDateAscending -> {
+                    // tasks sorted in ascending due date and time order
+                    val sortedTask = (tasks).sortedWith(Task.taskDueComparatorAscending)
+                    adapter.updateList(sortedTask.toMutableList())
+                    true
+                }
+                R.id.sortByDueDateDescending -> {
+                    // tasks sorted in descending due date and time order
+                    val sortedTask = (tasks).sortedWith(Task.taskDueComparatorDescending)
+                    adapter.updateList(sortedTask.toMutableList())
+                    true
+                }
+                else -> false
+            }
+        }
+        popup.show()
     }
 }

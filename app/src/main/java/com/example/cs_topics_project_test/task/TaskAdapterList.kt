@@ -61,4 +61,9 @@ class TaskAdapterList(private val tasks: MutableList<Task>,
         notifyItemInserted(tasks.size - 1)
         Toast.makeText(context, "Task ${task.getTaskName()} in TaskListAdapter; Number of tasks: ${tasks.size}", Toast.LENGTH_SHORT).show()
     }*/
+    fun updateList(newTasks: MutableList<Task>) {
+        tasks.clear()
+        tasks.addAll(newTasks)
+        notifyDataSetChanged() // Refresh RecyclerView
+    }
 }

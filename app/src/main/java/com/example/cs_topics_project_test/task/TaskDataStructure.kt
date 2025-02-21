@@ -1,6 +1,7 @@
 package com.example.cs_topics_project_test.task
 
 import android.content.Context
+import android.icu.util.Calendar
 import android.widget.Toast
 import com.example.cs_topics_project_test.function.DateAndTime
 import com.example.cs_topics_project_test.function.Date
@@ -13,7 +14,7 @@ object TaskDataStructure {
     /* Psychology behind data structure:
      * People generally tend to schedule multiple tasks around the same time in their task manager.
      * This helps them receive notifications etc at the same time.
-     * As such, array list/linked list for the tasks (value field) is more beneficial than unique key for every new task added
+     * As such a linked list for the tasks (value field) is more beneficial than unique key for every new task added
      */
 
     // private val taskMap = TreeMap<DateAndTime, MutableList<Task>>()
@@ -150,16 +151,83 @@ object TaskDataStructure {
         val taskList = mutableListOf<TaskCompleted>()
         for ((key, value) in completedMap) { //key = DateComplete; value = TaskNode
             var current = value
-            while (current != null) {
+            while (current.nextTask != null) {
                 val task = TaskCompleted(key.getDateCompleted(), key.getDueDate(), current.task)
                 taskList.add(task)
                 current = current.nextTask!!
             }
+            val task = TaskCompleted(key.getDateCompleted(), key.getDueDate(), current.task)
+            taskList.add(task)
         }
         return taskList // TaskCompleted = Date, DateAndTime, TaskDetail
     }
 
-    fun clearUpTasks() {
+    fun getTasksCompletedRange(date : Date) : MutableList<TaskCompleted> {
+        val taskList = mutableListOf<TaskCompleted>()
+        for ((key, value) in completedMap) { //key = DateComplete; value = TaskNode
+            if (key.getDueDate().getDate() == date) {
+                var current = value
+                while (current.nextTask != null) {
+                    val task = TaskCompleted(key.getDateCompleted(), key.getDueDate(), current.task)
+                    taskList.add(task)
+                    current = current.nextTask!!
+                }
+                val task = TaskCompleted(key.getDateCompleted(), key.getDueDate(), current.task)
+                taskList.add(task)
+            }
+        }
+        return taskList
+    }
 
+    fun cleanUpTasks() {
+        if (!completedMap.isEmpty()) {
+            var lowestDate : Date = completedMap.firstKey().getDateCompleted()
+            var cleanDate = addXXToDate(lowestDate.getYear(), lowestDate.getMonth(), lowestDate.getDate())
+            while (cleanDate <= TaskManager.todayDate) {
+                completedMap.remove(completedMap.firstKey())
+                if (!completedMap.isEmpty()) {
+                    lowestDate = completedMap.firstKey().getDateCompleted()
+                    cleanDate = addXXToDate(
+                        lowestDate.getYear(), lowestDate.getMonth(), lowestDate.getDate()
+                    )
+                }
+            }
+        }
+    }
+
+    private fun addXXToDate(year : Int, month : Int, date : Int) : Date {
+        var d = date + 7
+        var m = month
+        var y = year
+
+        if (m == 2 && y % 4 == 0) {
+            if (d > 29) {
+                m += d / 29
+                if (m > 12) {
+                    y += m / 12
+                    m %= 12
+                }
+                d %= 29
+            }
+        } else if ((m < 8 && m % 2 == 1) || (m > 7 && m % 2 == 0)) { //months that are 31 days long
+            if (d > 31) {
+                m += d / 31
+                if (m > 12) {
+                    y += m / 12
+                    m %= 12
+                }
+                d %= 31
+            }
+        } else {
+            if (d > 30) {
+                m += d / 30
+                if (m > 12) {
+                    y += m / 12
+                    m %= 12
+                }
+                d %= 30
+            }
+        }
+        return Date(y, m, d)
     }
 }

@@ -22,6 +22,7 @@ class CalendarFragment : Fragment() {
     // private lateinit var calendarView: CalendarView
     // private lateinit var dateViewVar: TextView
     private lateinit var calendarAdapter: CalendarAdapter
+    private lateinit var calendarAdapterCompleted: CalendarAdapterCompleted
     private var targetDate : Date = TaskManager.todayDate // place holder date
 
     override fun onCreateView(
@@ -40,6 +41,7 @@ class CalendarFragment : Fragment() {
         val calendarView = view.findViewById<CalendarView>(R.id.calendarView)
         val dateViewVar = view.findViewById<TextView>(R.id.dateView)
         val recyclerViewCalendar : RecyclerView = view.findViewById(R.id.recyclerViewCalendar)
+        val recyclerViewCalendarCompleted : RecyclerView = view.findViewById(R.id.recyclerViewCalendarCompleted)
 
         val todayDateLong = calendarView.date
 
@@ -75,9 +77,13 @@ class CalendarFragment : Fragment() {
         }
 
         calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate))
+        calendarAdapterCompleted = CalendarAdapterCompleted(TaskDataStructure.getTasksCompletedRange(targetDate))
 
         recyclerViewCalendar.adapter = calendarAdapter
         recyclerViewCalendar.layoutManager = LinearLayoutManager(activity)
+
+        recyclerViewCalendarCompleted.adapter = calendarAdapterCompleted
+        recyclerViewCalendarCompleted.layoutManager = LinearLayoutManager(activity)
     }
         //super.onCreate(savedInstanceState)
         // enableEdgeToEdge()
