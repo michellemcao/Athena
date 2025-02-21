@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!--nav to add task page-->
     <Button
         android:id="@+id/buttonNewTaskToggle"
         android:layout_width="wrap_content"
@@ -14,15 +15,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!--handling items that are due today-->
+
     <TextView
-        android:id="@+id/textViewDueToday"
+        android:id="@+id/toggleDueToday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:text="∧"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@id/textViewDueToday"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewDueToday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
         android:text="Due Today"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/toggleDueToday"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -35,15 +53,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewDueToday" />
 
+    <!--handling items that are due later-->
     <TextView
-        android:id="@+id/textViewDueLater"
+        android:id="@+id/toggleDueLater"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:text="∧"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@id/textViewDueLater"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerViewDueToday" />
+
+    <TextView
+        android:id="@+id/textViewDueLater"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
         android:text="Due Later"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/toggleDueLater"
         app:layout_constraintTop_toBottomOf="@id/recyclerViewDueToday" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -56,15 +90,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewDueLater" />
 
+    <!--handling items that are past due-->
     <TextView
-        android:id="@+id/textViewPastDue"
+        android:id="@+id/togglePastDue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:text="∧"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@id/textViewPastDue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerViewDueLater" />
+
+    <TextView
+        android:id="@+id/textViewPastDue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
         android:text="Past Due"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/togglePastDue"
         app:layout_constraintTop_toBottomOf="@id/recyclerViewDueLater" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -77,15 +127,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewPastDue" />
 
+    <!--handling completed items-->
     <TextView
-        android:id="@+id/textViewCompleted"
+        android:id="@+id/toggleCompleted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:text="∧"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@id/textViewCompleted"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerViewPastDue" />
+
+    <TextView
+        android:id="@+id/textViewCompleted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
         android:text="Completed"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/toggleCompleted"
         app:layout_constraintTop_toBottomOf="@id/recyclerViewPastDue" />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -1,20 +1,17 @@
 package com.example.cs_topics_project_test.task
 
 import android.content.Intent
-import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
-import com.example.cs_topics_project_test.function.Date
-import com.example.cs_topics_project_test.function.DateAndTime
-import com.example.cs_topics_project_test.function.Time
+import org.w3c.dom.Text
 
 // to view tasks
 class TaskFragment : Fragment() {
@@ -23,6 +20,11 @@ class TaskFragment : Fragment() {
     private lateinit var dueLaterAdapter: TaskAdapterList
     private lateinit var pastDueAdapter: TaskAdapterList
     private lateinit var completedAdapter: TaskAdapterCompleted
+
+    private var isDueTodayVisible = true
+    private var isDueLaterVisible = true
+    private var isPastDueVisible = true
+    private var isCompletedVisible = true
 
     /*private val todayDate: Date = Date(
         Calendar.getInstance().get(Calendar.YEAR),
@@ -68,13 +70,22 @@ class TaskFragment : Fragment() {
                 DateAndTime(todayDate, midnight), false)*/
         )
 
-        // variable declaration
-        val buttonNewTaskToggle: Button = view.findViewById(R.id.buttonNewTaskToggle) // opens up TaskActivity to add tasks
+        // variable declaration: opens up TaskActivity to add tasks
+        val buttonNewTaskToggle: Button = view.findViewById(R.id.buttonNewTaskToggle)
+
+        // recycler view variable declaration
         val recyclerViewDueToday : RecyclerView = view.findViewById(R.id.recyclerViewDueToday) // recyclerView to display tasks that are due today
         val recyclerViewDueLater : RecyclerView = view.findViewById(R.id.recyclerViewDueLater)
         val recyclerViewPastDue : RecyclerView = view.findViewById(R.id.recyclerViewPastDue)
         val recyclerViewCompleted : RecyclerView = view.findViewById(R.id.recyclerViewCompleted)
 
+        // toggle buttons to show or hide recycler view
+        val toggleDueToday : TextView = view.findViewById(R.id.toggleDueToday)
+        val toggleDueLater : TextView = view.findViewById(R.id.toggleDueLater)
+        val togglePastDue : TextView = view.findViewById(R.id.togglePastDue)
+        val toggleCompleted : TextView = view.findViewById(R.id.toggleCompleted)
+
+        // connecting recyclerView to adapter
         recyclerViewDueToday.adapter = dueTodayAdapter
         recyclerViewDueToday.layoutManager = LinearLayoutManager(activity)
 
@@ -88,11 +99,54 @@ class TaskFragment : Fragment() {
         recyclerViewCompleted.layoutManager = LinearLayoutManager(activity)
 
         buttonNewTaskToggle.setOnClickListener {
-        // button functionality
+        // button functionality -> takes user to a new page to add tasks
             startActivity(Intent(activity, TaskActivity::class.java))
         }
 
+        // toggle button code for showing or hiding tasks
+        toggleDueToday.setOnClickListener {
+            if (isDueTodayVisible) {
+                recyclerViewDueToday.visibility = View.GONE // Hide RecyclerView
+                toggleDueToday.text = "∨"
+            } else {
+                recyclerViewDueToday.visibility = View.VISIBLE // Show RecyclerView
+                toggleDueToday.text = "∧"
+            }
+            isDueTodayVisible = !isDueTodayVisible // Toggle state
+        }
 
+        toggleDueLater.setOnClickListener {
+            if (isDueLaterVisible) {
+                recyclerViewDueLater.visibility = View.GONE // Hide RecyclerView
+                toggleDueLater.text = "∨"
+            } else {
+                recyclerViewDueLater.visibility = View.VISIBLE // Show RecyclerView
+                toggleDueLater.text = "∧"
+            }
+            isDueLaterVisible = !isDueLaterVisible // Toggle state
+        }
+
+        togglePastDue.setOnClickListener {
+            if (isPastDueVisible) {
+                recyclerViewPastDue.visibility = View.GONE // Hide RecyclerView
+                togglePastDue.text = "∨"
+            } else {
+                recyclerViewPastDue.visibility = View.VISIBLE // Show RecyclerView
+                togglePastDue.text = "∧"
+            }
+            isPastDueVisible = !isPastDueVisible // Toggle state
+        }
+
+        toggleCompleted.setOnClickListener {
+            if (isCompletedVisible) {
+                recyclerViewCompleted.visibility = View.GONE // Hide RecyclerView
+                toggleCompleted.text = "∨"
+            } else {
+                recyclerViewCompleted.visibility = View.VISIBLE // Show RecyclerView
+                toggleCompleted.text = "∧"
+            }
+            isCompletedVisible = !isCompletedVisible // Toggle state
+        }
     }
 
     override fun onResume() {
