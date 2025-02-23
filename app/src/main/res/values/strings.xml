@@ -14,4 +14,7 @@
     <string name="menu_tasks">Tasks</string>
     <string name="task">Your tasks for</string>
     <string name="sign_out_button">Sign Out </string>
+    <string name="password">"   Password"</string>
+    <string name="email">"   Email"</string>
+    <string name="forgot_password"><u>Forgot Password?</u></string>
 </resources>
