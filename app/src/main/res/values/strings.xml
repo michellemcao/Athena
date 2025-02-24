@@ -17,4 +17,6 @@
     <string name="password">"   Password"</string>
     <string name="email">"   Email"</string>
     <string name="forgot_password"><u>Forgot Password?</u></string>
+    <string name="sign_in_button"><u>Sign In</u></string>
+    <string name="sign_up_button"><u>Sign Up</u></string>
 </resources>
