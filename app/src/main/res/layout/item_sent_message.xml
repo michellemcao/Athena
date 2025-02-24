@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:padding="8dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -11,23 +11,24 @@
         android:orientation="horizontal"
         android:background="@drawable/sent_message_background"
         android:gravity="end"
-        android:layout_gravity="end">
+        android:layout_gravity="end"
+        >
 
         <TextView
             android:id="@+id/messageText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:maxWidth="240dp"
-            android:padding="8dp"
-            android:singleLine="false"
-            android:ellipsize="none"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="4dp"
             android:breakStrategy="simple"
+            android:ellipsize="none"
+            android:lineSpacingExtra="0dp"
+            android:maxWidth="240dp"
+            android:padding="6dp"
             android:scrollHorizontally="false"
-            android:lineSpacingExtra="2dp"
-            android:text="This is a long message that should wrap and adjust the bubble width accordingly."
-            android:layout_marginEnd="8dp"/>
+            android:singleLine="false"
+            android:text="This is a long message that should wrap and adjust the bubble."
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
     </LinearLayout>
 </FrameLayout>
 
