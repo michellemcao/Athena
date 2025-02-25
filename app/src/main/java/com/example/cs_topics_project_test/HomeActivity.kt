@@ -16,6 +16,7 @@ import com.example.cs_topics_project_test.databinding.ActivityMainBinding
 import androidx.core.content.ContextCompat
 import android.content.Intent
 import com.example.cs_topics_project_test.ui.ChatListActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class HomeActivity : AppCompatActivity() {
 
@@ -58,7 +59,12 @@ class HomeActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-
+        // signs user out of account when sign out button clicked
+        navView.getMenu().findItem(R.id.signOutButton).setOnMenuItemClickListener ({ menuItem ->
+            FirebaseAuth.getInstance().signOut()
+            startActivity(Intent(this, SignInActivity::class.java))
+            true
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -70,4 +76,9 @@ class HomeActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+
+
+
+
 }
