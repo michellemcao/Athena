@@ -55,7 +55,7 @@ class CalendarAdapter(private val tasks: MutableList<Task>, private val listener
                 else if (task.getDueDate() > TaskManager.todayDate) TaskManager.tasksDueLater.removeAt(position)
                 else TaskManager.tasksDueToday.removeAt(position)
 
-                Toast.makeText(holder.itemView.context, "Marked task ${task.getTaskName()} as completed; Number of tasks: ${tasks.size}; position: ${position}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(holder.itemView.context, "Completed task: ${task.getTaskName()}. Hooray!!", Toast.LENGTH_SHORT).show()
                 tasks.removeAt(position) // adapter removal of position
                 notifyDataSetChanged()
             }

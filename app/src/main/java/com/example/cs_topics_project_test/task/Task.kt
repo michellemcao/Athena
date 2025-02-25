@@ -1,6 +1,7 @@
 package com.example.cs_topics_project_test.task
 
 import com.example.cs_topics_project_test.function.Date
+import com.example.cs_topics_project_test.function.DateAndTime
 import com.example.cs_topics_project_test.function.Time
 
 data class Task (
@@ -26,27 +27,37 @@ data class Task (
     override fun getTaskName(): String {
         return this.taskName
     }
-    override fun setTaskName(name: String) {
-        this.taskName = name
-    }
     override fun getTaskDescription(): String {
         return this.taskDescription
     }
-    override fun setTaskDescription(description: String) {
-        this.taskDescription = description
+    override fun getTaskDetail(): TaskDetail {
+        return TaskDetail(taskName, taskDescription)
     }
 
-    // set due date/time and modify it
     override fun getDueDate(): Date {
         return this.dueDate
-    }
-    override fun setDueDate(date: Date) {
-        this.dueDate = date
     }
     override fun getDueTime(): Time {
         return this.dueTime
     }
-    override fun setDueTime(time: Time) {
+    override fun getDateAndTime(): DateAndTime {
+        return DateAndTime(dueDate, dueTime)
+    }
+
+    fun setTaskName(name: String) {
+        this.taskName = name
+    }
+    fun setTaskDescription(description: String) {
+        this.taskDescription = description
+    }
+
+    // set due date/time and modify it
+
+    fun setDueDate(date: Date) {
+        this.dueDate = date
+    }
+
+    fun setDueTime(time: Time) {
         this.dueTime = time
     }
 

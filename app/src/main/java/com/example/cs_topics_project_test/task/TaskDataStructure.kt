@@ -87,10 +87,10 @@ object TaskDataStructure {
         val rangeMap = rangeMap(lowerBound, lowerInclusive, upperBound, upperInclusive)
         val taskList = mutableListOf<Task>()
         for ((key, value) in rangeMap) {
-            var current = value
+            var current : TaskNode? = value
             while (current != null) {
                 val task = Task(
-                    value.task.getTaskName(), value.task.getTaskDescription(), key.getDate(), key.getTime())
+                    current.task.getTaskName(), current.task.getTaskDescription(), key.getDate(), key.getTime())
                 taskList.add(task)
                 current = current.nextTask
             }
@@ -149,31 +149,29 @@ object TaskDataStructure {
 
     fun getTasksCompleted() : MutableList<TaskCompleted> {
         val taskList = mutableListOf<TaskCompleted>()
+        var current : TaskNode?
         for ((key, value) in completedMap) { //key = DateComplete; value = TaskNode
-            var current = value
-            while (current.nextTask != null) {
+            current = value
+            while (current != null) {
                 val task = TaskCompleted(key.getDateCompleted(), key.getDueDate(), current.task)
                 taskList.add(task)
-                current = current.nextTask!!
+                current = current.nextTask
             }
-            val task = TaskCompleted(key.getDateCompleted(), key.getDueDate(), current.task)
-            taskList.add(task)
         }
         return taskList // TaskCompleted = Date, DateAndTime, TaskDetail
     }
 
+    // gets task completed on a specific date?
     fun getTasksCompletedRange(date : Date) : MutableList<TaskCompleted> {
         val taskList = mutableListOf<TaskCompleted>()
         for ((key, value) in completedMap) { //key = DateComplete; value = TaskNode
             if (key.getDueDate().getDate() == date) {
-                var current = value
-                while (current.nextTask != null) {
+                var current: TaskNode? = value
+                while (current != null) {
                     val task = TaskCompleted(key.getDateCompleted(), key.getDueDate(), current.task)
                     taskList.add(task)
-                    current = current.nextTask!!
+                    current = current.nextTask
                 }
-                val task = TaskCompleted(key.getDateCompleted(), key.getDueDate(), current.task)
-                taskList.add(task)
             }
         }
         return taskList

@@ -7,38 +7,42 @@ import com.example.cs_topics_project_test.function.Time
 data class TaskCompleted (
     private val taskCompletedDate: Date, //TaskCompleted
     private val taskDue: DateAndTime,
-    private val taskDetail: TaskDetail
-) {
+    private val taskDetail: TaskDetail) : TaskOutline {
     // private val taskCompletedDate: Date = TaskManager.todayDate
     private var isCompleted = true
 
     // return whether task is completed and modify it
-    fun taskCompleted() {
+    override fun taskCompleted() {
         this.isCompleted = true
     }
-    fun taskNotCompleted() {
+    override fun taskNotCompleted() {
         this.isCompleted = false
     }
-    fun isTaskCompleted(): Boolean {
+    override fun isTaskCompleted(): Boolean {
         return this.isCompleted
     }
 
     // return task name/description and modify it
-    fun getTaskName(): String {
+    override fun getTaskName(): String {
         return this.taskDetail.getTaskName()
     }
-    fun getTaskDescription(): String {
+    override fun getTaskDescription(): String {
         return this.taskDetail.getTaskDescription()
+    }
+    override fun getTaskDetail(): TaskDetail {
+        return taskDetail
     }
 
     // set due date/time and modify it
-    fun getDueDate(): Date {
+    override fun getDueDate(): Date {
         return this.taskDue.getDate()
     }
-    fun getDueTime(): Time {
+    override fun getDueTime(): Time {
         return this.taskDue.getTime()
     }
-
+    override fun getDateAndTime(): DateAndTime {
+        return taskDue
+    }
     fun getTaskCompletedDate(): Date {
         return this.taskCompletedDate
     }

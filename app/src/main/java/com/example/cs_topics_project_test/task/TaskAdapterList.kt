@@ -45,7 +45,7 @@ class TaskAdapterList(private val tasks: MutableList<Task>, private val listener
                 // TaskManager.tasksCompleted.add(taskC)
                 listener.onTaskCompleted(taskC)
 
-                Toast.makeText(holder.itemView.context, "Marked task ${task.getTaskName()} as completed; Number of tasks: ${tasks.size}; position: ${position}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(holder.itemView.context, "Completed task: ${task.getTaskName()}. Hooray!!", Toast.LENGTH_SHORT).show()
                 tasks.removeAt(position) // adapter removal of position
                 notifyDataSetChanged()
             }
