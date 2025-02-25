@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //if (user != null) {
-            //FirebaseAuth.getInstance().signOut()
+            FirebaseAuth.getInstance().signOut()
         //}
         startActivity(Intent(this, SignInActivity::class.java))
     }

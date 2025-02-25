@@ -36,12 +36,9 @@ class SignUpActivity : AppCompatActivity() {
                     firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener {
                         if (it.isSuccessful) {
                             // send email verification
-                            firebaseAuth.currentUser?.sendEmailVerification()
-                                ?.addOnCompleteListener {
+                            firebaseAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener {
                                     Toast.makeText(this, "Please verify your email address", Toast.LENGTH_SHORT).show()
-                                }
-                            // TODO go to fragment that says "an email has been sent" until email is verified
-                            // TODO ask about first name, last name, username
+                            }
                             // redirect to sign in page
                             startActivity(
                                 Intent(this, SignInActivity::class.java)

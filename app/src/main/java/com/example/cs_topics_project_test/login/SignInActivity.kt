@@ -36,9 +36,14 @@ class SignInActivity : AppCompatActivity() {
 
                 firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
                     if (it.isSuccessful) {
-                        // (change MainActivity to the actual main page of the app later)
+                        val user = firebaseAuth.currentUser
+                        if (user != null && user.isEmailVerified) { // goes to home activity if user successfully sign in and verified
                         Toast.makeText(this, "Sign In Successful. ", Toast.LENGTH_SHORT).show()
-                             startActivity(Intent(this, HomeActivity::class.java))
+                             startActivity(Intent(this, HomeActivity::class.java)) }
+                        else {
+                            // if user not verified
+                            Toast.makeText(this, "Account not yet verified", Toast.LENGTH_SHORT).show()
+                        }
                     } else {
                         // if sign in fails, display message to user
                         Toast.makeText(this, "Authentication failed. ", Toast.LENGTH_SHORT).show()
