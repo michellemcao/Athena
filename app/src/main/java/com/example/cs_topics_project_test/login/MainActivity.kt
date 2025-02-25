@@ -1,8 +1,7 @@
-package com.example.cs_topics_project_test
+package com.example.cs_topics_project_test.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -21,11 +20,3 @@ class MainActivity : AppCompatActivity() {
 }
 
 
-/*
- - to do maybe: add splash screen before sign in
- - enter first name, last name, & username?? in sign-up page
- - check if email actual exists (verify if email exists with google - prolly some firebase feature)
- - have sign out feature in nav page
- - edit name, email and user id in nav page
- - make sure each has a unique username (store directly to firebase maybe)
- */

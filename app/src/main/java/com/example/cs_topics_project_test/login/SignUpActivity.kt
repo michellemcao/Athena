@@ -1,9 +1,10 @@
-package com.example.cs_topics_project_test
+package com.example.cs_topics_project_test.login
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.Navigation
 import com.example.cs_topics_project_test.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -34,7 +35,13 @@ class SignUpActivity : AppCompatActivity() {
 
                     firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener {
                         if (it.isSuccessful) {
-                            // ask about name and info stuff
+                            // send email verification
+                            firebaseAuth.currentUser?.sendEmailVerification()
+                                ?.addOnCompleteListener {
+                                    Toast.makeText(this, "Please verify your email address", Toast.LENGTH_SHORT).show()
+                                }
+                            // TODO go to fragment that says "an email has been sent" until email is verified
+                            // TODO ask about first name, last name, username
                             // redirect to sign in page
                             startActivity(
                                 Intent(this, SignInActivity::class.java)
@@ -52,14 +59,6 @@ class SignUpActivity : AppCompatActivity() {
 
             }
 
-            /*
-            firebaseAuth.sendSignInLinkToEmail(email, )
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        Toast.makeText(this, "Verification Email Sent", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-             */
         }
     }
 }
