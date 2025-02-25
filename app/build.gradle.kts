@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
     //alias(libs.plugins.jetbrains.kotlin.android)
-    id("kotlin-parcelize") // do we need this
 }
 
 android {
@@ -18,6 +17,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        //viewBinding {
+            //enabled = true
+        //}
     }
 
     buildTypes {
@@ -57,6 +60,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout.v220) // do we need line 53-57
     implementation(libs.firebase.auth)
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
