@@ -3,6 +3,7 @@ package com.example.cs_topics_project_test.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,7 +56,8 @@ class ChatActivity : AppCompatActivity() {
         editTextMessage = findViewById(R.id.editTextMessage)
         sendButton = findViewById(R.id.sendButton)
 
-        chatId = generateChatId(person.uid)
+        chatId = intent.getStringExtra("CHAT_ID")
+            ?: throw IllegalArgumentException("Chat ID must be provided")
         listenForMessages()
 
         sendButton.setOnClickListener { sendMessage() }
@@ -80,34 +82,33 @@ class ChatActivity : AppCompatActivity() {
         val currentUser = FirebaseAuth.getInstance().currentUser
             ?: throw IllegalStateException("User must be logged in")
 
-        val recipientId = chatId.split("_")[1] // Get the recipient's ID from chatId
-
         val newMessage = hashMapOf(
             "senderId" to currentUser.uid,
             "text" to messageText,
             "timestamp" to System.currentTimeMillis()
         )
 
+        // Log to verify chatId
+        Log.d("ChatActivity", "Sending message in chat with chatId: $chatId")
+
+        // Use the passed chatId to fetch the correct chat document
         val chatRef = db.collection("chats").document(chatId)
 
         chatRef.get().addOnSuccessListener { document ->
-            if (!document.exists()) {
-                // If chat doesn't exist, create it with metadata
-                val chatData = hashMapOf(
-                    "participants" to listOf(currentUser.uid, recipientId), // Ensure both IDs are in the participants array
-                    "lastMessage" to messageText,
-                    "lastUpdated" to System.currentTimeMillis()
-                )
-                chatRef.set(chatData) // Create chat document
+            if (document.exists()) {
+                // Chat exists, add the message
+                chatRef.collection("messages").add(newMessage)
+                editTextMessage.setText("") // Clear the message field
+            } else {
+                Log.e("ChatActivity", "Chat document does not exist for chatId: $chatId")
             }
-
-            // Add message inside the chat
-            chatRef.collection("messages").add(newMessage)
-            editTextMessage.setText("")
-        }.addOnFailureListener {
-            // Handle errors (e.g., network issues)
+        }.addOnFailureListener { exception ->
+            Log.e("ChatActivity", "Error fetching chat document", exception)
         }
     }
+
+
+
 
 
     private fun listenForMessages() {
