@@ -31,9 +31,12 @@ class ChatActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_PERSON = "extra_person"
 
-        fun createIntent(context: Context, person: Person): Intent {
-            return Intent(context, ChatActivity::class.java).putExtra(EXTRA_PERSON, person)
+        fun createIntent(context: Context, person: Person, chatId: String): Intent {
+            return Intent(context, ChatActivity::class.java)
+                .putExtra(EXTRA_PERSON, person)
+                .putExtra("CHAT_ID", chatId)
         }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

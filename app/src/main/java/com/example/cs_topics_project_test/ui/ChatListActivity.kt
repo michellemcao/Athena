@@ -45,9 +45,12 @@ class ChatListActivity : AppCompatActivity() {
         // Set up RecyclerView
         recyclerView = findViewById(R.id.recyclerView)
         adapter = ChatListAdapter(chatList) { person ->
-            val intent = ChatActivity.createIntent(this, person)
+            val chatId = person.chatId
+            val intent = ChatActivity.createIntent(this, person, chatId)
             startActivity(intent)
         }
+
+
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
