@@ -10,8 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.function.DateAndTime
 
-class TaskAdapterList(private val tasks: MutableList<Task>,
-    private val listener: TaskListener) : RecyclerView.Adapter<TaskAdapterList.TaskViewHolder>() {
+class TaskAdapterList(private val tasks: MutableList<Task>, private val listener: TaskListener) : RecyclerView.Adapter<TaskAdapterList.TaskViewHolder>() {
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val taskName: TextView = itemView.findViewById(R.id.textViewTaskName)

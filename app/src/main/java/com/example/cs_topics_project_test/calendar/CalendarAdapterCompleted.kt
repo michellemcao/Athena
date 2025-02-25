@@ -10,8 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.task.Task
 import com.example.cs_topics_project_test.task.TaskCompleted
+import com.example.cs_topics_project_test.task.TaskListener
 
-class CalendarAdapterCompleted(private val tasks: MutableList<TaskCompleted>) : RecyclerView.Adapter<CalendarAdapterCompleted.TaskViewHolder>() {
+class CalendarAdapterCompleted(private val tasks: MutableList<TaskCompleted>) : RecyclerView.Adapter<CalendarAdapterCompleted.TaskViewHolder>(), TaskListener {
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val taskName: TextView = itemView.findViewById(R.id.textViewTaskName)
@@ -36,4 +37,9 @@ class CalendarAdapterCompleted(private val tasks: MutableList<TaskCompleted>) : 
     }
 
     override fun getItemCount(): Int = tasks.size
+
+    override fun onTaskCompleted(task: TaskCompleted) {
+        tasks.add(task)
+        notifyItemInserted(tasks.size - 1)
+    }
 }

@@ -69,21 +69,26 @@ class CalendarFragment : Fragment() {
             dateViewVar.text = date
 
             targetDate = Date(year, month + 1, day)
-            calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate))
+
+            calendarAdapterCompleted = CalendarAdapterCompleted(TaskDataStructure.getTasksCompletedRange(targetDate))
+            calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate), calendarAdapterCompleted)
+
+            recyclerViewCalendarCompleted.adapter = calendarAdapterCompleted
+            recyclerViewCalendarCompleted.layoutManager = LinearLayoutManager(activity)
 
             recyclerViewCalendar.adapter = calendarAdapter
             recyclerViewCalendar.layoutManager = LinearLayoutManager(activity)
             // Toast.makeText(activity, "Target Date: $targetDate", Toast.LENGTH_SHORT).show()
         }
 
-        calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate))
         calendarAdapterCompleted = CalendarAdapterCompleted(TaskDataStructure.getTasksCompletedRange(targetDate))
-
-        recyclerViewCalendar.adapter = calendarAdapter
-        recyclerViewCalendar.layoutManager = LinearLayoutManager(activity)
+        calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate), calendarAdapterCompleted)
 
         recyclerViewCalendarCompleted.adapter = calendarAdapterCompleted
         recyclerViewCalendarCompleted.layoutManager = LinearLayoutManager(activity)
+
+        recyclerViewCalendar.adapter = calendarAdapter
+        recyclerViewCalendar.layoutManager = LinearLayoutManager(activity)
     }
         //super.onCreate(savedInstanceState)
         // enableEdgeToEdge()
