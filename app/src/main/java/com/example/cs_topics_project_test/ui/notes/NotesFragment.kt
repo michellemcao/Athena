@@ -26,7 +26,7 @@ class NotesFragment : Fragment(R.layout.fragment_notes) {
             // Navigate to the edit fragment and pass the selected note for editing
             val editNoteFragment = EditNoteFragment.newInstance(note)
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, editNoteFragment)
+                .replace(R.id.fragment_edit_note, editNoteFragment)
                 .addToBackStack(null)
                 .commit()
         }
@@ -46,7 +46,7 @@ class NotesFragment : Fragment(R.layout.fragment_notes) {
         fab.setOnClickListener {
             val addNoteFragment = AddNoteFragment() // Fragment for adding a new note
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, addNoteFragment)
+                .replace(R.id.fragment_add_note, addNoteFragment)
                 .addToBackStack(null)
                 .commit()
         }

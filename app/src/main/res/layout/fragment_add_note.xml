@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.notes.AddNoteFragment">
 
+    <FrameLayout
+        android:id="@+id/fragment_add_note"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <!-- Title EditText -->
     <EditText
         android:id="@+id/editTextTitle"
