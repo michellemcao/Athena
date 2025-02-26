@@ -14,13 +14,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="78dp"
         android:layout_marginEnd="79dp"
-        android:layout_marginBottom="104dp"
         android:fontFamily="@font/work_sans_bold"
         android:text="Welcome"
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
         android:textColor="@color/signin_white"
         android:textSize="60sp"
-        app:layout_constraintBottom_toTopOf="@+id/emailEt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
@@ -31,19 +29,15 @@
         android:layout_height="51dp"
         android:layout_marginStart="100dp"
         android:layout_marginEnd="100dp"
-        android:layout_marginBottom="53dp"
         android:fontFamily="@font/roboto_bold"
         android:text="Sign in to continue"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/signin_white"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/emailEt"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailLayout"
@@ -67,8 +61,8 @@
         android:layout_width="378dp"
         android:layout_height="63dp"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginStart="17dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="15dp"
         android:textColorHint="@color/signin_white"
         app:boxStrokeColor="@color/signin_white"
         app:layout_constraintEnd_toEndOf="parent"
@@ -98,59 +92,51 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginBottom="148dp"
         android:fontFamily="@font/roboto"
         android:text="Not Registered Yet?"
         android:textColor="@color/signin_white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.369"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signInButton"
-        app:layout_constraintVertical_bias="0.403" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signUpButton"
         android:layout_width="59dp"
         android:layout_height="21dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="75dp"
-        android:layout_marginEnd="98dp"
-        android:layout_marginBottom="112dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="148dp"
         android:background="@android:color/transparent"
         android:text="@string/sign_up_button"
         android:textAllCaps="false"
         android:textColor="@color/signin_white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/signInButton" />
+        app:layout_constraintStart_toEndOf="@+id/textView" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signInButton"
-        android:layout_width="0dp"
+        android:layout_width="378dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="15dp"
         android:background="@drawable/roundedbutton"
         android:backgroundTint="#ff97a0"
         android:fontFamily="@font/roboto_bold"
         android:text="Sign In"
         android:textColor="@color/signin_white"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.531"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordLayout"
-        app:layout_constraintVertical_bias="0.054" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordLayout" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button"
         android:layout_width="186dp"
         android:layout_height="20dp"
-        android:layout_marginStart="210dp"
         android:layout_marginTop="7dp"
         android:background="@android:color/transparent"
         android:fontFamily="@font/roboto"
@@ -158,12 +144,8 @@
         android:textAllCaps="false"
         android:textColor="@color/signin_white"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signInButton"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/signInButton" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -182,7 +164,7 @@
         android:layout_width="380dp"
         android:layout_height="55dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="237dp"
+        android:layout_marginTop="70dp"
         android:layout_marginEnd="15dp"
         android:background="@drawable/roundedbutton"
         android:hint="@string/email"
@@ -192,10 +174,8 @@
         android:textColorHighlight="@color/signin_white"
         android:textColorHint="@color/signin_white"
         android:textColorLink="@color/signin_white"
-        app:layout_constraintBottom_toTopOf="@+id/passwordLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
