@@ -1,6 +1,5 @@
 package com.example.cs_topics_project_test.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.widget.EditText
@@ -11,19 +10,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
-import com.example.cs_topics_project_test.ui.chat.Person
 import com.example.cs_topics_project_test.ui.ui.chat.ChatListAdapter
 import androidx.appcompat.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import android.util.Log
+import android.view.MenuItem
+import com.example.cs_topics_project_test.ui.ui.chat.Chat
 
 class ChatListActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ChatListAdapter
-    private val chatList = mutableListOf<Person>()
+    private val chatList = mutableListOf<Chat>() // Use Chat instead of Person
     private val db = FirebaseFirestore.getInstance()
     private var chatListener: ListenerRegistration? = null
 
@@ -44,12 +44,11 @@ class ChatListActivity : AppCompatActivity() {
 
         // Set up RecyclerView
         recyclerView = findViewById(R.id.recyclerView)
-        adapter = ChatListAdapter(chatList) { person ->
-            val chatId = person.chatId
-            val intent = ChatActivity.createIntent(this, person, chatId)
+        adapter = ChatListAdapter(chatList) { chat ->
+            val chatId = chat.cid // Access chatId from the Chat object
+            val intent = ChatActivity.createIntent(this, chat, chatId)
             startActivity(intent)
         }
-
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
@@ -67,7 +66,7 @@ class ChatListActivity : AppCompatActivity() {
                 }
 
                 if (snapshots != null) {
-                    val newChatList = mutableListOf<Person>()
+                    val newChatList = mutableListOf<Chat>() // Use Chat instead of Person
                     val chatDocuments = snapshots.documents
 
                     Log.d("FetchChats", "Fetched ${chatDocuments.size} chats from Firestore")
@@ -95,9 +94,9 @@ class ChatListActivity : AppCompatActivity() {
                                     .addOnSuccessListener { recipientDoc ->
                                         val recipientName = recipientDoc.getString("name") ?: "Unknown Recipient"
 
-                                        // Create a new Person object and add it to the list
-                                        val person = Person("$senderName, $recipientName", chatId)
-                                        newChatList.add(person)
+                                        // Create a new Chat object and add it to the list
+                                        val chat = Chat(chatId, senderName, recipientName)
+                                        newChatList.add(chat)
 
                                         // Log to verify if newChatList is properly populated
                                         Log.d("FetchChats", "Current chat list size: ${newChatList.size}")
@@ -168,61 +167,55 @@ class ChatListActivity : AppCompatActivity() {
     }
 
     private fun createNewChat(recipientUid: String) {
-        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
-        if (currentUserUid != null) {
-            val db = FirebaseFirestore.getInstance()
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val chatId = listOf(currentUserUid, recipientUid).sorted().joinToString("_")
 
-            // Generate a new chat document reference
-            val chatDocRef = db.collection("chats").document()  // This generates a new document with a unique ID
+        val chatDocRef = db.collection("chats").document(chatId)
 
-            val chatId = chatDocRef.id  // Get the auto-generated chat ID
-            val intent = Intent(this, ChatActivity::class.java)
-            intent.putExtra("CHAT_ID", chatId)  // Add the chat ID here
-            startActivity(intent)
-            // Create the chat document with basic info
-            val chat = hashMapOf(
-                "cid" to chatId,  // Store the chat ID in the document
-                "senderID" to currentUserUid,  // Field name should be consistent with other code
-                "recipientID" to recipientUid,
-                "timestamp" to System.currentTimeMillis()
-            )
+        chatDocRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                // Chat already exists, navigate to it
+                val intent = ChatActivity.createIntent(this, Chat(chatId, "Sender", "Recipient"), chatId)
+                startActivity(intent)
+            } else {
+                // Chat does not exist, create a new one
+                val chatData = hashMapOf(
+                    "cid" to chatId,
+                    "senderID" to currentUserUid,
+                    "recipientID" to recipientUid,
+                    "timestamp" to System.currentTimeMillis()
+                )
 
-            // Set the chat document
-            chatDocRef.set(chat)
-                .addOnSuccessListener {
-                    // Create the 'messages' subcollection inside the chat
-                    val messagesRef = chatDocRef.collection("messages")
+                chatDocRef.set(chatData)
+                    .addOnSuccessListener {
+                        // Initialize message collection
+                        chatDocRef.collection("messages").add(
+                            hashMapOf(
+                                "sender" to "system",
+                                "message" to "Chat created.",
+                                "timestamp" to System.currentTimeMillis()
+                            )
+                        )
 
-                    // Add an initial system message
-                    val firstMessage = hashMapOf(
-                        "sender" to "system",
-                        "message" to "Chat created.",
-                        "timestamp" to System.currentTimeMillis()
-                    )
-
-                    // Add the first message
-                    messagesRef.add(firstMessage)
-                        .addOnSuccessListener {
-                            Toast.makeText(this, "Chat created successfully!", Toast.LENGTH_SHORT).show()
-                            fetchChats()  // Optionally fetch chat list again if needed
-                        }
-                        .addOnFailureListener {
-                            Toast.makeText(this, "Failed to initialize messages", Toast.LENGTH_SHORT).show()
-                        }
-                }
-                .addOnFailureListener {
-                    Toast.makeText(this, "Failed to create chat", Toast.LENGTH_SHORT).show()
-                }
+                        // Navigate to the new chat
+                        val intent = ChatActivity.createIntent(this, Chat(chatId, "Sender", "Recipient"), chatId)
+                        startActivity(intent)
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Failed to create chat", Toast.LENGTH_SHORT).show()
+                    }
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this, "Error checking chat existence", Toast.LENGTH_SHORT).show()
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
         chatListener?.remove() // Clean up listener when activity is destroyed
     }
 
-    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()

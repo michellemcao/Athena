@@ -12,7 +12,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.ui.ui.chat.MessageAdapter
-import com.example.cs_topics_project_test.ui.chat.Person
+import com.example.cs_topics_project_test.ui.ui.chat.Chat
 import com.example.cs_topics_project_test.ui.ui.chat.Message
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
@@ -29,24 +29,23 @@ class ChatActivity : AppCompatActivity() {
     private var chatListener: ListenerRegistration? = null
 
     companion object {
-        private const val EXTRA_PERSON = "extra_person"
+        private const val EXTRA_CHAT = "extra_chat"
 
-        fun createIntent(context: Context, person: Person, chatId: String): Intent {
+        fun createIntent(context: Context, chat: Chat, chatId: String): Intent {
             return Intent(context, ChatActivity::class.java)
-                .putExtra(EXTRA_PERSON, person)
+                .putExtra(EXTRA_CHAT, chat)
                 .putExtra("CHAT_ID", chatId)
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        val person: Person = intent.getParcelableExtra(EXTRA_PERSON)
-            ?: throw IllegalArgumentException("Person must be provided")
+        val chat: Chat = intent.getParcelableExtra(EXTRA_CHAT)
+            ?: throw IllegalArgumentException("Chat must be provided")
 
-        title = person.name
+        title = chat.senderName // Assuming `Chat` has a `senderName` property
         val toolbar: Toolbar = findViewById(R.id.toolbarChat)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -76,7 +75,6 @@ class ChatActivity : AppCompatActivity() {
         val sortedIds = listOf(currentUserId, recipientId).sorted()
         return sortedIds.joinToString("_")
     }
-
 
     private fun sendMessage() {
         val messageText = editTextMessage.text.toString()
@@ -110,10 +108,6 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-
     private fun listenForMessages() {
         val currentUser = FirebaseAuth.getInstance().currentUser ?: return
         val currentUserId = currentUser.uid
@@ -138,9 +132,6 @@ class ChatActivity : AppCompatActivity() {
                 recyclerView.scrollToPosition(messageList.size - 1)
             }
     }
-
-
-
 
     override fun onDestroy() {
         super.onDestroy()

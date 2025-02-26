@@ -7,6 +7,6 @@ import android.os.Parcelable
 @Parcelize
 data class Person(
     val name: String,
-    val uid: String
+    val uid: String,
 ) : Parcelable
 
