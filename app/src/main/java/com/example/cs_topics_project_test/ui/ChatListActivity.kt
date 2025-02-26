@@ -199,7 +199,7 @@ class ChatListActivity : AppCompatActivity() {
 
                         // Navigate to the new chat
                         val intent = ChatActivity.createIntent(this, Chat(chatId, "Sender", "Recipient"), chatId)
-                        startActivity(intent)
+                        //startActivity(intent)
                     }
                     .addOnFailureListener {
                         Toast.makeText(this, "Failed to create chat", Toast.LENGTH_SHORT).show()

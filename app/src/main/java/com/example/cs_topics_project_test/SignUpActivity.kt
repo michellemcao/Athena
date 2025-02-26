@@ -78,7 +78,7 @@ class SignUpActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 Toast.makeText(this, "User added to Firestore", Toast.LENGTH_SHORT).show()
                 // Optionally, you can navigate to another activity, e.g., main screen
-                startActivity(Intent(this, SignInActivity::class.java))
+                //startActivity(Intent(this, SignInActivity::class.java))
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(this, "Failed to add user to Firestore: ${exception.message}", Toast.LENGTH_SHORT).show()

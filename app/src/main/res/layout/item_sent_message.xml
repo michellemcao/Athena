@@ -10,18 +10,21 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/sent_message_background"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:gravity="end"
         android:layout_gravity="end"
+        android:padding="8dp"
         >
 
         <TextView
             android:id="@+id/messageText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="4dp"
+            android:layout_marginEnd="8dp"
             android:breakStrategy="simple"
             android:ellipsize="none"
-            android:lineSpacingExtra="0dp"
+            android:lineSpacingExtra="2dp"
             android:maxWidth="240dp"
             android:padding="6dp"
             android:scrollHorizontally="false"
