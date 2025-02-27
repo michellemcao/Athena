@@ -3,6 +3,7 @@ package com.example.cs_topics_project_test.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,103 +12,138 @@ import android.widget.EditText
 import android.widget.ImageView
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.ui.ui.chat.MessageAdapter
-import com.example.cs_topics_project_test.ui.chat.Person
+import com.example.cs_topics_project_test.ui.ui.chat.Chat
 import com.example.cs_topics_project_test.ui.ui.chat.Message
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.*
 
 class ChatActivity : AppCompatActivity() {
 
-
-
-
-    companion object {
-        private const val EXTRA_PERSON = "extra_person"
-
-        // Factory method to create an intent for ChatActivity with a Person object
-        fun createIntent(context: Context, person: Person): Intent {
-            return Intent(context, ChatActivity::class.java).apply {
-                putExtra(EXTRA_PERSON, person)
-            }
-        }
-    }
-
-    // Declare views and variables
+    private lateinit var chatId: String
     private lateinit var recyclerView: RecyclerView
     private lateinit var editTextMessage: EditText
     private lateinit var sendButton: ImageView
     private lateinit var messageAdapter: MessageAdapter
-    private var messageList: MutableList<Message> = mutableListOf()
+    private val messageList = mutableListOf<Message>()
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var chatListener: ListenerRegistration? = null
+
+    companion object {
+        private const val EXTRA_CHAT = "extra_chat"
+
+        fun createIntent(context: Context, chat: Chat, chatId: String): Intent {
+            return Intent(context, ChatActivity::class.java)
+                .putExtra(EXTRA_CHAT, chat)
+                .putExtra("CHAT_ID", chatId)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        val recyclerViewMessages: RecyclerView = findViewById(R.id.recyclerViewMessages)
-        val spacing = resources.getDimensionPixelSize(R.dimen.message_spacing)
+        val chat: Chat = intent.getParcelableExtra(EXTRA_CHAT)
+            ?: throw IllegalArgumentException("Chat must be provided")
 
-        recyclerViewMessages.addItemDecoration(MessageAdapter.MessageSpacingDecoration(spacing))
+        title = chat.senderName // Assuming `Chat` has a `senderName` property
+        val toolbar: Toolbar = findViewById(R.id.toolbarChat)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // Retrieve the Person object passed via intent
-        val person: Person? = intent.getParcelableExtra(EXTRA_PERSON)
+        recyclerView = findViewById(R.id.recyclerViewMessages)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        messageAdapter = MessageAdapter(messageList)
+        recyclerView.adapter = messageAdapter
 
-        person?.let {
-            // Set the title to the person's name
-            setTitle(it.name)
+        editTextMessage = findViewById(R.id.editTextMessage)
+        sendButton = findViewById(R.id.sendButton)
 
-            // Set up the toolbar and enable the back button
-            val toolbar: Toolbar = findViewById(R.id.toolbarChat)
-            setSupportActionBar(toolbar)
+        chatId = intent.getStringExtra("CHAT_ID")
+            ?: throw IllegalArgumentException("Chat ID must be provided")
+        listenForMessages()
 
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setDisplayShowHomeEnabled(true)
-
-            // Setup RecyclerView for messages
-            recyclerView = findViewById(R.id.recyclerViewMessages)
-            recyclerView.layoutManager = LinearLayoutManager(this) // No reverse layout, messages appear from top to bottom
-            // recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)  // Reverse layout
-            messageAdapter = MessageAdapter(messageList)
-            recyclerView.adapter = messageAdapter
-
-            // Scroll to the bottom when the screen is first loaded
-
-            recyclerView.scrollToPosition(messageList.size - 1)
-
-            // Setup message input views
-            editTextMessage = findViewById(R.id.editTextMessage)
-            sendButton = findViewById(R.id.sendButton)
-
-            // Setup send button click listener
-            sendButton.setOnClickListener {
-                val messageText = editTextMessage.text.toString()
-                if (messageText.isNotEmpty()) {
-                    val newMessage = Message(
-                        sender = "You", // Update with dynamic sender name
-                        content = messageText,
-                        timestamp = System.currentTimeMillis().toString(),
-                        messageType = Message.MessageType.SENT
-                    )
-                    messageList.add(newMessage)
-                    messageAdapter.notifyItemInserted(messageList.size - 1)
-                    recyclerView.scrollToPosition(messageList.size - 1) // Scroll to the latest message
-                    editTextMessage.text.clear()
-                }
-            }
-
-        } ?: throw IllegalArgumentException("Person must be provided")
-
+        sendButton.setOnClickListener { sendMessage() }
     }
 
-    // Handle the back button press in the toolbar
-    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
-                true
+    private fun generateChatId(recipientId: String): String {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+            ?: throw IllegalStateException("User must be logged in")
+
+        val currentUserId = currentUser.uid
+
+        // Generate a consistent chatId using a lexicographical order (sort ids alphabetically)
+        val sortedIds = listOf(currentUserId, recipientId).sorted()
+        return sortedIds.joinToString("_")
+    }
+
+    private fun sendMessage() {
+        val messageText = editTextMessage.text.toString()
+        if (messageText.isEmpty()) return
+
+        val currentUser = FirebaseAuth.getInstance().currentUser
+            ?: throw IllegalStateException("User must be logged in")
+
+        val newMessage = hashMapOf(
+            "senderId" to currentUser.uid,
+            "text" to messageText,
+            "timestamp" to System.currentTimeMillis()
+        )
+
+        // Log to verify chatId
+        Log.d("ChatActivity", "Sending message in chat with chatId: $chatId")
+
+        // Use the passed chatId to fetch the correct chat document
+        val chatRef = db.collection("chats").document(chatId)
+
+        chatRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                // Chat exists, add the message
+                chatRef.collection("messages").add(newMessage)
+                editTextMessage.setText("") // Clear the message field
+            } else {
+                Log.e("ChatActivity", "Chat document does not exist for chatId: $chatId")
             }
-            else -> super.onOptionsItemSelected(item)
+        }.addOnFailureListener { exception ->
+            Log.e("ChatActivity", "Error fetching chat document", exception)
         }
     }
 
+    private fun listenForMessages() {
+        val currentUser = FirebaseAuth.getInstance().currentUser ?: return
+        val currentUserId = currentUser.uid
 
+        chatListener = db.collection("chats").document(chatId).collection("messages")
+            .orderBy("timestamp", Query.Direction.ASCENDING)
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) return@addSnapshotListener
 
+                messageList.clear()
+                snapshots?.documents?.mapNotNullTo(messageList) { doc ->
+                    val senderId = doc.getString("senderId") ?: return@mapNotNullTo null
+                    val text = doc.getString("text") ?: return@mapNotNullTo null
+                    val timestamp = doc.getLong("timestamp")?.toString() ?: return@mapNotNullTo null
+
+                    val messageType = if (senderId == currentUserId) Message.MessageType.SENT else Message.MessageType.RECEIVED
+
+                    Message(senderId, text, timestamp, messageType)
+                }
+
+                messageAdapter.notifyDataSetChanged()
+                recyclerView.scrollToPosition(messageList.size - 1)
+            }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        chatListener?.remove()
+    }
+
+    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
+        return if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
 }
-

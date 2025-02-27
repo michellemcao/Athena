@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.example.cs_topics_project_test"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.cs_topics_project_test"
@@ -52,14 +52,24 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.kotlin.stdlib)
-    implementation(libs.androidx.core.ktx.v190)
+    implementation(libs.androidx.core.ktx.v210)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.constraintlayout.v220) // do we need line 53-57
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.runtime.android)
+    implementation(libs.androidx.material3.android)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.annotation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.play.services.auth)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.material)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.ui.tooling.preview)
 }
