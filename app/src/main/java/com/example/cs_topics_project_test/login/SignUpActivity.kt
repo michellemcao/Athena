@@ -1,9 +1,10 @@
-package com.example.cs_topics_project_test
+package com.example.cs_topics_project_test.login
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.Navigation
 import com.example.cs_topics_project_test.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -34,6 +35,10 @@ class SignUpActivity : AppCompatActivity() {
 
                     firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener {
                         if (it.isSuccessful) {
+                            // send email verification
+                            firebaseAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener {
+                                    Toast.makeText(this, "Please verify your email address", Toast.LENGTH_SHORT).show()
+                            }
                             // redirect to sign in page
                             startActivity(
                                 Intent(this, SignInActivity::class.java)
@@ -50,6 +55,7 @@ class SignUpActivity : AppCompatActivity() {
                 Toast.makeText(this, "Empty fields are not allowed", Toast.LENGTH_SHORT).show()
 
             }
+
         }
     }
 }

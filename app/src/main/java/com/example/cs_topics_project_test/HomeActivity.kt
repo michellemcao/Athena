@@ -16,13 +16,18 @@ import com.example.cs_topics_project_test.databinding.ActivityMainBinding
 import androidx.core.content.ContextCompat
 import android.content.Intent
 import com.example.cs_topics_project_test.task.TaskDataStructure
+import android.widget.TextView
+import com.example.cs_topics_project_test.login.SignInActivity
 import com.example.cs_topics_project_test.ui.ChatListActivity
+import com.example.cs_topics_project_test.ui.UserSettings
+import com.google.firebase.auth.FirebaseAuth
 
 class HomeActivity : AppCompatActivity() {
 
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private lateinit var firebaseAuth: FirebaseAuth
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,14 +60,26 @@ class HomeActivity : AppCompatActivity() {
         // leads to a fragment in content_main.xml that leads to the navigation set-up in mobile_navigation
 
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.nav_home, R.id.nav_calendar, R.id.nav_tasks),
+            setOf(R.id.nav_home, R.id.nav_calendar, R.id.nav_tasks, R.id.user_settings),
             drawerLayout
         )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        // TODO fix the settings page
+        /*navView.getMenu().findItem(R.id.user_settings).setOnMenuItemClickListener ({ menuItem ->
+            startActivity(Intent(this, UserSettings::class.java))
+            true
+        })
+        */
 
+        // signs user out of account when sign out button clicked
+        navView.getMenu().findItem(R.id.signOutButton).setOnMenuItemClickListener ({ menuItem ->
+            FirebaseAuth.getInstance().signOut()
+            startActivity(Intent(this, SignInActivity::class.java))
+            true
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

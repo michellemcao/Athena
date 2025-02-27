@@ -26,5 +26,15 @@
             android:id="@+id/nav_tasks"
             android:icon="@drawable/ic_menu_tasks"
             android:title="@string/menu_tasks" />
+        <item
+            android:id="@+id/user_settings"
+            android:icon="@drawable/baseline_settings_24"
+            android:title="@string/user_settings" />
+        <item
+            android:id="@+id/signOutButton"
+            android:icon="@drawable/baseline_exit_to_app_24"
+            android:title="@string/sign_out_button" />
+
+
     </group>
 </menu>
