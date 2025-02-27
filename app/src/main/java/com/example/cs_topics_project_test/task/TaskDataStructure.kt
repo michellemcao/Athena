@@ -102,7 +102,7 @@ object TaskDataStructure {
 
     fun rangeDateTasks(date : Date) : MutableList<Task> {
         return rangeList(
-            DateAndTime(date, Time(0, 0, false)), true,
+            DateAndTime(date, Time(12, 0, false)), true,
             DateAndTime(date, Time(11, 59, true)), true)
     }
 

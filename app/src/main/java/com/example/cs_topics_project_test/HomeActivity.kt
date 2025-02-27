@@ -28,7 +28,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        TaskDataStructure.cleanUpTasks()
+        // TaskDataStructure.cleanUpTasks()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

@@ -39,9 +39,9 @@ class TaskActivity : AppCompatActivity() {
         val textViewTime: TextView = findViewById(R.id.textViewTime) // the task due time
         val buttonBack: Button = findViewById(R.id.buttonBack) // to go back to TaskFragment page
 
-        // egregious date and time values to make sure the change actually happens
-        var dueDate: Date? = null
-        var dueTime: Time? = null
+        // default date and time values to make sure the change actually happens
+        var dueDate = TaskManager.todayDate
+        var dueTime = Time(12, 0, true) // 12:00 PM or noon
 
         // setting up recyclerView
         recyclerViewTasks.adapter = taskAdapter
@@ -50,30 +50,26 @@ class TaskActivity : AppCompatActivity() {
         // adding tasks
         buttonAddTask.setOnClickListener {
             val taskName = editTextTaskName.text.toString()
-            val taskDescription = editTextTaskDescription.text.toString()
-            if (taskName.isNotBlank() && taskDescription.isNotBlank()) {
-                if (dueDate == null || dueTime == null) {
+            var taskDescription = editTextTaskDescription.text.toString()
+            if (taskName.isNotBlank()) { // && taskDescription.isNotBlank()) {
+                /*if (dueDate == null || dueTime == null) {
                     Toast.makeText(this, "Set a due date & time for better user experience!", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
-                }
-                val task = Task(
-                    taskName,
-                    taskDescription,
-                    dueDate!!,
-                    dueTime!!
-                )
+                }*/
+                if (taskDescription.isEmpty()) taskDescription = ""
+                val task = Task(taskName, taskDescription, dueDate, dueTime)
                 Toast.makeText(this, "Adding task: $taskName to local", Toast.LENGTH_SHORT).show()
                 localTasks.add(task)
 
                 // TaskManager.tasks.add(task) // previous TaskManager
                 val added: Boolean = TaskDataStructure.addTask(
-                    DateAndTime(dueDate!!, dueTime!!),
+                    DateAndTime(dueDate, dueTime),
                     TaskDetail(taskName, taskDescription)) // for storage w/ Firebase
 
                 // for viewing in app real-time
                 if (added) {
-                    if (dueDate!! < TaskManager.todayDate) TaskManager.tasksPastDue.add(task)
-                    else if (dueDate!! > TaskManager.todayDate) TaskManager.tasksDueLater.add(task)
+                    if (dueDate < TaskManager.todayDate) TaskManager.tasksPastDue.add(task)
+                    else if (dueDate > TaskManager.todayDate) TaskManager.tasksDueLater.add(task)
                     else TaskManager.tasksDueToday.add(task)
                 }
 
@@ -87,8 +83,8 @@ class TaskActivity : AppCompatActivity() {
                 editTextTaskDescription.text.clear()
                 textViewDate.text = "Select due date"
                 textViewTime.text = "Select due time"
-                dueDate = null
-                dueTime = null
+                dueDate = TaskManager.todayDate
+                dueTime = Time(12, 0, true)
 
             } else {
                 Toast.makeText(this, "Oops! Required field is blank.", Toast.LENGTH_SHORT).show()
