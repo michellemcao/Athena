@@ -15,7 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.cs_topics_project_test.databinding.ActivityMainBinding
 import androidx.core.content.ContextCompat
 import android.content.Intent
+import android.widget.TextView
 import com.example.cs_topics_project_test.ui.ChatListActivity
+import kotlin.random.Random
 
 class HomeActivity : AppCompatActivity() {
 
@@ -59,6 +61,8 @@ class HomeActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
 
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -70,4 +74,5 @@ class HomeActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
 }
