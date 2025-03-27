@@ -5,10 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:onClick="onClick"
-    tools:context=".MainActivity">
+    tools:context=".ui.home.HomeFragment">
+
+
+
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/bt"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#D98EAA"
@@ -17,7 +20,7 @@
         android:fontFamily="sans-serif"
         android:keepScreenOn="true"
         android:longClickable="true"
-        android:text="press here"
+        android:text="press here to change"
         android:textSize="8sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="@id/textView3"
@@ -25,7 +28,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/view6"
         app:layout_constraintTop_toTopOf="@+id/view6"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0"
+        tools:onClick="onClick" />
 
     <View
         android:id="@+id/view2"
@@ -54,7 +58,7 @@
         android:backgroundTint="#E6A4BB"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view"
         app:layout_constraintVertical_bias="1.0" />
@@ -108,7 +112,7 @@
         app:layout_constraintTop_toTopOf="@+id/view2" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/tv6"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
