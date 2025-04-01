@@ -26,6 +26,8 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
+
+
     ): View {
         val homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -38,6 +40,13 @@ class HomeFragment : Fragment() {
             textView.text = it
         }*/
         return root
+        /*
+        binding.bt.setOnClickListener {
+            // Handle the click event here
+            onClick()
+        }*/
+
+
     }
 
     override fun onDestroyView() {
@@ -54,7 +63,8 @@ class HomeFragment : Fragment() {
         "What do you call a pig who knows how to use a knife?")
     //fun onClick(view: android.view.View){}
 
-    fun onClick(view: View) {
+
+    public final fun onClick(view: View) {
         val myRandomInt = Random.nextInt(list.size)
         //val tv : TextView=findViewById(R.id.tv6)
         val t: TextView = view.findViewById(R.id.tv6)
