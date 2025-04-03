@@ -92,3 +92,5 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 }
+
+// TODO maybe use linear layouts to keep centered
