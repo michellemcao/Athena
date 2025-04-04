@@ -3,4 +3,22 @@
     <item android:id="@+id/sortByNameDescending" android:title="By Task Name Z-A" />
     <item android:id="@+id/sortByDueDateAscending" android:title="By Due Date 0-9" />
     <item android:id="@+id/sortByDueDateDescending" android:title="By Due Date 9-0" />
+
+
+    <!-- res/menu/sort_menu.xml -->
+
+    <item
+        android:id="@+id/sortByTitleAscending"
+        android:title="Sort by Title (Ascending)" />
+    <item
+        android:id="@+id/sortByTitleDescending"
+        android:title="Sort by Title (Descending)" />
+    <item
+        android:id="@+id/sortByCreationDateAscending"
+        android:title="Sort by Creation Date (Ascending)" />
+    <item
+        android:id="@+id/sortByCreationDateDescending"
+        android:title="Sort by Creation Date (Descending)" />
+
+
 </menu>
