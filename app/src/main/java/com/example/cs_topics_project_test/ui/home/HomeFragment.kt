@@ -28,6 +28,8 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
 
 
+
+
     ): View {
         val homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -47,6 +49,7 @@ class HomeFragment : Fragment() {
         }*/
 
 
+
     }
 
     override fun onDestroyView() {
@@ -64,14 +67,26 @@ class HomeFragment : Fragment() {
     //fun onClick(view: android.view.View){}
 
 
-    public final fun onClick(view: View) {
-        val myRandomInt = Random.nextInt(list.size)
+
+    fun onClick(view: View) {
+
         //val tv : TextView=findViewById(R.id.tv6)
-        val t: TextView = view.findViewById(R.id.tv6)
+
         //t.text = list[myRandomInt].toString()
-        t.text = list[myRandomInt]
+
         //var b: Button = findViewById<Button>(R.id.bt)
         //t.text = list[myRandomInt].toString()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val b : Button=view.findViewById(R.id.bt)
+
+        val t: TextView = view.findViewById(R.id.tv6)
+        b.setOnClickListener {
+            val myRandomInt = Random.nextInt(list.size)
+            t.text = list[myRandomInt]
+        }
     }
 
 
