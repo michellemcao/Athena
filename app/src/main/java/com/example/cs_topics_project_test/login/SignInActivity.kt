@@ -1,9 +1,7 @@
 package com.example.cs_topics_project_test.login
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Email
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -12,6 +10,7 @@ import com.example.cs_topics_project_test.HomeActivity
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.databinding.ActivitySignInBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.userProfileChangeRequest
 import org.w3c.dom.Text
 
 class SignInActivity : AppCompatActivity() {
@@ -19,7 +18,6 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
     private lateinit var firebaseAuth: FirebaseAuth
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -46,7 +44,24 @@ class SignInActivity : AppCompatActivity() {
                         val user = firebaseAuth.currentUser
                         if (user != null && user.isEmailVerified) { // goes to home activity if user successfully sign in and verified
                         Toast.makeText(this, "Sign In Successful. ", Toast.LENGTH_SHORT).show()
-                             startActivity(Intent(this, HomeActivity::class.java)) }
+                            // TODO if sign in successful, go to page to put name/username, store to firebase
+                            setContentView(R.layout.signin_userinfo)
+                            findViewById<Button>(R.id.userinfo_button).setOnClickListener {
+                                // if all fields are filled out
+                                if (findViewById<TextView>(R.id.firstname).text.toString().isNotEmpty() && findViewById<TextView>(R.id.lastname).text.toString().isNotEmpty() && findViewById<TextView>(R.id.setusername).text.toString().isNotEmpty()) {
+                                    val profileUpdates = userProfileChangeRequest {
+                                        displayName = findViewById<TextView>(R.id.firstname).text.toString()
+                                        // TODO add username
+                                    }
+                                    user!!.updateProfile(profileUpdates).addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            Toast.makeText(this, "Account Details Set", Toast.LENGTH_SHORT).show()
+                                            startActivity(Intent(this, HomeActivity::class.java))
+                                        }
+                                    }
+                                     }
+                                }
+                            }
                         else {
                             // if user not verified
                             Toast.makeText(this, "Account not yet verified", Toast.LENGTH_SHORT).show()
@@ -63,6 +78,7 @@ class SignInActivity : AppCompatActivity() {
 
         // forgot password
         // TODO check that they have an email in firebase, check if currentuser does this
+        // TODO error, keeps saying to put email when email box filled 
         binding.forgotpwButton.setOnClickListener {
             // redirect to forgot password page
             setContentView(R.layout.forgot_pw)
