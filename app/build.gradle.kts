@@ -1,3 +1,5 @@
+//import androidx.room.compiler.processing.util.compiler.compile
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -16,9 +18,12 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+        multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
+
 
     buildTypes {
         release {
@@ -58,6 +63,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout.v220) // do we need line 53-57
     implementation(libs.firebase.auth)
     implementation(libs.firebase.auth.ktx)
+    implementation("com.github.AnyChart:AnyChart-Android:1.1.2")
+    implementation(libs.androidx.room.compiler.processing.testing)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

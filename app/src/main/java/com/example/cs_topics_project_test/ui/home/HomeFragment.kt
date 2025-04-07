@@ -14,6 +14,7 @@ import kotlin.random.Random
 import android.widget.Button
 //import android.os.Build.VERSION_CODES.R
 
+
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -64,19 +65,6 @@ class HomeFragment : Fragment() {
         "Why is so great about Switzerland?",
         "Why did the pony need a drink of water?",
         "What do you call a pig who knows how to use a knife?")
-    //fun onClick(view: android.view.View){}
-
-
-
-    fun onClick(view: View) {
-
-        //val tv : TextView=findViewById(R.id.tv6)
-
-        //t.text = list[myRandomInt].toString()
-
-        //var b: Button = findViewById<Button>(R.id.bt)
-        //t.text = list[myRandomInt].toString()
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

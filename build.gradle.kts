@@ -6,3 +6,9 @@ plugins {
     //alias(libs.plugins.jetbrains.kotlin.android) apply false
 
 }
+
+allprojects {
+    repositories {
+        maven { url = uri("https://www.jitpack.io")}
+    }
+}
