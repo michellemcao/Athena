@@ -92,21 +92,18 @@ class ChatActivity : AppCompatActivity() {
         // Log to verify chatId
         Log.d("ChatActivity", "Sending message in chat with chatId: $chatId")
 
-        // Use the passed chatId to fetch the correct chat document
-        val chatRef = db.collection("chats").document(chatId)
-
-        chatRef.get().addOnSuccessListener { document ->
-            if (document.exists()) {
-                // Chat exists, add the message
-                chatRef.collection("messages").add(newMessage)
+        // Directly write to the subcollection (no need to check if the doc exists)
+        db.collection("chats").document(chatId)
+            .collection("messages")
+            .add(newMessage)
+            .addOnSuccessListener {
                 editTextMessage.setText("") // Clear the message field
-            } else {
-                Log.e("ChatActivity", "Chat document does not exist for chatId: $chatId")
             }
-        }.addOnFailureListener { exception ->
-            Log.e("ChatActivity", "Error fetching chat document", exception)
-        }
+            .addOnFailureListener { exception ->
+                Log.e("ChatActivity", "Error sending message", exception)
+            }
     }
+
 
     private fun listenForMessages() {
         val currentUser = FirebaseAuth.getInstance().currentUser ?: return

@@ -58,69 +58,44 @@ class ChatListActivity : AppCompatActivity() {
     }
 
     private fun fetchChats() {
-        db.collection("chats")
-            .addSnapshotListener { snapshots, error ->
-                if (error != null) {
-                    Log.e("ChatListActivity", "Error fetching chats", error)
-                    return@addSnapshotListener
-                }
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val userChatsRef = db.collection("users").document(currentUserUid).collection("chats")
 
-                if (snapshots != null) {
-                    val newChatList = mutableListOf<Chat>() // Use Chat instead of Person
-                    val chatDocuments = snapshots.documents
+        userChatsRef.addSnapshotListener { snapshots, error ->
+            if (error != null) {
+                Log.e("ChatListActivity", "Error fetching user chats", error)
+                return@addSnapshotListener
+            }
 
-                    Log.d("FetchChats", "Fetched ${chatDocuments.size} chats from Firestore")
+            if (snapshots != null) {
+                val newChatList = mutableListOf<Chat>()
 
-                    for (doc in chatDocuments) {
-                        val chatId = doc.getString("cid") ?: ""
-                        val senderId = doc.getString("senderID")
-                        val recipientId = doc.getString("recipientID")
+                for (doc in snapshots.documents) {
+                    val chatId = doc.id
+                    val recipientId = doc.getString("recipientID") ?: continue
 
-                        // Check if senderID and recipientID are valid
-                        if (senderId.isNullOrBlank() || recipientId.isNullOrBlank()) {
-                            Log.e("FetchChats", "Invalid chat data: senderID or recipientID missing for chatId: $chatId")
-                            continue
+                    db.collection("users").document(recipientId).get()
+                        .addOnSuccessListener { recipientDoc ->
+                            val recipientName = recipientDoc.getString("name") ?: "Unknown"
+                            val senderName = "You" // Optional: or pull from current user profile
+
+                            val chat = Chat(chatId, senderName, recipientName)
+                            newChatList.add(chat)
+
+                            if (newChatList.size == snapshots.size()) {
+                                chatList.clear()
+                                chatList.addAll(newChatList)
+                                adapter.notifyDataSetChanged()
+                            }
                         }
-
-                        Log.d("FetchChats", "Processing chat $chatId: sender=$senderId, recipient=$recipientId")
-
-                        // Fetch sender name
-                        db.collection("users").document(senderId).get()
-                            .addOnSuccessListener { senderDoc ->
-                                val senderName = senderDoc.getString("name") ?: "Unknown Sender"
-
-                                // Fetch recipient name
-                                db.collection("users").document(recipientId).get()
-                                    .addOnSuccessListener { recipientDoc ->
-                                        val recipientName = recipientDoc.getString("name") ?: "Unknown Recipient"
-
-                                        // Create a new Chat object and add it to the list
-                                        val chat = Chat(chatId, senderName, recipientName)
-                                        newChatList.add(chat)
-
-                                        // Log to verify if newChatList is properly populated
-                                        Log.d("FetchChats", "Current chat list size: ${newChatList.size}")
-
-                                        // Update UI after all documents are processed
-                                        if (newChatList.size == chatDocuments.size) {
-                                            Log.d("FetchChats", "Final chat list size: ${newChatList.size}")
-                                            chatList.clear()
-                                            chatList.addAll(newChatList)
-                                            adapter.notifyDataSetChanged()
-                                            Log.d("FetchChats", "Chat list updated successfully")
-                                        }
-                                    }
-                                    .addOnFailureListener { e ->
-                                        Log.e("FetchChats", "Error fetching recipient name", e)
-                                    }
-                            }
-                            .addOnFailureListener { e ->
-                                Log.e("FetchChats", "Error fetching sender name", e)
-                            }
-                    }
+                        .addOnFailureListener { e ->
+                            Log.e("ChatListActivity", "Failed to get recipient info", e)
+                        }
                 }
             }
+        }
     }
+
 
     private fun showCreateChatDialog() {
         val builder = AlertDialog.Builder(this)
@@ -170,45 +145,39 @@ class ChatListActivity : AppCompatActivity() {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val chatId = listOf(currentUserUid, recipientUid).sorted().joinToString("_")
 
-        val chatDocRef = db.collection("chats").document(chatId)
+        val chatData = hashMapOf(
+            "recipientID" to recipientUid,
+            "timestamp" to System.currentTimeMillis(),
+            "chatId" to chatId // ✅ Add chatId field
+        )
 
-        chatDocRef.get().addOnSuccessListener { document ->
-            if (document.exists()) {
-                // Chat already exists, navigate to it
-                val intent = ChatActivity.createIntent(this, Chat(chatId, "Sender", "Recipient"), chatId)
-                startActivity(intent)
-            } else {
-                // Chat does not exist, create a new one
-                val chatData = hashMapOf(
-                    "cid" to chatId,
-                    "senderID" to currentUserUid,
-                    "recipientID" to recipientUid,
+        val reverseChatData = hashMapOf(
+            "recipientID" to currentUserUid,
+            "timestamp" to System.currentTimeMillis(),
+            "chatId" to chatId // ✅ Add chatId field
+        )
+
+        val userChatsRef = db.collection("users").document(currentUserUid).collection("chats").document(chatId)
+        val recipientChatsRef = db.collection("users").document(recipientUid).collection("chats").document(chatId)
+
+        userChatsRef.set(chatData)
+        recipientChatsRef.set(reverseChatData)
+
+        // Initialize the chat in the main 'chats' collection (optional)
+        db.collection("chats").document(chatId).collection("messages")
+            .add(
+                mapOf(
+                    "sender" to "system",
+                    "message" to "Chat started",
                     "timestamp" to System.currentTimeMillis()
                 )
+            )
 
-                chatDocRef.set(chatData)
-                    .addOnSuccessListener {
-                        // Initialize message collection
-                        chatDocRef.collection("messages").add(
-                            hashMapOf(
-                                "sender" to "system",
-                                "message" to "Chat created.",
-                                "timestamp" to System.currentTimeMillis()
-                            )
-                        )
-
-                        // Navigate to the new chat
-                        val intent = ChatActivity.createIntent(this, Chat(chatId, "Sender", "Recipient"), chatId)
-                        //startActivity(intent)
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "Failed to create chat", Toast.LENGTH_SHORT).show()
-                    }
-            }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Error checking chat existence", Toast.LENGTH_SHORT).show()
-        }
+        // Navigate to chat screen
+        val intent = ChatActivity.createIntent(this, Chat(chatId, "You", "Recipient"), chatId)
+        startActivity(intent)
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
