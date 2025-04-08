@@ -46,6 +46,18 @@ object TaskManager {
                 DateAndTime(todayDate, midnight), false)
         }
     }
+
+    fun init() {
+        tasksDueToday = TaskDataStructure.rangeList(
+            DateAndTime(todayDate, midnight), true,
+            DateAndTime(todayDate, latenight), true)
+
+        tasksDueLater = TaskDataStructure.rangeListFrom(
+            DateAndTime(todayDate, latenight), false)
+
+        tasksPastDue = TaskDataStructure.rangeListTo(
+            DateAndTime(todayDate, midnight), false)
+    }
     /*private fun getTodayDate() : Date {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)

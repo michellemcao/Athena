@@ -44,6 +44,7 @@ class TaskFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // inflate layout for task view
+        TaskManager.init()
         return inflater.inflate(R.layout.fragment_task_upgrade, container, false)
     }
 

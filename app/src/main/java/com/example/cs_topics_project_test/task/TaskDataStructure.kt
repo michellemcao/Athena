@@ -5,13 +5,16 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import java.time.LocalDateTime
 import com.example.cs_topics_project_test.function.DateAndTime
 import com.example.cs_topics_project_test.function.Date
 import com.example.cs_topics_project_test.function.DateCompleted
 import com.example.cs_topics_project_test.function.Time
+import java.time.Instant
 import com.example.cs_topics_project_test.task.TaskDataStructure.TaskNode
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import java.time.ZoneId
 import java.util.NavigableMap
 import java.util.TreeMap
 
@@ -187,6 +190,7 @@ object TaskDataStructure {
         return taskList
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun initializeDatabase() {
         val db = FirebaseFirestore.getInstance()
         val taskCollection = db.collection("users")
@@ -194,7 +198,6 @@ object TaskDataStructure {
             .collection("taskList")
 
         loadTasksFromDatabase(taskCollection)
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -205,21 +208,36 @@ object TaskDataStructure {
                 // private val taskMap = TreeMap<DateAndTime, TaskNode>()
                 for (document in result.documents) {
                     val storedTask = document.toObject(TaskStore::class.java)
-                    // val taskId = document.id
-                    val key = 0
-                    val value = TaskDetail(storedTask!!.taskName, storedTask.taskDescription)
-                    if (task != null) {
-                        taskMap[taskId] = task
-                    }
+
+                    val key = convertUnix(storedTask!!)
+                    val value = TaskDetail(storedTask.taskName, storedTask.taskDescription)
+
+                    addTask(key, value)
                 }
-                onResult(taskMap)
+                // onResult(taskMap)
             }
             .addOnFailureListener { e ->
                 Log.w("Firestore", "Error getting tasks", e)
-                onResult(TreeMap()) // return empty TreeMap on failure
+                // onResult(TreeMap()) // return empty TreeMap on failure
             }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun convertUnix(storedTask : TaskStore): DateAndTime {
+        val unixSeconds = storedTask.dueDateAndTime // Unix timestamp (in seconds)
+        val userZoneId = ZoneId.systemDefault() // system time zone
+        val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(unixSeconds), userZoneId)
+
+        val date = Date(dateTime.year, dateTime.monthValue, dateTime.dayOfMonth)
+        var hour = dateTime.hour
+        var isPM = false
+        if (hour > 12) {
+            hour -= 12
+            isPM = true
+        }
+        val time = Time(hour, dateTime.minute, isPM)
+        return DateAndTime(date, time)
+    }
     /*fun saveToDatabase() {
         val user = auth.currentUser
         if (user != null) {
@@ -267,7 +285,7 @@ object TaskDataStructure {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun addTask(task : Task) {
+    fun storeTask(task : Task) {
         val db = FirebaseFirestore.getInstance()
         val taskCollection = db.collection("users")
             .document(userId!!.uid)

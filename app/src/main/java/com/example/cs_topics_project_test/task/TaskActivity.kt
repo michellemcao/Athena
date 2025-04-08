@@ -2,11 +2,13 @@ package com.example.cs_topics_project_test.task
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +25,7 @@ class TaskActivity : AppCompatActivity() {
     private val localTasks = mutableListOf<Task>() // local tasks
     private var tCount = 0 // number of tasks in local task list
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task)
@@ -68,6 +71,7 @@ class TaskActivity : AppCompatActivity() {
 
                 // for viewing in app real-time
                 if (added) {
+                    TaskDataStructure.storeTask(task)
                     if (dueDate < TaskManager.todayDate) TaskManager.tasksPastDue.add(task)
                     else if (dueDate > TaskManager.todayDate) TaskManager.tasksDueLater.add(task)
                     else TaskManager.tasksDueToday.add(task)
@@ -108,7 +112,7 @@ class TaskActivity : AppCompatActivity() {
         }
 
         buttonBack.setOnClickListener {
-            TaskDataStructure.storeAllTasks()
+            // TaskDataStructure.storeAllTasks()
             finish()
             //startActivity(Intent(this, TaskView::class.java)) // change to go to previous slide, not to Home
         }

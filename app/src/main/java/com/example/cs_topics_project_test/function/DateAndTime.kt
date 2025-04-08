@@ -3,6 +3,7 @@ package com.example.cs_topics_project_test.function
 import android.os.Build
 import androidx.annotation.RequiresApi
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 
 data class DateAndTime(private val date : Date, private val time : Time) : Comparable<DateAndTime> {
@@ -22,7 +23,13 @@ data class DateAndTime(private val date : Date, private val time : Time) : Compa
         var hour = time.getHour()
         if (time.isPM()) hour += 12
         val dateTime = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDate(), hour, time.getMin())
-        val unixTime = dateTime.toEpochSecond(ZoneOffset.ofHours(-7)) // or use ZoneOffset.ofHours(x)
+
+        val userZoneId = ZoneId.systemDefault() // gets user's current time zone
+
+        val unixTime = dateTime.atZone(userZoneId).toEpochSecond() // converted using user's zone
+
+        // val dateTime = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDate(), hour, time.getMin())
+        // val unixTime = dateTime.toEpochSecond(ZoneOffset.ofHours(-7)) // or use ZoneOffset.ofHours(x)
         return unixTime
     }
 

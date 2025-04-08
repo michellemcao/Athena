@@ -1,11 +1,15 @@
 package com.example.cs_topics_project_test.login
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.cs_topics_project_test.HomeActivity
 import com.example.cs_topics_project_test.databinding.ActivitySignInBinding
+import com.example.cs_topics_project_test.task.TaskDataStructure
+import com.example.cs_topics_project_test.task.TaskManager
 import com.google.firebase.auth.FirebaseAuth
 
 class SignInActivity : AppCompatActivity() {
@@ -13,6 +17,7 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
     private lateinit var firebaseAuth: FirebaseAuth
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,8 +43,10 @@ class SignInActivity : AppCompatActivity() {
                     if (it.isSuccessful) {
                         val user = firebaseAuth.currentUser
                         if (user != null && user.isEmailVerified) { // goes to home activity if user successfully sign in and verified
-                        Toast.makeText(this, "Sign In Successful. ", Toast.LENGTH_SHORT).show()
-                             startActivity(Intent(this, HomeActivity::class.java)) }
+                            Toast.makeText(this, "Sign In Successful. ", Toast.LENGTH_SHORT).show()
+                            TaskDataStructure.initializeDatabase()
+                            // TaskManager.init()
+                            startActivity(Intent(this, HomeActivity::class.java)) }
                         else {
                             // if user not verified
                             Toast.makeText(this, "Account not yet verified", Toast.LENGTH_SHORT).show()
