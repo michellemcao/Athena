@@ -45,7 +45,7 @@ class ChatActivity : AppCompatActivity() {
         val chat: Chat = intent.getParcelableExtra(EXTRA_CHAT)
             ?: throw IllegalArgumentException("Chat must be provided")
 
-        title = chat.senderName // Assuming `Chat` has a `senderName` property
+        title = chat.recipientName // Assuming `Chat` has a `senderName` property
         val toolbar: Toolbar = findViewById(R.id.toolbarChat)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

@@ -44,11 +44,29 @@ class ChatListActivity : AppCompatActivity() {
 
         // Set up RecyclerView
         recyclerView = findViewById(R.id.recyclerView)
-        adapter = ChatListAdapter(chatList) { chat ->
-            val chatId = chat.cid // Access chatId from the Chat object
-            val intent = ChatActivity.createIntent(this, chat, chatId)
-            startActivity(intent)
-        }
+
+        adapter = ChatListAdapter(
+            chatList,
+            onItemClick = { chat ->
+                val chatId = chat.cid
+                val intent = ChatActivity.createIntent(this, chat, chatId)
+                startActivity(intent)
+            },
+            onDeleteClick = { chat ->
+                // Handle delete action here (e.g., remove from list and notify adapter)
+                chatList.remove(chat)
+                adapter.notifyDataSetChanged()
+            },
+            onBlockClick = { chat ->
+                // Handle block action here (e.g., show confirmation dialog)
+                // You could also flag the user as blocked in your data model
+                Toast.makeText(this, "${chat.recipientName} has been blocked", Toast.LENGTH_SHORT)
+                    .show()
+            },
+            onOptionsClick = { chat ->
+                showChatOptionsDialog(chat)
+            }
+        )
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
@@ -56,6 +74,94 @@ class ChatListActivity : AppCompatActivity() {
         // Load chat list from Firestore
         fetchChats()
     }
+
+    private fun showChatOptionsDialog(chat: Chat) {
+        val options = arrayOf("Delete Chat", "Block User")
+
+        AlertDialog.Builder(this)
+            .setTitle("Options for ${chat.recipientName}")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> showDeleteConfirmationDialog(chat) // 👈 Show confirmation before deleting
+                    1 -> blockUser(chat)
+                }
+            }
+            .show()
+    }
+
+    private fun showDeleteConfirmationDialog(chat: Chat) {
+        AlertDialog.Builder(this)
+            .setTitle("Delete Chat")
+            .setMessage("Are you sure you want to delete the chat with ${chat.recipientName}? This action cannot be undone.")
+            .setPositiveButton("Delete") { _, _ ->
+                deleteChat(chat)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+
+
+    private fun deleteChat(chat: Chat) {
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val chatId = chat.cid
+
+        db.collection("users").document(currentUserUid)
+            .collection("chats").document(chatId)
+            .delete()
+            .addOnSuccessListener {
+                Toast.makeText(this, "Chat deleted", Toast.LENGTH_SHORT).show()
+
+                // Remove from local list and update UI
+                chatList.remove(chat)
+                adapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener { e ->
+                Log.e("ChatListActivity", "Failed to delete chat", e)
+                Toast.makeText(this, "Failed to delete chat", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
+    private fun blockUser(chat: Chat) {
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val chatId = chat.cid
+
+        val blockData = hashMapOf(
+            "blocked" to true,
+            "timestamp" to System.currentTimeMillis()
+        )
+
+        db.collection("users").document(currentUserUid)
+            .collection("chats").document(chatId)
+            .get()
+            .addOnSuccessListener { document ->
+                val recipientId = document.getString("recipientID")
+                if (recipientId != null) {
+                    val blockData = hashMapOf(
+                        "blocked" to true,
+                        "timestamp" to System.currentTimeMillis()
+                    )
+
+                    db.collection("users").document(currentUserUid)
+                        .collection("blockedUsers").document(recipientId)
+                        .set(blockData)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "User blocked", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(this, "Failed to block user", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    Toast.makeText(this, "Recipient ID not found", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to fetch chat info", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
 
     private fun fetchChats() {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
@@ -79,7 +185,7 @@ class ChatListActivity : AppCompatActivity() {
                             val recipientName = recipientDoc.getString("name") ?: "Unknown"
                             val senderName = "You" // Optional: or pull from current user profile
 
-                            val chat = Chat(chatId, senderName, recipientName)
+                            val chat = Chat(chatId, recipientName, senderName)
                             newChatList.add(chat)
 
                             if (newChatList.size == snapshots.size()) {
@@ -145,38 +251,55 @@ class ChatListActivity : AppCompatActivity() {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val chatId = listOf(currentUserUid, recipientUid).sorted().joinToString("_")
 
-        val chatData = hashMapOf(
-            "recipientID" to recipientUid,
-            "timestamp" to System.currentTimeMillis(),
-            "chatId" to chatId // ✅ Add chatId field
-        )
-
-        val reverseChatData = hashMapOf(
-            "recipientID" to currentUserUid,
-            "timestamp" to System.currentTimeMillis(),
-            "chatId" to chatId // ✅ Add chatId field
-        )
-
         val userChatsRef = db.collection("users").document(currentUserUid).collection("chats").document(chatId)
         val recipientChatsRef = db.collection("users").document(recipientUid).collection("chats").document(chatId)
 
-        userChatsRef.set(chatData)
-        recipientChatsRef.set(reverseChatData)
+        // Step 1: Get recipient's name
+        db.collection("users").document(currentUserUid).get()
+            .addOnSuccessListener { userDoc ->
+                val senderName = userDoc.getString("name") ?: "You"  // Use the current user's name as sender
 
-        // Initialize the chat in the main 'chats' collection (optional)
-        db.collection("chats").document(chatId).collection("messages")
-            .add(
-                mapOf(
-                    "sender" to "system",
-                    "message" to "Chat started",
-                    "timestamp" to System.currentTimeMillis()
-                )
-            )
+                // Step 2: Get recipient's name
+                db.collection("users").document(recipientUid).get()
+                    .addOnSuccessListener { document ->
+                        val recipientName = document.getString("name") ?: "Recipient"
 
-        // Navigate to chat screen
-        val intent = ChatActivity.createIntent(this, Chat(chatId, "You", "Recipient"), chatId)
-        startActivity(intent)
+                        val chatData = hashMapOf(
+                            "recipientID" to recipientUid,
+                            "timestamp" to System.currentTimeMillis(),
+                            "chatId" to chatId,
+                            "recipientName" to recipientName
+                        )
+
+                        val reverseChatData = hashMapOf(
+                            "recipientID" to currentUserUid,
+                            "timestamp" to System.currentTimeMillis(),
+                            "chatId" to chatId
+                        )
+
+                        userChatsRef.set(chatData)
+                        recipientChatsRef.set(reverseChatData)
+
+                        // Optional: create initial system message
+                        db.collection("chats").document(chatId).collection("messages")
+                            .add(
+                                mapOf(
+                                    "sender" to "system",
+                                    "message" to "Chat started",
+                                    "timestamp" to System.currentTimeMillis()
+                                )
+                            )
+
+                        // Step 3: Launch ChatActivity with the actual names
+                        val intent = ChatActivity.createIntent(this, Chat(chatId, senderName, recipientName), chatId)
+                        startActivity(intent)
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Failed to get recipient info", Toast.LENGTH_SHORT).show()
+                    }
+            }
     }
+
 
 
     override fun onDestroy() {
