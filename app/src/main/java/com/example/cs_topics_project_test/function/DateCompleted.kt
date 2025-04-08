@@ -1,5 +1,8 @@
 package com.example.cs_topics_project_test.function
 
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+
 class DateCompleted (private val dateCompleted: Date, private val dueDate: DateAndTime) : Comparable<DateCompleted> {
     fun getDateCompleted() : Date {
         return dateCompleted

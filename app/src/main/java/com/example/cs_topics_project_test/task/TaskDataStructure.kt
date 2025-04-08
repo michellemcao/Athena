@@ -1,12 +1,17 @@
 package com.example.cs_topics_project_test.task
 
-import android.content.Context
-import android.icu.util.Calendar
-import android.widget.Toast
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import com.example.cs_topics_project_test.function.DateAndTime
 import com.example.cs_topics_project_test.function.Date
 import com.example.cs_topics_project_test.function.DateCompleted
 import com.example.cs_topics_project_test.function.Time
+import com.example.cs_topics_project_test.task.TaskDataStructure.TaskNode
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.NavigableMap
 import java.util.TreeMap
 
@@ -21,6 +26,9 @@ object TaskDataStructure {
     // private val taskMap = TreeMap<DateAndTime, TaskDetail>()
     private val taskMap = TreeMap<DateAndTime, TaskNode>()
     private val completedMap = TreeMap<DateCompleted, TaskNode>()
+
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val userId = auth.currentUser
 
     private class TaskNode (
         val task: TaskDetail,
@@ -54,14 +62,6 @@ object TaskDataStructure {
         return taskMap.containsKey(key)
     }
 
-    // taskMap helped functions
-    private fun rangeMap(lowerBound : DateAndTime,
-                         lowerInclusive : Boolean,
-                         upperBound : DateAndTime,
-                         upperInclusive : Boolean) : NavigableMap<DateAndTime, TaskNode> {
-        return taskMap.subMap(lowerBound, lowerInclusive, upperBound, upperInclusive)
-    }
-
     fun rangeListFrom(lowerBound: DateAndTime, lowerInclusive: Boolean) : MutableList<Task> {
         if (taskMap.isEmpty() || taskMap.lastKey() <= lowerBound) {
             return mutableListOf<Task>() /*rangeList(lowerBound, lowerInclusive,
@@ -80,6 +80,22 @@ object TaskDataStructure {
         return rangeList(taskMap.firstKey(), true, upperBound, upperInclusive)
     }
 
+    // the tasks in a specific day
+    fun rangeDateTasks(date : Date) : MutableList<Task> {
+        return rangeList(
+            DateAndTime(date, Time(12, 0, false)), true,
+            DateAndTime(date, Time(11, 59, true)), true)
+    }
+
+    // taskMap helped functions
+    private fun rangeMap(lowerBound : DateAndTime,
+                         lowerInclusive : Boolean,
+                         upperBound : DateAndTime,
+                         upperInclusive : Boolean) : NavigableMap<DateAndTime, TaskNode> {
+        return taskMap.subMap(lowerBound, lowerInclusive, upperBound, upperInclusive)
+    }
+
+    // returns list of task in specific range as Task Object
     fun rangeList(lowerBound : DateAndTime,
                   lowerInclusive : Boolean,
                   upperBound : DateAndTime,
@@ -98,12 +114,6 @@ object TaskDataStructure {
             taskList.add(task)*/
         }
         return taskList
-    }
-
-    fun rangeDateTasks(date : Date) : MutableList<Task> {
-        return rangeList(
-            DateAndTime(date, Time(12, 0, false)), true,
-            DateAndTime(date, Time(11, 59, true)), true)
     }
 
     // edit task
@@ -177,7 +187,115 @@ object TaskDataStructure {
         return taskList
     }
 
-    fun cleanUpTasks() {
+    fun initializeDatabase() {
+        val db = FirebaseFirestore.getInstance()
+        val taskCollection = db.collection("users")
+            .document(userId!!.uid)
+            .collection("taskList")
+
+        loadTasksFromDatabase(taskCollection)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun loadTasksFromDatabase(collection: CollectionReference) {
+        collection.get()
+            .addOnSuccessListener { result ->
+                // val taskMap = TreeMap<String, Task>()
+                // private val taskMap = TreeMap<DateAndTime, TaskNode>()
+                for (document in result.documents) {
+                    val storedTask = document.toObject(TaskStore::class.java)
+                    // val taskId = document.id
+                    val key = 0
+                    val value = TaskDetail(storedTask!!.taskName, storedTask.taskDescription)
+                    if (task != null) {
+                        taskMap[taskId] = task
+                    }
+                }
+                onResult(taskMap)
+            }
+            .addOnFailureListener { e ->
+                Log.w("Firestore", "Error getting tasks", e)
+                onResult(TreeMap()) // return empty TreeMap on failure
+            }
+    }
+
+    /*fun saveToDatabase() {
+        val user = auth.currentUser
+        if (user != null) {
+            val userRef = database.child("tasks")
+
+            val taskList = convertTaskMapToList(taskMap)
+            // val completedTaskList = convertTaskMapToList(completedMap)
+
+            val dataMap = mapOf(
+                "taskList" to taskList,
+                // "completedTaskList" to completedTaskList
+            )
+
+            userRef.setValue(dataMap).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("Firebase", "Tasks saved successfully.")
+                } else {
+                    Log.e("Firebase", "Failed to save tasks.", task.exception)
+                }
+            }
+        }
+    }*/
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun storeAllTasks() {
+        val db = FirebaseFirestore.getInstance()
+        val taskCollection = db.collection("users")
+            .document(userId!!.uid)
+            .collection("taskList")
+
+        for ((key, value) in taskMap) {
+            var current: TaskNode? = value
+            while (current != null) {
+                val task = TaskStore(current.task.getTaskName(), current.task.getTaskDescription(), key.getUnixTime())
+                taskCollection.document().set(task)
+                    .addOnSuccessListener {
+                        Log.d("Firestore", "Task '${value.toString()}' stored successfully.")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w("Firestore", "Error storing task '$value'", e)
+                    }
+                current = current.nextTask
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun addTask(task : Task) {
+        val db = FirebaseFirestore.getInstance()
+        val taskCollection = db.collection("users")
+            .document(userId!!.uid)
+            .collection("taskList")
+        val item = TaskStore(task.getTaskName(), task.getTaskDescription(), task.getDateAndTime().getUnixTime())
+        taskCollection.document().set(item)
+            .addOnSuccessListener {
+                Log.d("Firestore", "Task '${task.toString()}' stored successfully.")
+            }
+            .addOnFailureListener { e ->
+                Log.w("Firestore", "Error storing task '$task'", e)
+            }
+    }
+
+    /*private fun convertTaskMapToList(map: TreeMap<DateAndTime, TaskNode>): List<TaskStore> {
+        val list = mutableListOf<TaskStore>()
+        for ((key, value) in map) {
+            var current: TaskNode? = value
+            while (current != null) {
+                val task = TaskStore(current.task.getTaskName(), current.task.getTaskDescription(), key.getUnixTime())
+                list.add(task)
+                current = current.nextTask
+            }
+        }
+        return list
+    }*/
+
+    /*fun cleanUpTasks() {
         if (!completedMap.isEmpty()) {
             var lowestDate : Date = completedMap.firstKey().getDateCompleted()
             var cleanDate = addXXToDate(lowestDate.getYear(), lowestDate.getMonth(), lowestDate.getDate())
@@ -227,5 +345,5 @@ object TaskDataStructure {
             }
         }
         return Date(y, m, d)
-    }
+    }*/
 }

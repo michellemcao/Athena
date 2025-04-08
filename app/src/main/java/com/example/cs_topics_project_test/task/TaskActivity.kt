@@ -108,6 +108,7 @@ class TaskActivity : AppCompatActivity() {
         }
 
         buttonBack.setOnClickListener {
+            TaskDataStructure.storeAllTasks()
             finish()
             //startActivity(Intent(this, TaskView::class.java)) // change to go to previous slide, not to Home
         }
@@ -154,5 +155,4 @@ class TaskActivity : AppCompatActivity() {
 
         timePickerDialog.show()
     }
-
 }

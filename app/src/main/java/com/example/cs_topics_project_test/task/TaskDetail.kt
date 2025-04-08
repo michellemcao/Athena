@@ -1,8 +1,8 @@
 package com.example.cs_topics_project_test.task
 
 data class TaskDetail (
-    private var taskName: String,
-    private var taskDescription: String,
+    private var taskName: String = "",
+    private var taskDescription: String = "",
 ) {
     private var isCompleted = false
 
@@ -29,5 +29,9 @@ data class TaskDetail (
     }
     fun setTaskDescription(description: String) {
         this.taskDescription = description
+    }
+
+    override fun toString() : String {
+        return this.taskName
     }
 }
