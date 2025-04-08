@@ -90,7 +90,7 @@ class TaskFragment : Fragment() {
         val togglePastDue : TextView = view.findViewById(R.id.togglePastDue)
         val toggleCompleted : TextView = view.findViewById(R.id.toggleCompleted)
 
-        // buttons to sort and their listeners
+        // buttons to sort tasks and their listeners
         val sortDueToday : ImageButton = view.findViewById(R.id.buttonDueTodaySort)
         sortDueToday.setOnClickListener {
             showSortOptions(sortDueToday, dueTodayAdapter, TaskManager.tasksDueToday)
@@ -119,12 +119,12 @@ class TaskFragment : Fragment() {
         recyclerViewCompleted.adapter = completedAdapter
         recyclerViewCompleted.layoutManager = LinearLayoutManager(activity)
 
-        buttonNewTaskToggle.setOnClickListener {
         // button functionality -> takes user to a new page to add tasks
+        buttonNewTaskToggle.setOnClickListener {
             startActivity(Intent(activity, TaskActivity::class.java))
         }
 
-        // toggle button code for showing or hiding tasks
+        // toggle button code for showing or hiding tasks REDUNDANT CODE
         toggleDueToday.setOnClickListener {
             if (isDueTodayVisible) {
                 recyclerViewDueToday.visibility = View.GONE // Hide RecyclerView
@@ -170,13 +170,15 @@ class TaskFragment : Fragment() {
         }
     }
 
+    // Notify the adapter to refresh the RecyclerView, since tasks were most likely added in TaskActivity
     override fun onResume() {
         super.onResume()
-        dueTodayAdapter.notifyDataSetChanged() // Notify the adapter to refresh the RecyclerView
+        dueTodayAdapter.notifyDataSetChanged()
         dueLaterAdapter.notifyDataSetChanged()
         pastDueAdapter.notifyDataSetChanged()
     }
 
+    // shows the sorting options when button is clicked
     private fun showSortOptions(view : ImageButton, adapter : TaskAdapterList, tasks : MutableList<Task>) {
         val popup = PopupMenu(activity, view)
         val inflater: MenuInflater = popup.menuInflater
