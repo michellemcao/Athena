@@ -86,8 +86,8 @@ object TaskDataStructure {
     // the tasks in a specific day
     fun rangeDateTasks(date : Date) : MutableList<Task> {
         return rangeList(
-            DateAndTime(date, Time(12, 0, false)), true,
-            DateAndTime(date, Time(11, 59, true)), true)
+            DateAndTime(date, Time(0, 0)), true,
+            DateAndTime(date, Time(23, 59)), true)
     }
 
     // taskMap helped functions
@@ -195,7 +195,7 @@ object TaskDataStructure {
         val db = FirebaseFirestore.getInstance()
         val taskCollection = db.collection("users")
             .document(userId!!.uid)
-            .collection("taskList")
+            .collection("tasks")
 
         loadTasksFromDatabase(taskCollection)
     }
@@ -229,13 +229,14 @@ object TaskDataStructure {
         val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(unixSeconds), userZoneId)
 
         val date = Date(dateTime.year, dateTime.monthValue, dateTime.dayOfMonth)
-        var hour = dateTime.hour
+        /*var hour = dateTime.hour
         var isPM = false
         if (hour > 12) {
             hour -= 12
             isPM = true
         }
-        val time = Time(hour, dateTime.minute, isPM)
+        val time = Time(hour, dateTime.minute, isPM)*/
+        val time = Time(dateTime.hour, dateTime.minute)
         return DateAndTime(date, time)
     }
     /*fun saveToDatabase() {
@@ -266,7 +267,7 @@ object TaskDataStructure {
         val db = FirebaseFirestore.getInstance()
         val taskCollection = db.collection("users")
             .document(userId!!.uid)
-            .collection("taskList")
+            .collection("tasks")
 
         for ((key, value) in taskMap) {
             var current: TaskNode? = value
@@ -289,7 +290,7 @@ object TaskDataStructure {
         val db = FirebaseFirestore.getInstance()
         val taskCollection = db.collection("users")
             .document(userId!!.uid)
-            .collection("taskList")
+            .collection("tasks")
         val item = TaskStore(task.getTaskName(), task.getTaskDescription(), task.getDateAndTime().getUnixTime())
         taskCollection.document().set(item)
             .addOnSuccessListener {

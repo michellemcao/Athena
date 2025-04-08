@@ -15,8 +15,8 @@ object TaskManager {
             val date = calendar.get(Calendar.DAY_OF_MONTH)
             return Date(year, month, date)
         }
-    private val midnight: Time = Time(12, 0, false) // 12:00 AM
-    private val latenight: Time = Time(11, 59, true) // 11:59 PM
+    private val midnight: Time = Time(0, 0) // 12:00 AM
+    private val latenight: Time = Time(23, 59) // 11:59 PM
 
     // val tasks = mutableListOf<Task>() // past global list of tasks
 

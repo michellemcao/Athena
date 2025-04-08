@@ -20,9 +20,9 @@ data class DateAndTime(private val date : Date, private val time : Time) : Compa
     // fix this for any time zone
     @RequiresApi(Build.VERSION_CODES.O)
     fun getUnixTime() : Long {
-        var hour = time.getHour()
-        if (time.isPM()) hour += 12
-        val dateTime = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDate(), hour, time.getMin())
+        // var hour = time.getHour()
+        // if (time.isPM()) hour += 12
+        val dateTime = LocalDateTime.of(date.getYear(), date.getMonth(), date.getDate(), time.getHour(), time.getMin())
 
         val userZoneId = ZoneId.systemDefault() // gets user's current time zone
 

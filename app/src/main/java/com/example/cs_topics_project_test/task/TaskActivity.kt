@@ -44,7 +44,7 @@ class TaskActivity : AppCompatActivity() {
 
         // default date and time values to make sure the change actually happens
         var dueDate = TaskManager.todayDate
-        var dueTime = Time(12, 0, true) // 12:00 PM or noon
+        var dueTime = Time(12, 0) // 12:00 PM or noon
 
         // setting up recyclerView
         recyclerViewTasks.adapter = taskAdapter
@@ -88,7 +88,7 @@ class TaskActivity : AppCompatActivity() {
                 textViewDate.text = "Select due date"
                 textViewTime.text = "Select due time"
                 dueDate = TaskManager.todayDate
-                dueTime = Time(12, 0, true)
+                dueTime = Time(12, 0) // 12:00 PM
 
             } else {
                 Toast.makeText(this, "Oops! Required field is blank.", Toast.LENGTH_SHORT).show()
@@ -143,9 +143,10 @@ class TaskActivity : AppCompatActivity() {
         val timePickerDialog = TimePickerDialog(
             this,
             { _, selectedHour, selectedMinute ->
-                val isPM = selectedHour >= 12
+                /*val isPM = selectedHour >= 12
                 val adjustedHour = if (selectedHour % 12 == 0) 12 else selectedHour % 12
-                val selectedTime = Time(adjustedHour, selectedMinute, isPM)
+                val selectedTime = Time(adjustedHour, selectedMinute, isPM)*/
+                val selectedTime = Time(selectedHour, selectedMinute)
                 /*val formattedTime = String.format("%02d:%02d %s",
                     formattedHour, selectedMinute,
                     if (isPM) "PM" else "AM"
