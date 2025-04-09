@@ -51,6 +51,10 @@ class TaskAdapterList(private val tasks: MutableList<Task>, private val listener
             }
             else task.taskNotCompleted()
         }
+        holder.itemView.setOnLongClickListener {
+            listener.onTaskPressed(task, position, tasks, this)
+            true
+        }
     }
 
     override fun getItemCount(): Int = tasks.size

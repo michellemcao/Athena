@@ -4,16 +4,14 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
-import java.time.LocalDateTime
-import com.example.cs_topics_project_test.function.DateAndTime
 import com.example.cs_topics_project_test.function.Date
+import com.example.cs_topics_project_test.function.DateAndTime
 import com.example.cs_topics_project_test.function.DateCompleted
 import com.example.cs_topics_project_test.function.Time
-import java.time.Instant
-import com.example.cs_topics_project_test.task.TaskDataStructure.TaskNode
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.NavigableMap
 import java.util.TreeMap
@@ -27,7 +25,7 @@ object TaskDataStructure {
 
     // private val taskMap = TreeMap<DateAndTime, MutableList<Task>>()
     // private val taskMap = TreeMap<DateAndTime, TaskDetail>()
-    private val taskMap = TreeMap<DateAndTime, TaskNode>()
+    private val taskMap = TreeMap<DateAndTime, TaskNode?>()
     private val completedMap = TreeMap<DateCompleted, TaskNode>()
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -36,7 +34,9 @@ object TaskDataStructure {
     private class TaskNode (
         val task: TaskDetail,
         var nextTask: TaskNode?
-    ) {}
+    )
+
+    // TaskMap functionality and retrieval code
 
     // adding task to taskMap
     fun addTask(key: DateAndTime, value: TaskDetail) : Boolean {
@@ -59,6 +59,36 @@ object TaskDataStructure {
         }
         return true
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun removeTask(key: DateAndTime, value: TaskDetail): Boolean {
+        if (!keyExists(key)) return false
+
+        var current = taskMap[key]
+        var prev: TaskNode? = null
+
+        while (current != null) {
+            if (current.task == value) {
+                // Removes the specific TaskDetail node
+                if (prev == null) {
+                    taskMap[key] = current.nextTask
+                } else {
+                    prev.nextTask = current.nextTask
+                }
+                // Remove the key if no tasks left
+                if (taskMap[key] == null) {
+                    taskMap.remove(key)
+                }
+                // removes task from firestore
+                deleteTask(value.getTaskName(), value.getTaskDescription(), key.getUnixTime())
+                return true
+            }
+            prev = current
+            current = current.nextTask
+        }
+        return false // task not found
+    }
+
 
     // checking is key exists in taskMap
     private fun keyExists(key: DateAndTime) : Boolean {
@@ -94,7 +124,7 @@ object TaskDataStructure {
     private fun rangeMap(lowerBound : DateAndTime,
                          lowerInclusive : Boolean,
                          upperBound : DateAndTime,
-                         upperInclusive : Boolean) : NavigableMap<DateAndTime, TaskNode> {
+                         upperInclusive : Boolean) : NavigableMap<DateAndTime, TaskNode?> {
         return taskMap.subMap(lowerBound, lowerInclusive, upperBound, upperInclusive)
     }
 
@@ -119,7 +149,7 @@ object TaskDataStructure {
         return taskList
     }
 
-    // edit task
+    // completedMap functionality and processing
 
     // complete task and process it
     fun processCompletedTask(key: DateAndTime, value: TaskDetail) {
@@ -190,13 +220,14 @@ object TaskDataStructure {
         return taskList
     }
 
+    // FireStore Data Saving and Retrieval
     @RequiresApi(Build.VERSION_CODES.O)
     fun initializeDatabase() {
+        cleanUpTasks()
         val db = FirebaseFirestore.getInstance()
         val taskCollection = db.collection("users")
             .document(userId!!.uid)
             .collection("tasks")
-
         loadTasksFromDatabase(taskCollection)
     }
 
@@ -239,28 +270,6 @@ object TaskDataStructure {
         val time = Time(dateTime.hour, dateTime.minute)
         return DateAndTime(date, time)
     }
-    /*fun saveToDatabase() {
-        val user = auth.currentUser
-        if (user != null) {
-            val userRef = database.child("tasks")
-
-            val taskList = convertTaskMapToList(taskMap)
-            // val completedTaskList = convertTaskMapToList(completedMap)
-
-            val dataMap = mapOf(
-                "taskList" to taskList,
-                // "completedTaskList" to completedTaskList
-            )
-
-            userRef.setValue(dataMap).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("Firebase", "Tasks saved successfully.")
-                } else {
-                    Log.e("Firebase", "Failed to save tasks.", task.exception)
-                }
-            }
-        }
-    }*/
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun storeAllTasks() {
@@ -301,6 +310,86 @@ object TaskDataStructure {
             }
     }
 
+    private fun deleteTask(taskName: String, taskDescription: String, dueDateAndTime: Number) {
+        val db = FirebaseFirestore.getInstance()
+        val taskRef = db.collection("users")
+            .document(userId!!.uid)
+            .collection("tasks")
+
+        taskRef
+            .whereEqualTo("taskName", taskName)
+            .whereEqualTo("taskDescription", taskDescription)
+            .whereEqualTo("dueDateAndTime", dueDateAndTime)
+            .limit(1) // Only want to delete one match
+            .get()
+            .addOnSuccessListener { documents ->
+                val doc = documents.firstOrNull()
+                if (doc != null) {
+                    taskRef.document(doc.id)
+                        .delete()
+                        .addOnSuccessListener {
+                            Log.d("Firestore", "Task '${taskName}' successfully deleted.")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w("Firestore", "Error deleting task '$taskName'", e)
+                        }
+                } else {
+                    Log.d("Firestore", "No matching task found.")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w("Firestore", "Error querying tasks: ${e.message}")
+            }
+    }
+
+    /* auto-delete for completed tasks psychology
+     * Completed tasks can be uncompleted but not deleted before a certain time range.
+     * This is to provide users with the satisfaction of viewing all their completed tasks, thereby being proud of what they have have accomplished.
+     */
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun cleanUpTasks() {
+        // get Today's date, subtract 7 days
+        // convert to unix
+        // remove all tasks that happened before the unix data
+        val currentDate = LocalDateTime.now()
+        val targetDate = currentDate.minusDays(7)
+        val userZoneId = ZoneId.systemDefault() // gets user's current time zone
+
+        val unixTime = targetDate.atZone(userZoneId).toEpochSecond()
+
+        val db = FirebaseFirestore.getInstance()
+        val taskRef = db.collection("users")
+            .document(userId!!.uid)
+            .collection("tasks")
+
+        // Query to find all documents where the field value is less than the given value
+        val query = taskRef.whereLessThan("dueDateAndTime", unixTime)
+
+        // Get the documents that match the query
+        query.get()
+            .addOnSuccessListener { querySnapshot ->
+                // Prepare a batch to delete documents
+                val batch = db.batch()
+
+                // Loop through documents in the query result
+                for (document in querySnapshot.documents) {
+                    // Delete the document
+                    batch.delete(document.reference)
+                }
+
+                batch.commit()
+                    .addOnSuccessListener {
+                        Log.d("Firestore", "Documents deleted successfully.")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w("Firestore","Error deleting documents: $e")
+                    }
+            }
+            .addOnFailureListener { e ->
+                Log.w("Firestore","Error deleting documents: $e")
+            }
+    }
     /*private fun convertTaskMapToList(map: TreeMap<DateAndTime, TaskNode>): List<TaskStore> {
         val list = mutableListOf<TaskStore>()
         for ((key, value) in map) {
@@ -312,57 +401,5 @@ object TaskDataStructure {
             }
         }
         return list
-    }*/
-
-    /*fun cleanUpTasks() {
-        if (!completedMap.isEmpty()) {
-            var lowestDate : Date = completedMap.firstKey().getDateCompleted()
-            var cleanDate = addXXToDate(lowestDate.getYear(), lowestDate.getMonth(), lowestDate.getDate())
-            while (cleanDate <= TaskManager.todayDate) {
-                completedMap.remove(completedMap.firstKey())
-                if (!completedMap.isEmpty()) {
-                    lowestDate = completedMap.firstKey().getDateCompleted()
-                    cleanDate = addXXToDate(
-                        lowestDate.getYear(), lowestDate.getMonth(), lowestDate.getDate()
-                    )
-                }
-            }
-        }
-    }
-
-    private fun addXXToDate(year : Int, month : Int, date : Int) : Date {
-        var d = date + 7
-        var m = month
-        var y = year
-
-        if (m == 2 && y % 4 == 0) {
-            if (d > 29) {
-                m += d / 29
-                if (m > 12) {
-                    y += m / 12
-                    m %= 12
-                }
-                d %= 29
-            }
-        } else if ((m < 8 && m % 2 == 1) || (m > 7 && m % 2 == 0)) { //months that are 31 days long
-            if (d > 31) {
-                m += d / 31
-                if (m > 12) {
-                    y += m / 12
-                    m %= 12
-                }
-                d %= 31
-            }
-        } else {
-            if (d > 30) {
-                m += d / 30
-                if (m > 12) {
-                    y += m / 12
-                    m %= 12
-                }
-                d %= 30
-            }
-        }
-        return Date(y, m, d)
     }*/
 }

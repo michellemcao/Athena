@@ -8,7 +8,7 @@ import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 
-class TaskAdapterCompleted(private val tasks: MutableList<TaskCompleted>) : RecyclerView.Adapter<TaskAdapterCompleted.TaskViewHolder>(), TaskListener {
+class TaskAdapterCompleted(private val tasks: MutableList<TaskCompleted>) : RecyclerView.Adapter<TaskAdapterCompleted.TaskViewHolder>() {
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val taskName: TextView = itemView.findViewById(R.id.textViewTaskName)
@@ -32,7 +32,7 @@ class TaskAdapterCompleted(private val tasks: MutableList<TaskCompleted>) : Recy
 
     override fun getItemCount(): Int = tasks.size
 
-    override fun onTaskCompleted(task: TaskCompleted) {
+    fun addCompletedTask(task: TaskCompleted) {
         tasks.add(task)
         notifyItemInserted(tasks.size - 1)
     }

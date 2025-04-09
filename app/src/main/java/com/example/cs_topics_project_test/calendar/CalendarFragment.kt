@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CalendarView
 import android.widget.TextView
 import android.widget.Toast
@@ -12,12 +13,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.function.Date
+import com.example.cs_topics_project_test.task.Task
+import com.example.cs_topics_project_test.task.TaskAdapterList
+import com.example.cs_topics_project_test.task.TaskCompleted
 import com.example.cs_topics_project_test.task.TaskDataStructure
+import com.example.cs_topics_project_test.task.TaskListener
 import com.example.cs_topics_project_test.task.TaskManager
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class CalendarFragment : Fragment() {
+class CalendarFragment : Fragment(), TaskListener {
 
     // private lateinit var calendarView: CalendarView
     // private lateinit var dateViewVar: TextView
@@ -71,7 +76,7 @@ class CalendarFragment : Fragment() {
             targetDate = Date(year, month + 1, day)
 
             calendarAdapterCompleted = CalendarAdapterCompleted(TaskDataStructure.getTasksCompletedRange(targetDate))
-            calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate), calendarAdapterCompleted)
+            calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate), this) //calendarAdapterCompleted)
 
             recyclerViewCalendarCompleted.adapter = calendarAdapterCompleted
             recyclerViewCalendarCompleted.layoutManager = LinearLayoutManager(activity)
@@ -82,7 +87,7 @@ class CalendarFragment : Fragment() {
         }
 
         calendarAdapterCompleted = CalendarAdapterCompleted(TaskDataStructure.getTasksCompletedRange(targetDate))
-        calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate), calendarAdapterCompleted)
+        calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate), this) // calendarAdapterCompleted)
 
         recyclerViewCalendarCompleted.adapter = calendarAdapterCompleted
         recyclerViewCalendarCompleted.layoutManager = LinearLayoutManager(activity)
@@ -90,7 +95,15 @@ class CalendarFragment : Fragment() {
         recyclerViewCalendar.adapter = calendarAdapter
         recyclerViewCalendar.layoutManager = LinearLayoutManager(activity)
     }
-        //super.onCreate(savedInstanceState)
+
+    override fun onTaskCompleted(task: TaskCompleted) {
+        calendarAdapterCompleted.addCompletedTask(task)
+    }
+
+    override fun onTaskPressed(task: Task, position: Int, taskList: MutableList<Task>, adapter: TaskAdapterList) {
+        return
+    }
+    //super.onCreate(savedInstanceState)
         // enableEdgeToEdge()
 
         //setContentView(R.layout.calendar_main)
