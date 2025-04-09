@@ -152,30 +152,15 @@ object TaskDataStructure {
     // completedMap functionality and processing
 
     // complete task and process it
+    @RequiresApi(Build.VERSION_CODES.O)
     fun processCompletedTask(key: DateAndTime, value: TaskDetail) {
-        if (!keyExists(key)) return
-
-        var current = taskMap[key] // TaskNode
-        var prev : TaskNode? = null
-
-        while (current != null) {
-            if (current.task == value) {
-                if (prev == null) { // if the first node is what we are looking for
-                    if (current.nextTask == null) {
-                        taskMap.remove(key) // no more entries for that DateAndTime so remove altogether
-                    } else {
-                        taskMap[key] = current.nextTask!! // shift the keys entry to the nextTask node
-                    }
-                } else {
-                    prev.nextTask = current.nextTask
-                }
+        if (removeTask(key, value)) {
                 addCompletedTask(DateCompleted(TaskManager.todayDate, key), value)
-            }
-            prev = current
-            current = current.nextTask
         }
+        return
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun addCompletedTask(key: DateCompleted, value: TaskDetail) {
         if (completedMap.containsKey(key)) {
             var current = completedMap[key]
@@ -188,6 +173,7 @@ object TaskDataStructure {
         } else {
             completedMap[key] = TaskNode(value, null)
         }
+        storeTask(TaskCompleted(key.getDateCompleted(), key.getDueDate(), value)) // stores the completed task
     }
 
     fun getTasksCompleted() : MutableList<TaskCompleted> {
@@ -225,10 +211,12 @@ object TaskDataStructure {
     fun initializeDatabase() {
         cleanUpTasks()
         val db = FirebaseFirestore.getInstance()
-        val taskCollection = db.collection("users")
+        val doc = db.collection("users")
             .document(userId!!.uid)
-            .collection("tasks")
+        val taskCollection = doc.collection("tasks")
+        val completedTaskCollection = doc.collection("tasksCompleted")
         loadTasksFromDatabase(taskCollection)
+        loadTasksFromDatabase(completedTaskCollection)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -240,10 +228,20 @@ object TaskDataStructure {
                 for (document in result.documents) {
                     val storedTask = document.toObject(TaskStore::class.java)
 
-                    val key = convertUnix(storedTask!!)
+                    val dueDate = convertUnix(storedTask!!)
                     val value = TaskDetail(storedTask.taskName, storedTask.taskDescription)
 
-                    addTask(key, value)
+                    if (storedTask.isCompleted) {
+                        val unixSeconds = storedTask.dueDateAndTime
+                        val userZoneId = ZoneId.systemDefault()
+                        val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(unixSeconds), userZoneId)
+                        val date = Date(dateTime.year, dateTime.monthValue, dateTime.dayOfMonth)
+                        val key = DateCompleted(date, dueDate)
+
+                        addCompletedTask(key, value)
+                    } else {
+                        addTask(dueDate, value)
+                    }
                 }
                 // onResult(taskMap)
             }
@@ -281,7 +279,7 @@ object TaskDataStructure {
         for ((key, value) in taskMap) {
             var current: TaskNode? = value
             while (current != null) {
-                val task = TaskStore(current.task.getTaskName(), current.task.getTaskDescription(), key.getUnixTime())
+                val task = TaskStore(current.task.getTaskName(), current.task.getTaskDescription(), key.getUnixTime(), false, 0)
                 taskCollection.document().set(task)
                     .addOnSuccessListener {
                         Log.d("Firestore", "Task '${value.toString()}' stored successfully.")
@@ -300,7 +298,29 @@ object TaskDataStructure {
         val taskCollection = db.collection("users")
             .document(userId!!.uid)
             .collection("tasks")
-        val item = TaskStore(task.getTaskName(), task.getTaskDescription(), task.getDateAndTime().getUnixTime())
+        val item = TaskStore(task.getTaskName(), task.getTaskDescription(), task.getDateAndTime().getUnixTime(), false, 0)
+        taskCollection.document().set(item)
+            .addOnSuccessListener {
+                Log.d("Firestore", "Task '${task.toString()}' stored successfully.")
+            }
+            .addOnFailureListener { e ->
+                Log.w("Firestore", "Error storing task '$task'", e)
+            }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun storeTask(task : TaskCompleted) {
+        val db = FirebaseFirestore.getInstance()
+        val taskCollection = db.collection("users")
+            .document(userId!!.uid)
+            .collection("tasksCompleted")
+
+        val dateCompleted = task.getTaskCompletedDate()
+        val dateTime = LocalDateTime.of(dateCompleted.getYear(), dateCompleted.getMonth(), dateCompleted.getDate(), 0, 0)
+        val userZoneId = ZoneId.systemDefault() // gets user's current time zone
+        val unixTime = dateTime.atZone(userZoneId).toEpochSecond()
+
+        val item = TaskStore(task.getTaskName(), task.getTaskDescription(), task.getDateAndTime().getUnixTime(), true, unixTime)
         taskCollection.document().set(item)
             .addOnSuccessListener {
                 Log.d("Firestore", "Task '${task.toString()}' stored successfully.")
@@ -361,10 +381,10 @@ object TaskDataStructure {
         val db = FirebaseFirestore.getInstance()
         val taskRef = db.collection("users")
             .document(userId!!.uid)
-            .collection("tasks")
+            .collection("tasksCompleted")
 
         // Query to find all documents where the field value is less than the given value
-        val query = taskRef.whereLessThan("dueDateAndTime", unixTime)
+        val query = taskRef.whereLessThan("completedDate", unixTime)
 
         // Get the documents that match the query
         query.get()
