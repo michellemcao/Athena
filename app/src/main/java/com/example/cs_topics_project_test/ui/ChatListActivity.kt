@@ -76,18 +76,91 @@ class ChatListActivity : AppCompatActivity() {
     }
 
     private fun showChatOptionsDialog(chat: Chat) {
-        val options = arrayOf("Delete Chat", "Block User")
+        // Call isUserBlocked with a callback to handle async result
+        isUserBlocked(chat) { isBlocked ->
+            val options = if (isBlocked) {
+                arrayOf("Delete Chat", "Unblock User") // Show Unblock option if user is blocked
+            } else {
+                arrayOf("Delete Chat", "Block User") // Otherwise, show Block option
+            }
 
-        AlertDialog.Builder(this)
-            .setTitle("Options for ${chat.recipientName}")
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> showDeleteConfirmationDialog(chat) // 👈 Show confirmation before deleting
-                    1 -> blockUser(chat)
+            AlertDialog.Builder(this)
+                .setTitle("Options for ${chat.recipientName}")
+                .setItems(options) { _, which ->
+                    when (which) {
+                        0 -> showDeleteConfirmationDialog(chat) // Show confirmation before deleting
+                        1 -> {
+                            if (isBlocked) {
+                                unblockUser(chat)
+                            } else {
+                                blockUser(chat)
+                            }
+                        }
+                    }
+                }
+                .show()
+        }
+    }
+
+    private fun isUserBlocked(chat: Chat, callback: (Boolean) -> Unit) {
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return callback(false)
+        val chatId = chat.cid  // Use the chat ID to retrieve the recipient ID from Firestore
+
+        // Get the recipient ID directly from Firestore
+        db.collection("users").document(currentUserUid)
+            .collection("chats").document(chatId)
+            .get()
+            .addOnSuccessListener { document ->
+                val recipientId = document.getString("recipientID")
+                if (recipientId != null) {
+                    // Check if the recipient is blocked
+                    val blockedUserDoc = db.collection("users").document(currentUserUid)
+                        .collection("blockedUsers").document(recipientId)
+
+                    blockedUserDoc.get().addOnSuccessListener { blockedDoc ->
+                        callback(blockedDoc.exists())  // Pass true if blocked, false otherwise
+                    }
+                } else {
+                    callback(false)  // If recipient ID is not found, treat as not blocked
                 }
             }
-            .show()
+            .addOnFailureListener {
+                callback(false)  // If fetch fails, treat as not blocked
+            }
     }
+
+
+    private fun unblockUser(chat: Chat) {
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val chatId = chat.cid  // Use the chat ID to retrieve the recipient ID from Firestore
+
+        // Get the recipient ID directly from Firestore
+        db.collection("users").document(currentUserUid)
+            .collection("chats").document(chatId)
+            .get()
+            .addOnSuccessListener { document ->
+                val recipientId = document.getString("recipientID")
+                if (recipientId != null) {
+                    // Remove the recipient from the blockedUsers collection
+                    db.collection("users").document(currentUserUid)
+                        .collection("blockedUsers").document(recipientId)
+                        .delete()
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "${chat.recipientName} has been unblocked", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(this, "Failed to unblock user", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    Toast.makeText(this, "Recipient ID not found", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to fetch chat info", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
 
     private fun showDeleteConfirmationDialog(chat: Chat) {
         AlertDialog.Builder(this)
@@ -291,7 +364,7 @@ class ChatListActivity : AppCompatActivity() {
                             )
 
                         // Step 3: Launch ChatActivity with the actual names
-                        val intent = ChatActivity.createIntent(this, Chat(chatId, senderName, recipientName), chatId)
+                        val intent = ChatActivity.createIntent(this, Chat(chatId, recipientName, senderName), chatId)
                         startActivity(intent)
                     }
                     .addOnFailureListener {
