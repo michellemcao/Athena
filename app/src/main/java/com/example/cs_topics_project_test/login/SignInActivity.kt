@@ -44,14 +44,16 @@ class SignInActivity : AppCompatActivity() {
                         val user = firebaseAuth.currentUser
                         if (user != null && user.isEmailVerified) { // goes to home activity if user successfully sign in and verified
                         Toast.makeText(this, "Sign In Successful. ", Toast.LENGTH_SHORT).show()
-                            // TODO if sign in successful, go to page to put name/username, store to firebase
+                        startActivity(Intent(this, HomeActivity::class.java))
+                            /*
+                            //  if sign in successful, go to page to put name/username, store to firebase
                             setContentView(R.layout.signin_userinfo)
                             findViewById<Button>(R.id.userinfo_button).setOnClickListener {
                                 // if all fields are filled out
                                 if (findViewById<TextView>(R.id.firstname).text.toString().isNotEmpty() && findViewById<TextView>(R.id.lastname).text.toString().isNotEmpty() && findViewById<TextView>(R.id.setusername).text.toString().isNotEmpty()) {
                                     val profileUpdates = userProfileChangeRequest {
                                         displayName = findViewById<TextView>(R.id.firstname).text.toString()
-                                        // TODO add username
+                                        //  add username
                                     }
                                     user!!.updateProfile(profileUpdates).addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
@@ -60,7 +62,7 @@ class SignInActivity : AppCompatActivity() {
                                         }
                                     }
                                      }
-                                }
+                                }*/
                             }
                         else {
                             // if user not verified
@@ -109,4 +111,3 @@ class SignInActivity : AppCompatActivity() {
     }
 }
 
-// TODO maybe use linear layouts to keep centered
