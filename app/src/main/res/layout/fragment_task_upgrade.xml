@@ -256,18 +256,20 @@
                     android:id="@+id/textViewDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="Select due date"
+                    android:hint="M/D/YYYY"
                     android:padding="8dp"
                     android:textSize="10sp"
+                    android:gravity="center"
                     android:background="@android:drawable/editbox_background_normal"/>
 
                 <TextView
                     android:id="@+id/textViewTime"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:hint="Select due time"
+                    android:hint="X:XX AM"
                     android:padding="8dp"
                     android:textSize="10sp"
+                    android:gravity="center"
                     android:background="@android:drawable/editbox_background_normal"/>
             </LinearLayout>
         </LinearLayout>

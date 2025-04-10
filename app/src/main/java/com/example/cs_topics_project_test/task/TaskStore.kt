@@ -11,7 +11,7 @@ import android.os.Parcelable
 data class TaskStore (val taskName: String = "",
                       val taskDescription: String = "",
                       val dueDateAndTime: Long = 0L,
-                      val isCompleted: Boolean = false,
+                      // val isCompleted: Boolean = false,
                       val completedDate: Long = 0L
 ) // : Parcelable
 

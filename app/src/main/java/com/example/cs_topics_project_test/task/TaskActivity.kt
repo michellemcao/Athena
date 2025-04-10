@@ -44,7 +44,16 @@ class TaskActivity : AppCompatActivity() {
 
         // default date and time values to make sure the change actually happens
         var dueDate = TaskManager.todayDate
-        var dueTime = Time(12, 0) // 12:00 PM or noon
+
+        var calendar = Calendar.getInstance()
+        var hour = calendar.get(Calendar.HOUR_OF_DAY) // 24-hour format; 0 - 23
+        var min = calendar.get(Calendar.MINUTE)
+        var dueTime = Time(hour, min)
+        // var dueTime = Time(12, 0) // 12:00 PM or noon
+
+        // setting date and time that will be added
+        textViewDate.text = dueDate.toString()
+        textViewTime.text = dueTime.toString()
 
         // setting up recyclerView
         recyclerViewTasks.adapter = taskAdapter
@@ -85,11 +94,16 @@ class TaskActivity : AppCompatActivity() {
                 // resetting all the fields
                 editTextTaskName.text.clear()
                 editTextTaskDescription.text.clear()
-                textViewDate.text = "Select due date"
-                textViewTime.text = "Select due time"
                 dueDate = TaskManager.todayDate
-                dueTime = Time(12, 0) // 12:00 PM
 
+                calendar = Calendar.getInstance()
+                hour = calendar.get(Calendar.HOUR_OF_DAY) // 24-hour format; 0 - 23
+                min = calendar.get(Calendar.MINUTE)
+                dueTime = Time(hour, min)
+                // dueTime = Time(12, 0) // 12:00 PM
+
+                textViewDate.text = dueDate.toString()
+                textViewTime.text = dueTime.toString()
             } else {
                 Toast.makeText(this, "Oops! Required field is blank.", Toast.LENGTH_SHORT).show()
             }

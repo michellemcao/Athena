@@ -2,12 +2,36 @@ package com.example.cs_topics_project_test.function
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.cs_topics_project_test.task.TaskStore
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 
-data class DateAndTime(private val date : Date, private val time : Time) : Comparable<DateAndTime> {
+data class DateAndTime(private var date : Date, private var time : Time) : Comparable<DateAndTime> {
     // Using 12 hour clock system
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    constructor(unixTime : Long) : this(
+        getDateFromUnix(unixTime),
+        getTimeFromUnix(unixTime)
+    )
+
+    companion object {
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun getDateFromUnix(unixTime: Long): Date {
+            val dateTime =
+                LocalDateTime.ofInstant(Instant.ofEpochSecond(unixTime), ZoneId.systemDefault())
+            return Date(dateTime.year, dateTime.monthValue, dateTime.dayOfMonth)
+        }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun getTimeFromUnix(unixTime: Long): Time {
+            val dateTime =
+                LocalDateTime.ofInstant(Instant.ofEpochSecond(unixTime), ZoneId.systemDefault())
+            return Time(dateTime.hour, dateTime.minute)
+        }
+    }
 
     fun getDate(): Date {
         return date
@@ -39,5 +63,9 @@ data class DateAndTime(private val date : Date, private val time : Time) : Compa
         val tCompare = this.time.compareTo(other.time)
         if (dCompare == 0) return tCompare
         return dCompare
+    }
+
+    override fun toString(): String {
+        return "$date $time"
     }
 }

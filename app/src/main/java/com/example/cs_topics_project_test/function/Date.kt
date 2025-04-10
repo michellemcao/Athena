@@ -43,6 +43,7 @@ class Date(private val year: Int, month: Int, date: Int) : Comparable<Date> {
     }
 
     override fun toString(): String {
+        // if (date < 10) return "$month/0$date/$year"
         return "$month/$date/$year"
     }
 }

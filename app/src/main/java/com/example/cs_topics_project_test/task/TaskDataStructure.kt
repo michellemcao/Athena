@@ -153,9 +153,10 @@ object TaskDataStructure {
 
     // complete task and process it
     @RequiresApi(Build.VERSION_CODES.O)
-    fun processCompletedTask(key: DateAndTime, value: TaskDetail) {
+    fun processCompletedTask(completedDate : DateAndTime, key: DateAndTime, value: TaskDetail) {
         if (removeTask(key, value)) {
-                addCompletedTask(DateCompleted(TaskManager.todayDate, key), value)
+            addCompletedTask(DateCompleted(completedDate, key), value)
+            storeTask(TaskCompleted(completedDate, key, value)) // stores the completed task to firestore
         }
         return
     }
@@ -173,7 +174,6 @@ object TaskDataStructure {
         } else {
             completedMap[key] = TaskNode(value, null)
         }
-        storeTask(TaskCompleted(key.getDateCompleted(), key.getDueDate(), value)) // stores the completed task
     }
 
     fun getTasksCompleted() : MutableList<TaskCompleted> {
@@ -228,19 +228,26 @@ object TaskDataStructure {
                 for (document in result.documents) {
                     val storedTask = document.toObject(TaskStore::class.java)
 
-                    val dueDate = convertUnix(storedTask!!)
-                    val value = TaskDetail(storedTask.taskName, storedTask.taskDescription)
+                    // val dueDate = convertUnix(storedTask!!)
+                    // val dueDate = DateAndTime(storedTask!!.dueDateAndTime)
+                    val value = TaskDetail(storedTask!!.taskName, storedTask.taskDescription)
 
-                    if (storedTask.isCompleted) {
-                        val unixSeconds = storedTask.dueDateAndTime
+                    if (storedTask.completedDate == 0L) {
+                        // addTask(dueDate, value)
+                        addTask(DateAndTime(storedTask.dueDateAndTime),
+                            value)
+                    } else {
+                        /*val unixSeconds = storedTask.dueDateAndTime
                         val userZoneId = ZoneId.systemDefault()
                         val dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(unixSeconds), userZoneId)
                         val date = Date(dateTime.year, dateTime.monthValue, dateTime.dayOfMonth)
                         val key = DateCompleted(date, dueDate)
 
-                        addCompletedTask(key, value)
-                    } else {
-                        addTask(dueDate, value)
+                        addCompletedTask(key, value)*/
+                        addCompletedTask(
+                            DateCompleted(storedTask.completedDate, storedTask.dueDateAndTime),
+                            value
+                        )
                     }
                 }
                 // onResult(taskMap)
@@ -279,7 +286,7 @@ object TaskDataStructure {
         for ((key, value) in taskMap) {
             var current: TaskNode? = value
             while (current != null) {
-                val task = TaskStore(current.task.getTaskName(), current.task.getTaskDescription(), key.getUnixTime(), false, 0)
+                val task = TaskStore(current.task.getTaskName(), current.task.getTaskDescription(), key.getUnixTime(), 0)
                 taskCollection.document().set(task)
                     .addOnSuccessListener {
                         Log.d("Firestore", "Task '${value.toString()}' stored successfully.")
@@ -298,7 +305,7 @@ object TaskDataStructure {
         val taskCollection = db.collection("users")
             .document(userId!!.uid)
             .collection("tasks")
-        val item = TaskStore(task.getTaskName(), task.getTaskDescription(), task.getDateAndTime().getUnixTime(), false, 0)
+        val item = TaskStore(task.getTaskName(), task.getTaskDescription(), task.getDateAndTime().getUnixTime(), 0)
         taskCollection.document().set(item)
             .addOnSuccessListener {
                 Log.d("Firestore", "Task '${task.toString()}' stored successfully.")
@@ -315,12 +322,13 @@ object TaskDataStructure {
             .document(userId!!.uid)
             .collection("tasksCompleted")
 
-        val dateCompleted = task.getTaskCompletedDate()
+        /*val dateCompleted = task.getTaskCompletedDate()
         val dateTime = LocalDateTime.of(dateCompleted.getYear(), dateCompleted.getMonth(), dateCompleted.getDate(), 0, 0)
         val userZoneId = ZoneId.systemDefault() // gets user's current time zone
-        val unixTime = dateTime.atZone(userZoneId).toEpochSecond()
+        val unixTime = dateTime.atZone(userZoneId).toEpochSecond()*/
 
-        val item = TaskStore(task.getTaskName(), task.getTaskDescription(), task.getDateAndTime().getUnixTime(), true, unixTime)
+        // val item = TaskStore(task.getTaskName(), task.getTaskDescription(), task.getDateAndTime().getUnixTime(), true, unixTime)
+        val item = TaskStore(task.getTaskName(), task.getTaskDescription(), task.getDateAndTime().getUnixTime(), task.getTaskCompletedDate().getUnixTime())
         taskCollection.document().set(item)
             .addOnSuccessListener {
                 Log.d("Firestore", "Task '${task.toString()}' stored successfully.")
