@@ -12,6 +12,7 @@ import com.example.cs_topics_project_test.databinding.FragmentSignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.cs_topics_project_test.ui.UserSettings
 
 
 class SignUp : Fragment() {
@@ -41,6 +42,8 @@ class SignUp : Fragment() {
             startActivity(Intent(requireContext(), SignInActivity::class.java))
 
         }
+
+        // when sign up button clicked
         binding.signUpButton.setOnClickListener {
             val email = binding.emailEt.text.toString()
             val pass = binding.passET.text.toString()
@@ -62,12 +65,15 @@ class SignUp : Fragment() {
                                 // After successful signup, add the user to Firestore
                                 addUserToFirestore(userUid, email)
                             }
-                            // redirect to sign in page
-                            startActivity(
-                                Intent(requireContext(), SignInActivity::class.java)
-                            )
+
+                            val userSettingsFragment = UserSettings.newInstance("signup")
+                            requireActivity().supportFragmentManager.beginTransaction()
+                                .replace(R.id.fragmentContainerView, userSettingsFragment)
+                                .addToBackStack(null)
+                                .commit()
+
                         }
-                        else { // if sign up fails
+                        else {
                             Toast.makeText(requireContext(), "Sign Up Unsuccessful. ", Toast.LENGTH_SHORT).show()
                         }
                     }

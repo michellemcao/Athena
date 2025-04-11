@@ -80,7 +80,8 @@ class SignInActivity : AppCompatActivity() {
 
         // forgot password
         // TODO check that they have an email in firebase, check if currentuser does this
-        // TODO error, keeps saying to put email when email box filled 
+        // TODO error, keeps saying to put email when email box filled
+        // TODO add a back button too oops
         binding.forgotpwButton.setOnClickListener {
             // redirect to forgot password page
             setContentView(R.layout.forgot_pw)
