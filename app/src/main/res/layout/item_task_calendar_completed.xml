@@ -11,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="8dp"
+        android:paddingTop="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -38,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
-        app:layout_constraintBottom_toBottomOf="@id/linearCalendarTask"
+        app:layout_constraintTop_toBottomOf="@id/linearCalendarTask"
         app:layout_constraintEnd_toStartOf="@id/textViewTaskCompletedDate"
         android:text="Completed On:"
         android:textColor="@color/pink_700"/>
@@ -48,8 +50,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
-        app:layout_constraintBottom_toBottomOf="@id/linearCalendarTask"
+        app:layout_constraintTop_toBottomOf="@id/linearCalendarTask"
         app:layout_constraintEnd_toEndOf="@id/linearCalendarTask"
-        android:text="1/1/2025"
+        android:text="M/D/YYYY X:XX AM"
         android:textColor="@color/pink_700"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
