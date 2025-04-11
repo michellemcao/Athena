@@ -72,6 +72,7 @@ class Time(hour: Int, min: Int/*, private val isPM: Boolean*/) : Comparable<Time
         val isPM : String = if (this.hour >= 12) { "PM" } else "AM"
         var hour = this.hour
         if (hour > 12) hour -= 12
+        else if (hour == 0) hour += 12
         return hour.toString() + ":" + addZero + this.min + " " +  isPM
     }
 }

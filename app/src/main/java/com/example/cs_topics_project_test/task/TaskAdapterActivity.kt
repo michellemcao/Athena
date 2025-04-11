@@ -12,8 +12,7 @@ class TaskAdapterActivity(private val tasks: MutableList<Task>) : RecyclerView.A
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val taskName: TextView = itemView.findViewById(R.id.textViewTaskName)
         val taskDescription: TextView = itemView.findViewById(R.id.textViewTaskDescription)
-        val taskDueDate: TextView = itemView.findViewById(R.id.textViewTaskDate)
-        val taskDueTime: TextView = itemView.findViewById(R.id.textViewTaskTime)
+        val taskDue: TextView = itemView.findViewById(R.id.textViewTaskDateAndTime)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -25,8 +24,7 @@ class TaskAdapterActivity(private val tasks: MutableList<Task>) : RecyclerView.A
         val task = tasks[position]
         holder.taskName.text = task.getTaskName()
         holder.taskDescription.text = task.getTaskDescription()
-        holder.taskDueDate.text = task.getDueDate().toString()
-        holder.taskDueTime.text = task.getDueTime().toString()
+        holder.taskDue.text = task.getDateAndTime().toString()
     }
 
     override fun getItemCount(): Int = tasks.size

@@ -46,18 +46,11 @@
                 android:text="Due:" />
 
             <TextView
-                android:id="@+id/textViewTaskDate"
+                android:id="@+id/textViewTaskDateAndTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="1/1/2025" />
-
-            <TextView
-                android:id="@+id/textViewTaskTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="12:00 PM" />
+                android:text="Date" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

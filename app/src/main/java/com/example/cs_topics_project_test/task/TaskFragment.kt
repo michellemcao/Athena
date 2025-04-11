@@ -272,11 +272,10 @@ class TaskFragment : Fragment(), TaskListener {
             // taskDescription = editTextTaskDescription.text.toString()
             if (editTextTaskName.text.toString().isNotBlank()) {
                 // removing the original task
-                taskList.remove(task) // removes task from list
-                TaskDataStructure.removeTask( // removes task from TreeMap & Firestore
-                    DateAndTime(dueDate, dueTime),
-                    TaskDetail(taskName, taskDescription)
-                )
+                if (TaskDataStructure.removeTask( // removes task from TreeMap & Firestore
+                    DateAndTime(task.getDueDate(), task.getDueTime()),
+                    TaskDetail(taskName, taskDescription))) taskList.remove(task) // removes task from list
+
                 // TaskDataStructure.deleteTask(taskName, taskDescription, task.getDateAndTime().getUnixTime()) // remove task from firestore
 
                 // notify adapter that tasks have been deleted
@@ -317,7 +316,7 @@ class TaskFragment : Fragment(), TaskListener {
                 layout.visibility = View.GONE
                 // exiting edit view
             } else {
-                Toast.makeText(activity, "Oops! Required field is blank.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "Oops! Required field is blank. Cannot edit task", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -340,11 +339,10 @@ class TaskFragment : Fragment(), TaskListener {
         }
 
         layout.findViewById<Button>(R.id.buttonDeleteTask).setOnClickListener {
-            taskList.remove(task) // removes task from adapter
-            TaskDataStructure.removeTask( // removes task from TreeMap & Firestore
+            if (TaskDataStructure.removeTask( // removes task from TreeMap & Firestore
                 DateAndTime(dueDate, dueTime),
-                TaskDetail(taskName, taskDescription)
-            )
+                TaskDetail(taskName, taskDescription))
+                ) taskList.remove(task) // removes task from adapter
             // TaskDataStructure.deleteTask(taskName, taskDescription, task.getDateAndTime().getUnixTime())// remove task from firestore
             adapter.notifyDataSetChanged()
             layout.visibility = View.GONE
