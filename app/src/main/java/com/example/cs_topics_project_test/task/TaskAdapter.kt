@@ -24,6 +24,7 @@ class TaskAdapter(private val tasks: MutableList<Task>) : RecyclerView.Adapter<T
         return TaskViewHolder(view)
     }
 
+
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = tasks[position]
         holder.taskName.text = task.getTaskName()

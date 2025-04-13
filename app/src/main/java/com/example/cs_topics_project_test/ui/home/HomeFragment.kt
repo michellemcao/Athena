@@ -1,5 +1,6 @@
 package com.example.cs_topics_project_test.ui.home
 
+
 //import android.os.Build.VERSION_CODES.R
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +13,18 @@ import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.databinding.FragmentHomeBinding
 import kotlin.random.Random
 import android.widget.Button
+import com.anychart.AnyChartView
+import com.anychart.chart.common.dataentry.ValueDataEntry
+import com.anychart.AnyChart
+import com.anychart.chart.common.dataentry.DataEntry
+import com.anychart.charts.Pie
+import com.example.cs_topics_project_test.task.Task
+import com.example.cs_topics_project_test.task.TaskManager.tasks
+
+/*import com.anychart.AnyChart.pie
+import com.anychart.Pie
+import com.anychart.ValueDataEntry
+*/
 //import android.os.Build.VERSION_CODES.R
 
 
@@ -31,6 +44,8 @@ class HomeFragment : Fragment() {
 
 
 
+
+
     ): View {
         val homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -42,6 +57,7 @@ class HomeFragment : Fragment() {
         homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }*/
+
         return root
         /*
         binding.bt.setOnClickListener {
@@ -51,6 +67,39 @@ class HomeFragment : Fragment() {
 
 
 
+    }
+
+    private var chart: AnyChartView? = null
+    fun onCreate(view: AnyChartView, savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        //setContentView(R.layout.fragment_home)
+        val chart: AnyChartView=view.findViewById(R.id.any_chart_view)
+        configChartView()
+
+    }
+
+    private fun configChartView() {
+
+        var checked =0
+        var notchecked =0
+        for(i in 0..tasks.size-1){
+            if(tasks[i].isTaskCompleted()){
+                checked++
+            }
+            else{
+                notchecked++
+            }
+        }
+        val work = listOf(checked, notchecked)
+        val done = listOf("done", "not done")
+        val pie: Pie =AnyChart.pie()
+        val dataPieChart: MutableList<DataEntry> = mutableListOf()
+        for(index in work.indices){
+            dataPieChart.add(ValueDataEntry(done.elementAt(index),work.elementAt(index)))
+        }
+        pie.data(dataPieChart)
+        pie.title("Finished work")
+        chart!!.setChart(pie)
     }
 
     override fun onDestroyView() {

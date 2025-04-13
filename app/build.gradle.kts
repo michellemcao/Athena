@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.auth.ktx)
     implementation("com.github.AnyChart:AnyChart-Android:1.1.2")
+    implementation("androidx.multidex:multidex:2.0.1")
     implementation(libs.androidx.room.compiler.processing.testing)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

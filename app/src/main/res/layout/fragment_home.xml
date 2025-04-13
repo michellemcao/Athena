@@ -135,10 +135,11 @@
         app:layout_constraintStart_toStartOf="@id/view"
         app:layout_constraintTop_toTopOf="@+id/view" />
 
-    <com.anychart.anychart.AnyChartView
+    <com.anychart.AnyChartView
         android:id="@+id/any_chart_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginEnd="100dp"
         app:layout_constraintBottom_toBottomOf="@+id/view2"
         app:layout_constraintEnd_toEndOf="@+id/view2"
         app:layout_constraintStart_toStartOf="@+id/view2"
