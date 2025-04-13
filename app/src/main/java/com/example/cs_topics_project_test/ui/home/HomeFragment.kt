@@ -18,6 +18,8 @@ import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.AnyChart
 import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.charts.Pie
+import com.anychart.charts.Cartesian
+import com.anychart.core.cartesian.series.Column
 import com.example.cs_topics_project_test.task.Task
 import com.example.cs_topics_project_test.task.TaskManager.tasks
 
@@ -73,9 +75,10 @@ class HomeFragment : Fragment() {
     fun onCreate(view: AnyChartView, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.fragment_home)
-        val chart: AnyChartView=view.findViewById(R.id.any_chart_view)
+        chart=view.findViewById(R.id.any_chart_view)
         configChartView()
-
+        chart2=view.findViewById(R.id.any_chart_view2)
+        configChartView2()
     }
 
     private fun configChartView() {
@@ -92,7 +95,7 @@ class HomeFragment : Fragment() {
         }
         val work = listOf(checked, notchecked)
         val done = listOf("done", "not done")
-        val pie: Pie =AnyChart.pie()
+        val pie: Pie=AnyChart.pie()
         val dataPieChart: MutableList<DataEntry> = mutableListOf()
         for(index in work.indices){
             dataPieChart.add(ValueDataEntry(done.elementAt(index),work.elementAt(index)))
@@ -101,6 +104,38 @@ class HomeFragment : Fragment() {
         pie.title("Finished work")
         chart!!.setChart(pie)
     }
+
+    private var chart2: AnyChartView? = null
+
+    private fun configChartView2() {
+
+        var checked =0
+        var notchecked =0
+        for(i in 0..tasks.size-1){
+            if(tasks[i].isTaskCompleted()){
+                checked++
+            }
+            else{
+                notchecked++
+            }
+        }
+        val work = listOf(checked, notchecked)
+        val done = listOf("done", "not done")
+        val column: Cartesian =AnyChart.column()
+        val dataColumnChart: MutableList<DataEntry> = mutableListOf()
+        for(index in work.indices){
+            dataColumnChart.add(ValueDataEntry(done.elementAt(index),work.elementAt(index)))
+        }
+        val series =column.column(dataColumnChart)
+        series.normal().fill("#E294AF")
+        column.data(dataColumnChart)
+        column.xAxis(0).title("Work")
+        column.yAxis(0).title("Amount")
+
+        chart2!!.setChart(column)
+
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -124,6 +159,14 @@ class HomeFragment : Fragment() {
             val myRandomInt = Random.nextInt(list.size)
             t.text = list[myRandomInt]
         }
+        var todo=""
+        for(i in 0..tasks.size-1){
+            if(!tasks[i].isTaskCompleted()){
+                todo=todo+" -"+tasks[i].getTaskName()+"\n"
+            }
+        }
+        val unfinished : TextView=view.findViewById(R.id.unfinished)
+        unfinished.text=todo
     }
 
 
