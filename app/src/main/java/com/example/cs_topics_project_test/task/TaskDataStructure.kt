@@ -27,7 +27,6 @@ object TaskDataStructure {
     // private val taskMap = TreeMap<DateAndTime, TaskDetail>()
     private var taskMap = TreeMap<DateAndTime, TaskNode?>()
     private var completedMap = TreeMap<DateCompleted, TaskNode?>()
-
     // private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private var userId = FirebaseAuth.getInstance().currentUser
 
@@ -35,6 +34,12 @@ object TaskDataStructure {
         val task: TaskDetail,
         var nextTask: TaskNode?
     )
+
+    fun init() {
+        this.taskMap = TreeMap<DateAndTime, TaskNode?>()
+        this.completedMap = TreeMap<DateCompleted, TaskNode?>()
+        this.userId = FirebaseAuth.getInstance().currentUser
+    }
 
     // TaskMap functionality and retrieval code
 
@@ -436,11 +441,6 @@ object TaskDataStructure {
             }
     }
 
-    fun resetLocal() {
-        taskMap = TreeMap<DateAndTime, TaskNode?>()
-        completedMap = TreeMap<DateCompleted, TaskNode?>()
-        // userId = null
-    }
     /* @RequiresApi(Build.VERSION_CODES.O)
     private fun convertUnix(storedTask : TaskStore): DateAndTime {
         val unixSeconds = storedTask.dueDateAndTime // Unix timestamp (in seconds)
