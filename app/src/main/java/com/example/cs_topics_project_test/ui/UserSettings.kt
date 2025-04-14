@@ -14,7 +14,10 @@ import com.google.firebase.auth.userProfileChangeRequest
 import com.example.cs_topics_project_test.login.SignInActivity
 import android.content.Intent
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
+// TODO rn you have to type your name and username each time, make it so you can change whatever
+// TODO fix ui/constraints stuff later
 
 class UserSettings : Fragment() {
 
@@ -42,8 +45,10 @@ class UserSettings : Fragment() {
 
         // reads "mode" argument (either "signup" or "settings")
         mode = arguments?.getString(ARG_MODE)
+        mode = arguments?.getString("mode") ?: "settings" // fallback if missing
 
         firestore = FirebaseFirestore.getInstance()
+        firebaseAuth = FirebaseAuth.getInstance()
 
     }
     // TODO also update username and store somewhere in Firebase (rn it's only name)
@@ -63,7 +68,6 @@ class UserSettings : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         // when submit button clicked
         binding.submitUserSettings.setOnClickListener {
             // name is the new inputted name
@@ -94,13 +98,15 @@ class UserSettings : Fragment() {
                                     user.updateProfile(profileUpdates).addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
                                             // add username to firestore
-                                            val userData = hashMapOf("username" to username)
+                                            val userData = hashMapOf("username" to username, "name" to name)
 
-                                            firestore.collection("users").document(user.uid).set(userData)
+                                            firestore.collection("users").document(user.uid).set(userData, SetOptions.merge())
                                                 .addOnSuccessListener {
                                                     Toast.makeText(requireContext(), "Profile Updated", Toast.LENGTH_SHORT).show()
+
                                                     // if user came from the sign up screen, go back to sign in
                                                     if (mode == "signup") {
+                                                        Toast.makeText(requireContext(), "Please sign in", Toast.LENGTH_SHORT).show()
                                                         startActivity(Intent(requireContext(), SignInActivity::class.java))
                                                     }
                                                 }

@@ -67,12 +67,6 @@ class HomeActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        // TODO fix the settings page
-        /*navView.getMenu().findItem(R.id.user_settings).setOnMenuItemClickListener ({ menuItem ->
-            startActivity(Intent(this, UserSettings::class.java))
-            true
-        })
-        */
 
         // signs user out of account when sign out button clicked
         navView.getMenu().findItem(R.id.signOutButton).setOnMenuItemClickListener ({ menuItem ->
