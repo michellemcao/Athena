@@ -14,9 +14,9 @@
     <!--adding fragment (calendar code and functionality) to side panel; works closely with main/activity_main_drawer.xml-->
     <fragment
         android:id="@+id/nav_calendar"
-        android:name="com.example.cs_topics_project_test.ui.calendar.CalendarFragment"
+        android:name="com.example.cs_topics_project_test.calendar.CalendarFragment"
         android:label="@string/menu_calendar"
-        tools:layout="@layout/fragment_calendar_old" />
+        tools:layout="@layout/fragment_calendar" />
 
     <!---<activity
         android:id="@+id/nav_tasks"
@@ -27,5 +27,5 @@
         android:id="@+id/nav_tasks"
         android:name="com.example.cs_topics_project_test.task.TaskFragment"
         android:label="@string/menu_tasks"
-        tools:layout="@layout/fragment_task" />
+        tools:layout="@layout/fragment_task_upgrade" />
 </navigation>

@@ -12,15 +12,16 @@
         android:background="?attr/colorPrimary"
         android:theme="?attr/actionBarTheme"
         android:title="Chat with John Doe"
-        android:padding="8dp" />
+        android:padding="0dp" />
 
     <!-- RecyclerView for displaying the messages -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMessages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:clipChildren="false"
+        android:clipToPadding="true"
+        android:clipChildren="true"
+        android:padding="0dp"
         android:layout_below="@id/toolbarChat"
         android:layout_above="@id/messageInputLayout" />
 

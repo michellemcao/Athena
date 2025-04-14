@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
-import com.example.cs_topics_project_test.ui.ui.chat.Message
 import android.graphics.Rect
 
 
@@ -30,6 +29,7 @@ class MessageAdapter(private val messageList: MutableList<Message>) :
             holder.bind(message)
         }
     }
+
 
     override fun getItemCount(): Int = messageList.size
 
@@ -65,11 +65,11 @@ class MessageAdapter(private val messageList: MutableList<Message>) :
             if (position == RecyclerView.NO_POSITION) return
 
             // Apply top margin for all items
-            outRect.top = spacing
+            outRect.top = 1
 
             // Optional: Add bottom spacing for the last item
             if (position == state.itemCount - 1) {
-                outRect.bottom = spacing
+                outRect.bottom = 1
             }
         }
     }

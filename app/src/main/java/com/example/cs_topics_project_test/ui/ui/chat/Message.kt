@@ -3,10 +3,12 @@ data class Message(
     val sender: String,
     val content: String,
     val timestamp: String,
-    val messageType: MessageType
+    var messageType: MessageType
 ) {
     enum class MessageType {
         SENT,
         RECEIVED
     }
+
+    constructor() : this("", "", "", MessageType.SENT)
 }

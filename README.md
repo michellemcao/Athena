@@ -18,9 +18,6 @@
 ### To-do:
 - Data Storage w/ SQL
 - Finalize Color schemes
-- Team Accounts (Group Calendar, Assigning Tasks to specific individuals, etc)
-- Audio Calls
-- Video Calls
 
 ## Problems Faced
 - a disappearing navigation bar

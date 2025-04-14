@@ -1,4 +1,4 @@
-package com.example.cs_topics_project_test
+package com.example.cs_topics_project_test.login
 
 import android.content.Intent
 import android.os.Build.VERSION_CODES.R
@@ -20,10 +20,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (user != null) {
-            FirebaseAuth.getInstance().signOut(); //GET RID OF THIS LATER!!
-            // go to main activity page (dont have it here)
-        }
+        //if (user != null) {
+            FirebaseAuth.getInstance().signOut()
+        //}
         startActivity(Intent(this, SignInActivity::class.java))
     }
     /*private val list: List<String> = listOf("What do you call a factory that makes okay products? ",
