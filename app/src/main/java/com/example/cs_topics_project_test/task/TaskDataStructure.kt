@@ -100,6 +100,10 @@ object TaskDataStructure {
         return taskList
     }
 
+    fun allTaskMap(): MutableList<Task> {
+        return rangeList(taskMap.firstKey(), true, taskMap.lastKey(), true)
+    }
+
     fun rangeDateTasks(date : Date) : MutableList<Task> {
         return rangeList(
             DateAndTime(date, Time(12, 0, false)), true,
