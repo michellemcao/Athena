@@ -21,7 +21,10 @@ import com.anychart.charts.Pie
 import com.anychart.charts.Cartesian
 import com.anychart.core.cartesian.series.Column
 import com.example.cs_topics_project_test.task.Task
-import com.example.cs_topics_project_test.task.TaskManager.tasks
+import com.example.cs_topics_project_test.task.TaskManager.tasksDueLater
+//import com.example.cs_topics_project_test.task.TaskManager.tasks
+import com.example.cs_topics_project_test.task.TaskManager.tasksDueToday
+import com.example.cs_topics_project_test.task.TaskManager.tasksPastDue
 
 /*import com.anychart.AnyChart.pie
 import com.anychart.Pie
@@ -70,6 +73,7 @@ class HomeFragment : Fragment() {
 
 
     }
+    private var tasks = tasksDueToday+tasksDueLater+ tasksPastDue
 
     private var chart: AnyChartView? = null
     fun onCreate(view: AnyChartView, savedInstanceState: Bundle?) {
