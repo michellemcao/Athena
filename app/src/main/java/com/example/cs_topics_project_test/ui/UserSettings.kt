@@ -108,11 +108,17 @@ class UserSettings : Fragment() {
                         displayName = name
                     }
                     user.updateProfile(profileUpdates).addOnSuccessListener {
-                        Toast.makeText(requireContext(), "Name updated", Toast.LENGTH_SHORT).show()
-                        // variable name kind of confusing here but updates the name shown on screen
-                        prevName.text = name
-                        nameUpdated = true
-                        checkifDone()
+                        // add name to firestore
+                        val userData = hashMapOf("name" to name)
+                        firestore.collection("users").document(user.uid).set(userData, SetOptions.merge())
+                            .addOnSuccessListener {
+                                Toast.makeText(requireContext(), "Name updated", Toast.LENGTH_SHORT).show()
+                                // variable name kind of confusing here but updates the name shown on screen
+                                prevName.text = name
+                                nameUpdated = true
+                                checkifDone()
+                            }
+
                     }
                 }
 
@@ -132,6 +138,7 @@ class UserSettings : Fragment() {
                                             Toast.makeText(
                                                 requireContext(),"Username already taken",Toast.LENGTH_SHORT).show()
                                         } else {
+                                            // add to firestore
                                             val userData = hashMapOf("username" to username)
                                             firestore.collection("users").document(user.uid).set(userData, SetOptions.merge())
                                                 .addOnSuccessListener {
