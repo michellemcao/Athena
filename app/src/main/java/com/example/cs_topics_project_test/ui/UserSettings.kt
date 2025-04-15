@@ -17,7 +17,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 
 // TODO rn you have to type your name and username each time, make it so you can change whatever
-// TODO fix ui/constraints stuff later
 
 class UserSettings : Fragment() {
 
@@ -68,64 +67,84 @@ class UserSettings : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // when submit button clicked
+
+        // text that shows user's name/username
+        val prevName = view.findViewById<TextView>(R.id.textView10)
+        val prevUsername = view.findViewById<TextView>(R.id.usernameDisplay)
+
+        val user = firebaseAuth.currentUser
+
+        // set text or default sets name and username to none
+        prevName.text = user?.displayName?:"No Name"
+        prevUsername.text = "No username"
+
+        if (mode == "settings" && user != null) {
+            firestore.collection("users").document(user.uid).get()
+                .addOnSuccessListener { document ->
+                    prevUsername.text = document.getString("username") ?: "No username" // idk if this is necessary but just in case
+                }
+        }
+
+        // when save button clicked
         binding.submitUserSettings.setOnClickListener {
-            // name is the new inputted name
-            val name = binding.newName.text.toString()
-            val username = binding.username.text.toString()
-            val user = firebaseAuth.currentUser
+            // name is the new inputted name, trim to get rid of leading/trailing whitespace
+            val name = binding.newName.text.toString().trim()
+            val username = binding.username.text.toString().trim()
 
             if (user != null) {
-
-                // update display name in firebase
-                val profileUpdates = userProfileChangeRequest {
-                    displayName = name
+                // if user changed name, change saved name in firestore
+                if (name.isNotEmpty() && name != user.displayName) {
+                    val profileUpdates = userProfileChangeRequest {
+                        displayName = name
+                    }
+                    user.updateProfile(profileUpdates).addOnSuccessListener {
+                        Toast.makeText(requireContext(), "Name updated", Toast.LENGTH_SHORT).show()
+                        // variable name kind of confusing here but updates the name shown on screen
+                        prevName.text = name
+                    }
                 }
-                val prevName = view.findViewById<TextView>(R.id.textView10)
-                prevName.text = user.displayName
 
-                user.updateProfile(profileUpdates).addOnCompleteListener { task->
-                    if (task.isSuccessful) {
-                        Toast.makeText(requireContext(), "User profile updated", Toast.LENGTH_SHORT).show()
+                // same thing for username
+                if (username.isNotEmpty()) {
+                    // get current username from firestore (check if unchanged)
+                    firestore.collection("users").document(user.uid).get()
+                        .addOnSuccessListener { doc ->
+                            // if username null assign "" to it temporarily
+                            val currentUsername = doc.getString("username") ?: ""
 
-                        firestore.collection("users")
-                            // check if username unique
-                            .whereEqualTo("username",username).get()
-                            .addOnSuccessListener { documents ->
-                                if (!documents.isEmpty) {
-                                    Toast.makeText(requireContext(), "Username already taken. Please choose another.", Toast.LENGTH_SHORT).show()
-                                } else {
-                                    user.updateProfile(profileUpdates).addOnCompleteListener { task ->
-                                        if (task.isSuccessful) {
-                                            // add username to firestore
-                                            val userData = hashMapOf("username" to username, "name" to name)
-
-                                            firestore.collection("users").document(user.uid).set(userData, SetOptions.merge())
+                            if (username != currentUsername) {
+                                // check if username unique
+                                firestore.collection("users").whereEqualTo("username", username)
+                                    .get()
+                                    .addOnSuccessListener { docs ->
+                                        if (!docs.isEmpty) {
+                                            Toast.makeText(
+                                                requireContext(),
+                                                "Username already taken",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        } else {
+                                            val userData = hashMapOf("username" to username)
+                                            firestore.collection("users").document(user.uid)
+                                                .set(userData, SetOptions.merge())
                                                 .addOnSuccessListener {
-                                                    Toast.makeText(requireContext(), "Profile Updated", Toast.LENGTH_SHORT).show()
-
-                                                    // if user came from the sign up screen, go back to sign in
-                                                    if (mode == "signup") {
-                                                        Toast.makeText(requireContext(), "Please sign in", Toast.LENGTH_SHORT).show()
-                                                        startActivity(Intent(requireContext(), SignInActivity::class.java))
-                                                    }
+                                                    Toast.makeText(
+                                                        requireContext(),
+                                                        "Username updated",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                    prevUsername.text = username
                                                 }
                                         }
                                     }
-                                }
                             }
+                        }
 
 
-
-                    }
                 }
-            }
-
-        }
+            }}}}
 
 
 
-    }
 
 
-}
