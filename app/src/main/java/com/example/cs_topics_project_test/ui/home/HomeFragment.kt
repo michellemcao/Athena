@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.databinding.FragmentHomeBinding
+import com.example.cs_topics_project_test.task.TaskManager
 import kotlin.random.Random
 
 class HomeFragment : Fragment() {
@@ -59,6 +60,15 @@ class HomeFragment : Fragment() {
             val myRandomInt = Random.nextInt(list.size)
             t.text = list[myRandomInt]
         }
+        var todo=""
+        var tasks = TaskManager.tasksDueToday
+        for(i in 0..tasks.size-1){
+            if(!tasks[i].isTaskCompleted()){
+                todo=todo+" -"+tasks[i].getTaskName()+"\n"
+            }
+        }
+        val unfinished : TextView=view.findViewById(R.id.unfinished)
+        unfinished.text=todo
 
     }
 
