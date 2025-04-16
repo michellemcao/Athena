@@ -17,7 +17,7 @@ import com.example.cs_topics_project_test.task.TaskDataStructure
 import com.example.cs_topics_project_test.task.TaskDetail
 import com.example.cs_topics_project_test.task.TaskListener
 
-class CalendarAdapterCompleted(private val tasks: MutableList<TaskCompleted>) : RecyclerView.Adapter<CalendarAdapterCompleted.TaskViewHolder>() {
+class CalendarAdapterCompleted(private val tasks: MutableList<TaskCompleted>, private val listener: TaskListener) : RecyclerView.Adapter<CalendarAdapterCompleted.TaskViewHolder>() {
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val taskName: TextView = itemView.findViewById(R.id.textViewTaskName)
@@ -51,6 +51,7 @@ class CalendarAdapterCompleted(private val tasks: MutableList<TaskCompleted>) : 
                 // TaskManager.tasksCompleted.add(taskC)
 
                 // listener.onTaskCompleted(taskC)
+                listener.onTask(1, Task(task.getTaskName(), task.getTaskDescription(), task.getDueDate(), task.getDueTime()))
 
                 Toast.makeText(
                     holder.itemView.context,

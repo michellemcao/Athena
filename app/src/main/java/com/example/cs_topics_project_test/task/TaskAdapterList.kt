@@ -81,4 +81,9 @@ class TaskAdapterList(private val tasks: MutableList<Task>, private val listener
         tasks.addAll(newTasks)
         notifyDataSetChanged() // Refresh RecyclerView
     }
+    fun addTask(task: Task) {
+        tasks.add(task)
+        // notifyItemInserted(tasks.size - 1)
+        notifyDataSetChanged()
+    }
 }

@@ -75,7 +75,7 @@ class CalendarFragment : Fragment(), TaskListener {
 
             targetDate = Date(year, month + 1, day)
 
-            calendarAdapterCompleted = CalendarAdapterCompleted(TaskDataStructure.getTasksCompletedRange(targetDate))
+            calendarAdapterCompleted = CalendarAdapterCompleted(TaskDataStructure.getTasksCompletedRange(targetDate), this)
             calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate), this) //calendarAdapterCompleted)
 
             recyclerViewCalendarCompleted.adapter = calendarAdapterCompleted
@@ -86,7 +86,7 @@ class CalendarFragment : Fragment(), TaskListener {
             // Toast.makeText(activity, "Target Date: $targetDate", Toast.LENGTH_SHORT).show()
         }
 
-        calendarAdapterCompleted = CalendarAdapterCompleted(TaskDataStructure.getTasksCompletedRange(targetDate))
+        calendarAdapterCompleted = CalendarAdapterCompleted(TaskDataStructure.getTasksCompletedRange(targetDate), this)
         calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate), this) // calendarAdapterCompleted)
 
         recyclerViewCalendarCompleted.adapter = calendarAdapterCompleted
@@ -98,6 +98,10 @@ class CalendarFragment : Fragment(), TaskListener {
 
     override fun onTaskCompleted(task: TaskCompleted) {
         calendarAdapterCompleted.addCompletedTask(task)
+    }
+
+    override fun onTask(num: Int, task: Task) {
+        calendarAdapter.addTask(task)
     }
 
     override fun onTaskPressed(task: Task, position: Int, taskList: MutableList<Task>, adapter: TaskAdapterList) {

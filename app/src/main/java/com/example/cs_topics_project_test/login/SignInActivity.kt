@@ -49,6 +49,7 @@ class SignInActivity : AppCompatActivity() {
                         val user = firebaseAuth.currentUser
                         if (user != null && user.isEmailVerified) { // goes to home activity if user successfully sign in and verified
                             Toast.makeText(this, "Sign In Successful. ", Toast.LENGTH_SHORT).show()
+                            TaskDataStructure.init()
                             TaskDataStructure.initializeDatabase()
                             // TaskManager.init()
                             startActivity(Intent(this, HomeActivity::class.java))
@@ -118,4 +119,3 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 }
-

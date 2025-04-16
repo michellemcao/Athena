@@ -64,7 +64,7 @@ class TaskFragment : Fragment(), TaskListener {
         // Toast.makeText(activity, "Today's Date: $todayDate", Toast.LENGTH_SHORT).show()
 
 
-        completedAdapter = TaskAdapterCompleted(TaskManager.tasksCompleted)
+        completedAdapter = TaskAdapterCompleted(TaskManager.tasksCompleted, this)
         // taskListAdapter = TaskListAdapter(TaskManager.tasks) // takes task from global TaskManager
         // tasks sorted by ascending name order
         // val ascTask = (TaskManager.tasksDueToday).sortedWith(Task.taskNameComparatorAscending)
@@ -241,6 +241,14 @@ class TaskFragment : Fragment(), TaskListener {
 
     override fun onTaskCompleted(task : TaskCompleted) {
         completedAdapter.addCompletedTask(task)
+    }
+
+    override fun onTask(num: Int, task: Task) {
+        when(num) {
+            1 -> dueTodayAdapter.addTask(task)
+            2 -> dueLaterAdapter.addTask(task)
+            3 -> pastDueAdapter.addTask(task)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

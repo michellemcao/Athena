@@ -14,7 +14,7 @@ import com.example.cs_topics_project_test.function.DateAndTime
 import com.example.cs_topics_project_test.function.Time
 import java.util.Calendar
 
-class TaskAdapterCompleted(private val tasks: MutableList<TaskCompleted>) : RecyclerView.Adapter<TaskAdapterCompleted.TaskViewHolder>() {
+class TaskAdapterCompleted(private val tasks: MutableList<TaskCompleted>, private val listener: TaskListener) : RecyclerView.Adapter<TaskAdapterCompleted.TaskViewHolder>() {
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val taskName: TextView = itemView.findViewById(R.id.textViewTaskName)
@@ -39,15 +39,21 @@ class TaskAdapterCompleted(private val tasks: MutableList<TaskCompleted>) : Recy
             if (!isChecked) {
                 task.taskNotCompleted()
 
+                val dueDate = task.getDueDate()
                 val date = DateAndTime(task.getDueDate(), task.getDueTime())
                 val dateC = task.getTaskCompletedDate()
                 val taskD = TaskDetail(task.getTaskName(), task.getTaskDescription())
                 // taskD.taskCompleted()
 
                 // val taskC = TaskCompleted(TaskManager.todayDate, date, taskD)
-                val taskC = TaskCompleted(dateC, date, taskD)
+                // val taskC = TaskCompleted(dateC, date, taskD)
+                val taskA = Task(task.getTaskName(), task.getTaskDescription(), task.getDueDate(), task.getDueTime())
                 TaskDataStructure.processTask(dateC, date, taskD)
                 // TaskManager.tasksCompleted.add(taskC)
+
+                if (dueDate < TaskManager.todayDate) listener.onTask(3, taskA) // TaskManager.tasksPastDue.add(taskA)
+                else if (dueDate > TaskManager.todayDate) listener.onTask(2, taskA) // TaskManager.tasksDueLater.add(taskA)
+                else listener.onTask(1, taskA) // TaskManager.tasksDueToday.add(taskA)
 
                 // listener.onTaskCompleted(taskC)
 

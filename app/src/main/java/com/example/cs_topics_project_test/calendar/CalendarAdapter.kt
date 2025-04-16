@@ -61,10 +61,11 @@ class CalendarAdapter(private val tasks: MutableList<Task>, private val listener
                 // update data structure in TaskDataStructure (global tasks), TaskManager (to-do list tasks), and calendar (real-time updatin!)
                 TaskDataStructure.processCompletedTask(completedDate, date, taskD)
                 listener.onTaskCompleted(taskC)
-                TaskManager.tasksCompleted.add(taskC)
+
+                /*TaskManager.tasksCompleted.add(taskC)
                 if (task.getDueDate() < TaskManager.todayDate) TaskManager.init(3)
                 else if (task.getDueDate() > TaskManager.todayDate) TaskManager.init(2)
-                else TaskManager.init(1) //TaskManager.tasksDueToday.removeAt(position)
+                else TaskManager.init(1) //TaskManager.tasksDueToday.removeAt(position)*/
 
                 Toast.makeText(holder.itemView.context, "Completed task: ${task.getTaskName()}. Hooray!!", Toast.LENGTH_SHORT).show()
                 tasks.removeAt(position) // adapter removal of position
@@ -81,4 +82,8 @@ class CalendarAdapter(private val tasks: MutableList<Task>, private val listener
         notifyItemInserted(tasks.size - 1)
         Toast.makeText(context, "Task ${task.getTaskName()} in TaskListAdapter; Number of tasks: ${tasks.size}", Toast.LENGTH_SHORT).show()
     }*/
+    fun addTask(task : Task) {
+        tasks.add(task)
+        notifyDataSetChanged()
+    }
 }
