@@ -67,16 +67,24 @@ class HomeActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        // TODO fix the settings page
-        /*navView.getMenu().findItem(R.id.user_settings).setOnMenuItemClickListener ({ menuItem ->
-            startActivity(Intent(this, UserSettings::class.java))
-            true
-        })
-        */
+        firebaseAuth = FirebaseAuth.getInstance()
+        val currentUser = firebaseAuth.currentUser
+
+        // show user's name and email in nav header
+        val headerView = navView.getHeaderView(0)
+        val nameTextView = headerView.findViewById<TextView>(R.id.nameTextView)
+        val emailTextView = headerView.findViewById<TextView>(R.id.textView)
+        if (currentUser != null) {
+            val name = currentUser.displayName
+            val email = currentUser.email
+            nameTextView.text = name
+            emailTextView.text = email
+        }
+
 
         // signs user out of account when sign out button clicked
         navView.getMenu().findItem(R.id.signOutButton).setOnMenuItemClickListener ({ menuItem ->
-            FirebaseAuth.getInstance().signOut()
+            firebaseAuth.signOut()
             startActivity(Intent(this, SignInActivity::class.java))
             true
         })

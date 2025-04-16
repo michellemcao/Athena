@@ -11,48 +11,157 @@ import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.databinding.FragmentUserSettingsBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
-
+import com.example.cs_topics_project_test.login.SignInActivity
+import android.content.Intent
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
 class UserSettings : Fragment() {
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var binding: FragmentUserSettingsBinding
+    private lateinit var firestore: FirebaseFirestore
 
-    val user = firebaseAuth.currentUser
+    // mode is whether fragment is being used for sign up or regular settings
+    private var mode: String? = null
+
+    companion object {
+        private const val ARG_MODE = "mode"
+
+        fun newInstance(mode: String): UserSettings {
+            val fragment = UserSettings()
+            val bundle = Bundle()
+            bundle.putString(ARG_MODE, mode)
+            fragment.arguments = bundle
+            return fragment
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // reads "mode" argument (either "signup" or "settings")
+        mode = arguments?.getString(ARG_MODE)
+        //mode = arguments?.getString("mode") ?: "settings" // fallback if missing
+
+        firestore = FirebaseFirestore.getInstance()
+        firebaseAuth = FirebaseAuth.getInstance()
+
     }
-    // TODO also update username and store somewhere in Firebase (rn it's only name)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_user_settings, container, true)
-        return view
+        binding = FragmentUserSettingsBinding.inflate(inflater,container,false)
+        return binding.root
+
+        // val view = inflater.inflate(R.layout.fragment_user_settings, container, true)
+        // return view
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // name is the new inputted name
-        val name = R.id.newName.toString()
-        // update display name in firebase
-        val profileUpdates = userProfileChangeRequest {
-            displayName = name
-        }
+
+        // text that shows user's name/username
         val prevName = view.findViewById<TextView>(R.id.textView10)
-        if (user != null) {
-            prevName.text = user.displayName
+        val prevUsername = view.findViewById<TextView>(R.id.usernameDisplay)
+
+        val user = firebaseAuth.currentUser
+
+        // set text or default sets name and username to none
+        prevName.text = user?.displayName?:"No Name"
+        prevUsername.text = "No username"
+
+        if (mode == "settings" && user != null) {
+            firestore.collection("users").document(user.uid).get()
+                .addOnSuccessListener { document ->
+                    prevUsername.text = document.getString("username") ?: "No username" // idk if this is necessary but just in case
+                }
         }
-        user!!.updateProfile(profileUpdates).addOnCompleteListener { task->
-            if (task.isSuccessful) {
-                Toast.makeText(requireContext(), "User profile updated", Toast.LENGTH_SHORT).show()
+
+        // when save button clicked
+        binding.submitUserSettings.setOnClickListener {
+            // name is the new inputted name, trim to get rid of leading/trailing whitespace
+            val name = binding.newName.text.toString().trim()
+            val username = binding.username.text.toString().trim()
+
+            if (user != null) {
+
+                var nameUpdated = false
+                var usernameUpdated = false
+
+                // if coming from sign in page, must have name and username filled out
+                fun checkifDone() {
+                    if (mode == "signup" && nameUpdated && usernameUpdated) {
+                        startActivity(Intent(requireContext(),SignInActivity::class.java))
+                        requireActivity().finish()
+                    }
+                }
+
+
+                // if user changed name, change saved name in firestore
+                if (name.isNotEmpty() && name != user.displayName) {
+                    val profileUpdates = userProfileChangeRequest {
+                        displayName = name
+                    }
+                    user.updateProfile(profileUpdates).addOnSuccessListener {
+                        // add name to firestore
+                        val userData = hashMapOf("name" to name)
+                        firestore.collection("users").document(user.uid).set(userData, SetOptions.merge())
+                            .addOnSuccessListener {
+                                Toast.makeText(requireContext(), "Name updated", Toast.LENGTH_SHORT).show()
+                                // variable name kind of confusing here but updates the name shown on screen
+                                prevName.text = name
+                                nameUpdated = true
+                                checkifDone()
+                            }
+
+                    }
+                }
+
+                // same thing for username
+                if (username.isNotEmpty()) {
+                    // get current username from firestore (check if unchanged)
+                    firestore.collection("users").document(user.uid).get()
+                        .addOnSuccessListener { doc ->
+                            // if username null assign "" to it temporarily
+                            val currentUsername = doc.getString("username") ?: ""
+
+                            if (username != currentUsername) {
+                                // check if username unique
+                                firestore.collection("users").whereEqualTo("username", username).get()
+                                    .addOnSuccessListener { docs ->
+                                        if (!docs.isEmpty) {
+                                            Toast.makeText(
+                                                requireContext(),"Username already taken",Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            // add to firestore
+                                            val userData = hashMapOf("username" to username)
+                                            firestore.collection("users").document(user.uid).set(userData, SetOptions.merge())
+                                                .addOnSuccessListener {
+                                                    Toast.makeText(requireContext(),"Username updated",Toast.LENGTH_SHORT).show()
+                                                    usernameUpdated = true
+                                                    prevUsername.text = username
+                                                    checkifDone()
+                                                }
+                                        }
+                                    }
+                            }
+                        }
+
+
+                }
+
             }
+
         }
     }
-
-
 }
+
+
+
+
+
