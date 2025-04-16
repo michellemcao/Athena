@@ -6,3 +6,9 @@ plugins {
     //alias(libs.plugins.jetbrains.kotlin.android) apply false
 
 }
+buildscript {
+
+    dependencies{
+        classpath("com.github.dcendents:android-maven-gradle-plugin:2.0")
+    }
+}

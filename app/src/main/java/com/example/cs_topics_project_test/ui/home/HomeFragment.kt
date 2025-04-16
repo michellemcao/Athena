@@ -12,6 +12,17 @@ import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.databinding.FragmentHomeBinding
 import com.example.cs_topics_project_test.task.TaskManager
 import kotlin.random.Random
+/*import com.anychart.AnyChartView
+import com.anychart.chart.common.dataentry.ValueDataEntry
+import com.anychart.AnyChart
+import com.anychart.chart.common.dataentry.DataEntry
+import com.anychart.charts.Pie
+import com.anychart.charts.Cartesian
+import com.anychart.core.cartesian.series.Column
+import com.example.cs_topics_project_test.task.Task
+import com.example.cs_topics_project_test.task.TaskManager.tasksDueLater
+import com.example.cs_topics_project_test.task.TaskManager.tasksDueToday
+import com.example.cs_topics_project_test.task.TaskManager.tasksPastDue*/
 
 class HomeFragment : Fragment() {
 
@@ -38,6 +49,8 @@ class HomeFragment : Fragment() {
         }*/
         return root
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
