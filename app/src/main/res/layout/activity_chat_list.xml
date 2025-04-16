@@ -17,23 +17,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- RecyclerView for the list of chats -->
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/createChatButton"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:src="@drawable/ic_add"
-        android:contentDescription="Create Chat"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:layout_constraintTop_toTopOf="@id/toolbarChat"
-        app:layout_constraintEnd_toEndOf="@id/toolbarChat"
-        app:layout_constraintBottom_toBottomOf="@id/toolbarChat"
-        android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
-        android:tooltipText="Create Chat"
+        android:layout_marginEnd="16dp"
+        android:accessibilityLiveRegion="polite"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Create Chat"
         android:importantForAccessibility="yes"
-        android:accessibilityLiveRegion="polite" />
+        android:src="@drawable/ic_add"
+        android:tooltipText="Create Chat"
+        app:layout_constraintBottom_toBottomOf="@id/toolbarChat"
+        app:layout_constraintEnd_toEndOf="@id/toolbarChat"
+        app:layout_constraintTop_toTopOf="@id/toolbarChat"
+        app:layout_constraintVertical_bias="1.0" />
 
-    <!-- RecyclerView for the list of chats -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
