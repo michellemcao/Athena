@@ -65,11 +65,8 @@ data class Task (
     override fun compareTo(other: Task): Int {
         val dCompare = this.dueDate.compareTo(other.dueDate)
         val tCompare = this.dueTime.compareTo(other.dueTime)
-        if (dCompare == 0) {
-            if (tCompare == 0) return 0
-            else if (tCompare == 1) return 1
-        } else if (dCompare == 1) return 1
-        return -1
+        if (dCompare == 0) return tCompare
+        return dCompare
     }
 
     // comparators for sorting tasks

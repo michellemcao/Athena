@@ -1,14 +1,18 @@
 package com.example.cs_topics_project_test.task
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.CheckBox
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.function.DateAndTime
+import com.example.cs_topics_project_test.function.Time
+import java.util.Calendar
 
 class TaskAdapterList(private val tasks: MutableList<Task>, private val listener: TaskListener) : RecyclerView.Adapter<TaskAdapterList.TaskViewHolder>() {
 
@@ -25,6 +29,7 @@ class TaskAdapterList(private val tasks: MutableList<Task>, private val listener
         return TaskViewHolder(view)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = tasks[position]
         holder.taskName.text = task.getTaskName()
@@ -40,8 +45,15 @@ class TaskAdapterList(private val tasks: MutableList<Task>, private val listener
                 val taskD = TaskDetail(task.getTaskName(), task.getTaskDescription())
                 // taskD.taskCompleted()
 
-                val taskC = TaskCompleted(TaskManager.todayDate, date, taskD)
-                TaskDataStructure.processCompletedTask(date, taskD)
+                // get time when task is completed
+                val calendar = Calendar.getInstance()
+                val hour = calendar.get(Calendar.HOUR_OF_DAY) // 24-hour format; 0 - 23
+                val minute = calendar.get(Calendar.MINUTE)
+                val completedDate = DateAndTime(TaskManager.todayDate, Time(hour, minute))
+
+                // val taskC = TaskCompleted(TaskManager.todayDate, date, taskD)
+                val taskC = TaskCompleted(completedDate, date, taskD)
+                TaskDataStructure.processCompletedTask(completedDate, date, taskD)
                 // TaskManager.tasksCompleted.add(taskC)
                 listener.onTaskCompleted(taskC)
 
@@ -50,6 +62,10 @@ class TaskAdapterList(private val tasks: MutableList<Task>, private val listener
                 notifyDataSetChanged()
             }
             else task.taskNotCompleted()
+        }
+        holder.itemView.setOnLongClickListener {
+            listener.onTaskPressed(task, position, tasks, this)
+            true
         }
     }
 
@@ -64,5 +80,10 @@ class TaskAdapterList(private val tasks: MutableList<Task>, private val listener
         tasks.clear()
         tasks.addAll(newTasks)
         notifyDataSetChanged() // Refresh RecyclerView
+    }
+    fun addTask(task: Task) {
+        tasks.add(task)
+        // notifyItemInserted(tasks.size - 1)
+        notifyDataSetChanged()
     }
 }

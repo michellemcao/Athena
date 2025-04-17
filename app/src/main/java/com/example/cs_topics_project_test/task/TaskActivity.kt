@@ -2,11 +2,13 @@ package com.example.cs_topics_project_test.task
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +25,7 @@ class TaskActivity : AppCompatActivity() {
     private val localTasks = mutableListOf<Task>() // local tasks
     private var tCount = 0 // number of tasks in local task list
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task)
@@ -41,7 +44,16 @@ class TaskActivity : AppCompatActivity() {
 
         // default date and time values to make sure the change actually happens
         var dueDate = TaskManager.todayDate
-        var dueTime = Time(12, 0, true) // 12:00 PM or noon
+
+        var calendar = Calendar.getInstance()
+        var hour = calendar.get(Calendar.HOUR_OF_DAY) // 24-hour format; 0 - 23
+        var min = calendar.get(Calendar.MINUTE)
+        var dueTime = Time(hour, min)
+        // var dueTime = Time(12, 0) // 12:00 PM or noon
+
+        // setting date and time that will be added
+        textViewDate.text = dueDate.toString()
+        textViewTime.text = dueTime.toString()
 
         // setting up recyclerView
         recyclerViewTasks.adapter = taskAdapter
@@ -68,6 +80,7 @@ class TaskActivity : AppCompatActivity() {
 
                 // for viewing in app real-time
                 if (added) {
+                    TaskDataStructure.storeTask(task)
                     if (dueDate < TaskManager.todayDate) TaskManager.tasksPastDue.add(task)
                     else if (dueDate > TaskManager.todayDate) TaskManager.tasksDueLater.add(task)
                     else TaskManager.tasksDueToday.add(task)
@@ -81,11 +94,16 @@ class TaskActivity : AppCompatActivity() {
                 // resetting all the fields
                 editTextTaskName.text.clear()
                 editTextTaskDescription.text.clear()
-                textViewDate.text = "Select due date"
-                textViewTime.text = "Select due time"
                 dueDate = TaskManager.todayDate
-                dueTime = Time(12, 0, true)
 
+                calendar = Calendar.getInstance()
+                hour = calendar.get(Calendar.HOUR_OF_DAY) // 24-hour format; 0 - 23
+                min = calendar.get(Calendar.MINUTE)
+                dueTime = Time(hour, min)
+                // dueTime = Time(12, 0) // 12:00 PM
+
+                textViewDate.text = dueDate.toString()
+                textViewTime.text = dueTime.toString()
             } else {
                 Toast.makeText(this, "Oops! Required field is blank.", Toast.LENGTH_SHORT).show()
             }
@@ -108,6 +126,7 @@ class TaskActivity : AppCompatActivity() {
         }
 
         buttonBack.setOnClickListener {
+            // TaskDataStructure.storeAllTasks()
             finish()
             //startActivity(Intent(this, TaskView::class.java)) // change to go to previous slide, not to Home
         }
@@ -138,9 +157,10 @@ class TaskActivity : AppCompatActivity() {
         val timePickerDialog = TimePickerDialog(
             this,
             { _, selectedHour, selectedMinute ->
-                val isPM = selectedHour >= 12
+                /*val isPM = selectedHour >= 12
                 val adjustedHour = if (selectedHour % 12 == 0) 12 else selectedHour % 12
-                val selectedTime = Time(adjustedHour, selectedMinute, isPM)
+                val selectedTime = Time(adjustedHour, selectedMinute, isPM)*/
+                val selectedTime = Time(selectedHour, selectedMinute)
                 /*val formattedTime = String.format("%02d:%02d %s",
                     formattedHour, selectedMinute,
                     if (isPM) "PM" else "AM"
@@ -154,5 +174,4 @@ class TaskActivity : AppCompatActivity() {
 
         timePickerDialog.show()
     }
-
 }

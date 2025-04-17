@@ -5,7 +5,7 @@ import com.example.cs_topics_project_test.function.DateAndTime
 import com.example.cs_topics_project_test.function.Time
 
 data class TaskCompleted (
-    private val taskCompletedDate: Date, //TaskCompleted
+    private val taskCompletedDate: DateAndTime, //TaskCompleted
     private val taskDue: DateAndTime,
     private val taskDetail: TaskDetail) : TaskOutline {
     // private val taskCompletedDate: Date = TaskManager.todayDate
@@ -43,7 +43,7 @@ data class TaskCompleted (
     override fun getDateAndTime(): DateAndTime {
         return taskDue
     }
-    fun getTaskCompletedDate(): Date {
+    fun getTaskCompletedDate(): DateAndTime {
         return this.taskCompletedDate
     }
 }

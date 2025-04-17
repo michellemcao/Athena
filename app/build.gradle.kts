@@ -17,6 +17,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -72,4 +73,13 @@ dependencies {
     implementation(libs.androidx.material)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.ui.tooling.preview)
+    // For Card view
+    implementation(libs.androidx.cardview)
+
+    // Chart and graph library
+    implementation(libs.eazegraph)
+    implementation(libs.library)
+
+
+
 }

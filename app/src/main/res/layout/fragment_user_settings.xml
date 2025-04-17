@@ -10,57 +10,88 @@
         android:id="@+id/newName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="215dp"
-        android:layout_marginEnd="166dp"
-        android:layout_marginBottom="31dp"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Change Name"
-        app:layout_constraintBottom_toTopOf="@+id/username"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:hint="Enter new name"
+        android:inputType="textPersonName"
+        app:layout_constraintTop_toBottomOf="@+id/nameLabel"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginLeft="20dp"
+         />
+
+    <!-- text says Username: -->
+    <TextView
+        android:id="@+id/usernameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username:"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/newName"
+        android:layout_marginTop="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginLeft="20dp"
+         />
+
+    <!-- display user's username -->
+    <TextView
+        android:id="@+id/usernameDisplay"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@id/usernameLabel"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/usernameLabel" />
+
 
     <EditText
         android:id="@+id/username"
+        android:inputType="text"
+        android:hint="Enter new username"
+        app:layout_constraintTop_toBottomOf="@+id/usernameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="31dp"
-        android:layout_marginEnd="166dp"
-        android:layout_marginBottom="395dp"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Username"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newName" />
+        android:layout_marginLeft="20dp"/>
+
+    <!-- edit icon next to username -->
+
+
+    <!-- text that says Name: -->
+    <Button
+        android:id="@+id/submit_user_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="36dp"
+        android:text="Save"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/nameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="165dp"
-        android:layout_marginBottom="16dp"
         android:text="Name:"
-        app:layout_constraintBottom_toTopOf="@+id/newName"
-        app:layout_constraintEnd_toStartOf="@+id/textView10"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="100dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginLeft="20dp"
+         />
 
+    <!-- displayed user's name -->
     <TextView
         android:id="@+id/textView10"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="165dp"
-        android:layout_marginEnd="276dp"
-        android:layout_marginBottom="16dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/newName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView8"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/nameLabel"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/nameLabel"
+        android:textSize="18sp"
+        />
+
+    <!-- edit icon next to name -->
+
 </androidx.constraintlayout.widget.ConstraintLayout>
