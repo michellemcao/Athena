@@ -30,4 +30,18 @@
     <color name="calendar_weekday_text">#0000FF</color>
     <color name="calendar_date_text">#000000</color>
     <color name="calendar_selected_date_circle">#FF0000</color>
+
+
+    <color name="colorPrimary">#024265</color>
+    <color name="colorPrimaryDark">#024265</color>
+    <color name="colorAccent">#05af9b</color>
+
+    <color name="color_one">#fb7268</color>
+    <color name="color_white">#ededf2</color>
+    <color name="color_two">#E3E0E0</color>
+
+    <color name="R">#FFA726</color>
+    <color name="Python">#66BB6A</color>
+    <color name="CPP">#EF5350</color>
+    <color name="Java">#29B6F6</color>
 </resources>

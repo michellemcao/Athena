@@ -26,6 +26,7 @@ object TaskManager {
 
     var tasksCompleted = TaskDataStructure.getTasksCompleted()
 
+
     // 1 = tasksDueToday
     // 2 = tasksDueLater
     // 3 = tasksPastDue
