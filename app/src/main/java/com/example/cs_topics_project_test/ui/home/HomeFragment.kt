@@ -11,14 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.databinding.FragmentHomeBinding
 import com.example.cs_topics_project_test.task.TaskManager
-import com.example.cs_topics_project_test.task.TaskManager.tasksDueLater
-import com.example.cs_topics_project_test.task.TaskManager.tasksDueToday
-import com.example.cs_topics_project_test.task.TaskManager.tasksPastDue
 import kotlin.random.Random
 import org.eazegraph.lib.charts.PieChart
 import org.eazegraph.lib.models.PieModel
 import android.graphics.Color
-import com.example.cs_topics_project_test.task.TaskManager.tasksCompleted
 
 
 class HomeFragment : Fragment() {
@@ -40,6 +36,7 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        TaskManager.init()
 
         /*val textView: TextView = binding.textHome
         homeViewModel.text.observe(viewLifecycleOwner) {
@@ -48,7 +45,7 @@ class HomeFragment : Fragment() {
         return root
     }
 
-    private var tasks = tasksDueToday+tasksDueLater+ tasksPastDue
+    private var tasks = TaskManager.tasksDueToday+TaskManager.tasksDueLater+ TaskManager.tasksPastDue
 
     //private var chart: PieChart? = null
     /*fun onCreate(pieChart: PieChart,savedInstanceState: Bundle?) {
@@ -148,13 +145,13 @@ class HomeFragment : Fragment() {
     }
 
     private fun configChartView2(chart: PieChart) {
-        val total = (tasksDueLater.size+ tasksPastDue.size+ tasksDueToday.size)
+        val total = (TaskManager.tasksDueLater.size + TaskManager.tasksPastDue.size + TaskManager.tasksDueToday.size)
         if(total==0){
             chart.clearChart()
             return
         }
-        val countlater = (tasksDueLater.size*100f)/total
-        val countpast = (tasksPastDue.size*100f)/total
+        val countlater = (TaskManager.tasksDueLater.size*100f)/total
+        val countpast = (TaskManager.tasksPastDue.size*100f)/total
         val counttoday = 100-countlater-countpast
         chart.clearChart()
 
@@ -181,12 +178,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun configChartView(chart: PieChart) {
-        val total = (tasksDueLater.size+ tasksPastDue.size+ tasksDueToday.size+tasksCompleted.size)
+        val total = (TaskManager.tasksDueLater.size+ TaskManager.tasksPastDue.size+ TaskManager.tasksDueToday.size+TaskManager.tasksCompleted.size)
         if(total==0){
             chart.clearChart()
             return
         }
-        val countdone = (tasksCompleted.size*100f)/total
+        val countdone = (TaskManager.tasksCompleted.size*100f)/total
         val countnotdone = 100-countdone
         chart.clearChart()
 
