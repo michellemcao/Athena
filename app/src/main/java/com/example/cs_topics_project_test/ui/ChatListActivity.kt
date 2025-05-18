@@ -253,29 +253,32 @@ class ChatListActivity : AppCompatActivity() {
 
                 for (doc in snapshots.documents) {
                     val chatId = doc.id
-                    val recipientId = doc.getString("recipientID") ?: continue
+                    val isGroup = doc.getBoolean("isGroup") ?: false
 
-                    db.collection("users").document(recipientId).get()
-                        .addOnSuccessListener { recipientDoc ->
-                            val recipientName = recipientDoc.getString("name") ?: "Unknown"
-                            val senderName = "You" // Optional: or pull from current user profile
+                    val recipientNames: List<String> = when (val nameField = doc.get("recipientName")) {
+                        is String -> listOf(nameField) // one-on-one chat
+                        is List<*> -> nameField.filterIsInstance<String>() // group chat
+                        else -> listOf("Unknown")
+                    }
 
-                            val chat = Chat(chatId, recipientName, senderName)
-                            newChatList.add(chat)
+                    // Optional: filter out current user's name
+                    val displayName = recipientNames.filter { it != "You" }.joinToString(", ")
 
-                            if (newChatList.size == snapshots.size()) {
-                                chatList.clear()
-                                chatList.addAll(newChatList)
-                                adapter.notifyDataSetChanged()
-                            }
-                        }
-                        .addOnFailureListener { e ->
-                            Log.e("ChatListActivity", "Failed to get recipient info", e)
-                        }
+                    val senderName = "You" // can also pull from profile if needed
+                    val chat = Chat(chatId, displayName, senderName)
+                    newChatList.add(chat)
+
+                    // When all chats are processed
+                    if (newChatList.size == snapshots.size()) {
+                        chatList.clear()
+                        chatList.addAll(newChatList)
+                        adapter.notifyDataSetChanged()
+                    }
                 }
             }
         }
     }
+
 
 
     private fun showCreateChatDialog() {
@@ -311,7 +314,7 @@ class ChatListActivity : AppCompatActivity() {
         builder.show()
     }
 
-    // 🔍 Look up user by username and return UID
+    // look up user by username and return UID
     private fun fetchUidsByUsernames(usernames: List<String>, callback: (List<String>) -> Unit) {
         val db = FirebaseFirestore.getInstance()
         val uids = mutableListOf<String>()
@@ -352,48 +355,42 @@ class ChatListActivity : AppCompatActivity() {
             .addOnSuccessListener { userDoc ->
                 val senderName = userDoc.getString("name") ?: "You"
 
-                val recipientNames = mutableMapOf<String, String>()
+                val userNames = mutableMapOf<String, String>()
                 var completedFetches = 0
 
-                for (recipientUid in recipientUids) {
-                    db.collection("users").document(recipientUid).get()
-                        .addOnSuccessListener { recipientDoc ->
-                            val recipientName = recipientDoc.getString("name") ?: "User"
-                            recipientNames[recipientUid] = recipientName
-
-                            // Store chat info for both users
-                            val chatData = hashMapOf(
-                                "recipientID" to recipientUid,
-                                "timestamp" to System.currentTimeMillis(),
-                                "chatId" to chatId,
-                                "recipientName" to recipientName,
-                                "isGroup" to isGroup
-                            )
-                            val reverseChatData = hashMapOf(
-                                "recipientID" to currentUserUid,
-                                "timestamp" to System.currentTimeMillis(),
-                                "chatId" to chatId,
-                                "isGroup" to isGroup
-                            )
-
-                            db.collection("users").document(currentUserUid)
-                                .collection("chats").document(chatId).set(chatData)
-
-                            db.collection("users").document(recipientUid)
-                                .collection("chats").document(chatId).set(reverseChatData)
-
+                // Fetch names of all participants (including current user)
+                for (uid in allParticipants) {
+                    db.collection("users").document(uid).get()
+                        .addOnSuccessListener { doc ->
+                            val name = doc.getString("name") ?: "User"
+                            userNames[uid] = name
                             completedFetches++
 
-                            // Only continue once all recipient names have been fetched
-                            if (completedFetches == recipientUids.size) {
-                                // Build group name if it's a group
-                                val displayName = if (isGroup) {
-                                    recipientNames.values.joinToString(", ")
-                                } else {
-                                    recipientNames[recipientUids.first()] ?: "Chat"
+                            if (completedFetches == allParticipants.size) {
+                                // Once all names are fetched
+                                for (uid in allParticipants) {
+                                    // Exclude self from the display name & recipient IDs
+                                    val otherParticipantNames = allParticipants
+                                        .filter { it != uid }
+                                        .mapNotNull { userNames[it] }
+
+                                    val otherParticipantIds = allParticipants
+                                        .filter { it != uid }
+
+                                    val chatData = hashMapOf(
+                                        "recipientID" to otherParticipantIds,
+                                        "recipientName" to otherParticipantNames,
+                                        "timestamp" to System.currentTimeMillis(),
+                                        "chatId" to chatId,
+                                        "isGroup" to isGroup
+                                    )
+
+                                    db.collection("users").document(uid)
+                                        .collection("chats").document(chatId)
+                                        .set(chatData)
                                 }
 
-                                // Create initial message
+                                // Initial system message
                                 db.collection("chats").document(chatId).collection("messages")
                                     .add(
                                         mapOf(
@@ -403,7 +400,12 @@ class ChatListActivity : AppCompatActivity() {
                                         )
                                     )
 
-                                // Start ChatActivity with resolved display name
+                                // For ChatActivity display name, exclude current user
+                                val displayName = allParticipants
+                                    .filter { it != currentUserUid }
+                                    .mapNotNull { userNames[it] }
+                                    .joinToString(", ")
+
                                 val intent = ChatActivity.createIntent(
                                     this,
                                     Chat(chatId, displayName, senderName),

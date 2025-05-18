@@ -81,62 +81,88 @@ class ChatActivity : AppCompatActivity() {
         val messageText = editTextMessage.text.toString()
         if (messageText.isEmpty()) return
 
-        val currentUser = FirebaseAuth.getInstance().currentUser
-            ?: throw IllegalStateException("User must be logged in")
+        val currentUser = FirebaseAuth.getInstance().currentUser ?: return
         val currentUserId = currentUser.uid
 
-        // 🔥 Correct Firestore path to get recipientID
         db.collection("users").document(currentUserId)
             .collection("chats").document(chatId)
             .get()
             .addOnSuccessListener { chatDoc ->
-                val recipientId = chatDoc.getString("recipientID")
+                val recipientIdField = chatDoc.get("recipientID")
+                val recipientIds: List<String> = when (recipientIdField) {
+                    is String -> listOf(recipientIdField)
+                    is List<*> -> recipientIdField.filterIsInstance<String>()
+                    else -> {
+                        Log.e("ChatActivity", "Invalid recipientID type")
+                        return@addOnSuccessListener
+                    }
+                }
 
-                if (recipientId == null) {
-                    Log.e("ChatActivity", "Recipient ID not found in user's chat subcollection")
+                if (recipientIds.isEmpty()) {
+                    Log.e("ChatActivity", "No valid recipients found")
                     return@addOnSuccessListener
                 }
 
-                // Step 1: Check if current user has blocked the recipient
-                db.collection("users").document(currentUserId)
-                    .collection("blockedUsers").document(recipientId)
-                    .get()
-                    .addOnSuccessListener { blockedDoc ->
-                        if (blockedDoc.exists()) {
-                            Toast.makeText(this, "You have blocked this user", Toast.LENGTH_SHORT).show()
-                            return@addOnSuccessListener
-                        }
+                // Track completion and blocking
+                var checksDone = 0
+                var isBlocked = false
 
-                        // Step 2: Check if recipient has blocked current user
-                        db.collection("users").document(recipientId)
-                            .collection("blockedUsers").document(currentUserId)
-                            .get()
-                            .addOnSuccessListener { blockedByRecipientDoc ->
-                                if (blockedByRecipientDoc.exists()) {
-                                    Toast.makeText(this, "You cannot message this user", Toast.LENGTH_SHORT).show()
-                                    return@addOnSuccessListener
-                                }
-
-                                // ✅ Proceed to send the message
-                                val newMessage = hashMapOf(
-                                    "senderId" to currentUserId,
-                                    "text" to messageText,
-                                    "timestamp" to System.currentTimeMillis()
-                                )
-
-                                db.collection("chats").document(chatId)
-                                    .collection("messages")
-                                    .add(newMessage)
-                                    .addOnSuccessListener {
-                                        editTextMessage.setText("")
-                                    }
-                                    .addOnFailureListener { exception ->
-                                        Log.e("ChatActivity", "Error sending message", exception)
-                                    }
+                for (recipientId in recipientIds) {
+                    // Check if current user blocked recipient
+                    db.collection("users").document(currentUserId)
+                        .collection("blockedUsers").document(recipientId)
+                        .get()
+                        .addOnSuccessListener { blockedDoc ->
+                            if (blockedDoc.exists()) {
+                                Toast.makeText(this, "You have blocked $recipientId", Toast.LENGTH_SHORT).show()
+                                isBlocked = true
                             }
-                    }
+
+                            // Check if recipient blocked current user
+                            db.collection("users").document(recipientId)
+                                .collection("blockedUsers").document(currentUserId)
+                                .get()
+                                .addOnSuccessListener { blockedByRecipientDoc ->
+                                    if (blockedByRecipientDoc.exists()) {
+                                        db.collection("users").document(recipientId)
+                                            .get()
+                                            .addOnSuccessListener { recipientDoc ->
+                                                val recipientName = recipientDoc.getString("name") ?: "This user"
+                                                Toast.makeText(this, "$recipientName has blocked you", Toast.LENGTH_SHORT).show()
+                                                isBlocked = true
+                                            }
+                                            .addOnFailureListener {
+                                                Toast.makeText(this, "You cannot message this user", Toast.LENGTH_SHORT).show()
+                                                isBlocked = true
+                                            }
+                                    }
+
+                                    // After checking all recipients
+                                    checksDone++
+                                    if (checksDone == recipientIds.size && !isBlocked) {
+                                        val newMessage = hashMapOf(
+                                            "senderId" to currentUserId,
+                                            "text" to messageText,
+                                            "timestamp" to System.currentTimeMillis()
+                                        )
+
+                                        db.collection("chats").document(chatId)
+                                            .collection("messages")
+                                            .add(newMessage)
+                                            .addOnSuccessListener {
+                                                editTextMessage.setText("")
+                                            }
+                                            .addOnFailureListener { exception ->
+                                                Log.e("ChatActivity", "Error sending message", exception)
+                                            }
+                                    }
+                                }
+                        }
+                }
             }
     }
+
+
 
 
 
