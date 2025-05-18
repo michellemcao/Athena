@@ -18,6 +18,8 @@ import com.google.firebase.firestore.ListenerRegistration
 import android.util.Log
 import android.view.MenuItem
 import com.example.cs_topics_project_test.ui.ui.chat.Chat
+import com.google.android.gms.tasks.Tasks
+
 
 class ChatListActivity : AppCompatActivity() {
 
@@ -278,20 +280,24 @@ class ChatListActivity : AppCompatActivity() {
 
     private fun showCreateChatDialog() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Enter Recipient Username")
+        builder.setTitle("Enter Usernames (comma-separated)")
 
         val input = EditText(this)
         input.inputType = InputType.TYPE_CLASS_TEXT
         builder.setView(input)
 
         builder.setPositiveButton("Create") { dialog, _ ->
-            val username = input.text.toString().trim()
-            if (username.isNotEmpty()) {
-                getUidByUsername(username) { recipientUid ->
-                    if (recipientUid != null) {
-                        createNewChat(recipientUid)
-                    } else {
-                        Toast.makeText(this, "Username not found!", Toast.LENGTH_SHORT).show()
+            val usernamesInput = input.text.toString().trim()
+            if (usernamesInput.isNotEmpty()) {
+                val usernames = usernamesInput.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+
+                if (usernames.isNotEmpty()) {
+                    fetchUidsByUsernames(usernames) { uids ->
+                        if (uids.isNotEmpty()) {
+                            createNewChat(uids)
+                        } else {
+                            Toast.makeText(this, "No valid usernames found", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
@@ -306,76 +312,107 @@ class ChatListActivity : AppCompatActivity() {
     }
 
     // 🔍 Look up user by username and return UID
-    private fun getUidByUsername(username: String, callback: (String?) -> Unit) {
+    private fun fetchUidsByUsernames(usernames: List<String>, callback: (List<String>) -> Unit) {
         val db = FirebaseFirestore.getInstance()
-        db.collection("users")
-            .whereEqualTo("username", username)
-            .limit(1)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                if (!querySnapshot.isEmpty) {
-                    val doc = querySnapshot.documents[0]
-                    callback(doc.id)  // the UID is the document ID
-                } else {
-                    callback(null)
+        val uids = mutableListOf<String>()
+        var processed = 0
+
+        for (username in usernames) {
+            db.collection("users")
+                .whereEqualTo("username", username)
+                .limit(1)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (!querySnapshot.isEmpty) {
+                        uids.add(querySnapshot.documents[0].id)
+                    }
+                    processed++
+                    if (processed == usernames.size) {
+                        callback(uids)
+                    }
                 }
-            }
-            .addOnFailureListener {
-                callback(null)
-            }
+                .addOnFailureListener {
+                    processed++
+                    if (processed == usernames.size) {
+                        callback(uids)
+                    }
+                }
+        }
     }
 
 
-    private fun createNewChat(recipientUid: String) {
+
+    private fun createNewChat(recipientUids: List<String>) {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        val chatId = listOf(currentUserUid, recipientUid).sorted().joinToString("_")
+        val allParticipants = (recipientUids + currentUserUid).sorted()
+        val chatId = allParticipants.joinToString("_")
+        val isGroup = recipientUids.size > 1
 
-        val userChatsRef = db.collection("users").document(currentUserUid).collection("chats").document(chatId)
-        val recipientChatsRef = db.collection("users").document(recipientUid).collection("chats").document(chatId)
-
-        // Step 1: Get recipient's name
         db.collection("users").document(currentUserUid).get()
             .addOnSuccessListener { userDoc ->
-                val senderName = userDoc.getString("name") ?: "You"  // Use the current user's name as sender
+                val senderName = userDoc.getString("name") ?: "You"
 
-                // Step 2: Get recipient's name
-                db.collection("users").document(recipientUid).get()
-                    .addOnSuccessListener { document ->
-                        val recipientName = document.getString("name") ?: "Recipient"
+                val recipientNames = mutableMapOf<String, String>()
+                var completedFetches = 0
 
-                        val chatData = hashMapOf(
-                            "recipientID" to recipientUid,
-                            "timestamp" to System.currentTimeMillis(),
-                            "chatId" to chatId,
-                            "recipientName" to recipientName
-                        )
+                for (recipientUid in recipientUids) {
+                    db.collection("users").document(recipientUid).get()
+                        .addOnSuccessListener { recipientDoc ->
+                            val recipientName = recipientDoc.getString("name") ?: "User"
+                            recipientNames[recipientUid] = recipientName
 
-                        val reverseChatData = hashMapOf(
-                            "recipientID" to currentUserUid,
-                            "timestamp" to System.currentTimeMillis(),
-                            "chatId" to chatId
-                        )
-
-                        userChatsRef.set(chatData)
-                        recipientChatsRef.set(reverseChatData)
-
-                        // Optional: create initial system message
-                        db.collection("chats").document(chatId).collection("messages")
-                            .add(
-                                mapOf(
-                                    "sender" to "system",
-                                    "message" to "Chat started",
-                                    "timestamp" to System.currentTimeMillis()
-                                )
+                            // Store chat info for both users
+                            val chatData = hashMapOf(
+                                "recipientID" to recipientUid,
+                                "timestamp" to System.currentTimeMillis(),
+                                "chatId" to chatId,
+                                "recipientName" to recipientName,
+                                "isGroup" to isGroup
+                            )
+                            val reverseChatData = hashMapOf(
+                                "recipientID" to currentUserUid,
+                                "timestamp" to System.currentTimeMillis(),
+                                "chatId" to chatId,
+                                "isGroup" to isGroup
                             )
 
-                        // Step 3: Launch ChatActivity with the actual names
-                        val intent = ChatActivity.createIntent(this, Chat(chatId, recipientName, senderName), chatId)
-                        startActivity(intent)
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "Failed to get recipient info", Toast.LENGTH_SHORT).show()
-                    }
+                            db.collection("users").document(currentUserUid)
+                                .collection("chats").document(chatId).set(chatData)
+
+                            db.collection("users").document(recipientUid)
+                                .collection("chats").document(chatId).set(reverseChatData)
+
+                            completedFetches++
+
+                            // Only continue once all recipient names have been fetched
+                            if (completedFetches == recipientUids.size) {
+                                // Build group name if it's a group
+                                val displayName = if (isGroup) {
+                                    recipientNames.values.joinToString(", ")
+                                } else {
+                                    recipientNames[recipientUids.first()] ?: "Chat"
+                                }
+
+                                // Create initial message
+                                db.collection("chats").document(chatId).collection("messages")
+                                    .add(
+                                        mapOf(
+                                            "sender" to "system",
+                                            "message" to if (isGroup) "Group chat created" else "Chat started",
+                                            "timestamp" to System.currentTimeMillis()
+                                        )
+                                    )
+
+                                // Start ChatActivity with resolved display name
+                                val intent = ChatActivity.createIntent(
+                                    this,
+                                    Chat(chatId, displayName, senderName),
+                                    chatId
+                                )
+                                startActivity(intent)
+                            }
+                        }
+                }
             }
     }
 
