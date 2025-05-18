@@ -140,6 +140,9 @@ class ChatActivity : AppCompatActivity() {
                                     // After checking all recipients
                                     checksDone++
                                     if (checksDone == recipientIds.size && !isBlocked) {
+
+                                        val isGroupChat = recipientIds.size > 1 // true if more than one recipient
+
                                         val newMessage = hashMapOf(
                                             "senderId" to currentUserId,
                                             "text" to messageText,
@@ -155,7 +158,13 @@ class ChatActivity : AppCompatActivity() {
                                             .addOnFailureListener { exception ->
                                                 Log.e("ChatActivity", "Error sending message", exception)
                                             }
+
+                                        if (isGroupChat) {
+                                            val senderName = FirebaseAuth.getInstance().currentUser?.displayName ?: "Unknown"
+                                            newMessage["senderName"] = senderName
+                                        }
                                     }
+
                                 }
                         }
                 }
@@ -164,47 +173,94 @@ class ChatActivity : AppCompatActivity() {
 
 
 
-
+    private val senderNameCache = mutableMapOf<String, String>()
 
     private fun listenForMessages() {
         val currentUser = FirebaseAuth.getInstance().currentUser ?: return
         val currentUserId = currentUser.uid
 
-        // Step 1: Load the list of users this user has blocked
         db.collection("users").document(currentUserId)
             .collection("blockedUsers")
             .get()
             .addOnSuccessListener { blockedSnapshot ->
                 val blockedUserIds = blockedSnapshot.documents.mapNotNull { it.id }
 
-                // Step 2: Start listening to messages
                 chatListener = db.collection("chats").document(chatId)
                     .collection("messages")
                     .orderBy("timestamp", Query.Direction.ASCENDING)
                     .addSnapshotListener { snapshots, e ->
-                        if (e != null) return@addSnapshotListener
+                        if (e != null || snapshots == null) return@addSnapshotListener
 
-                        messageList.clear()
-                        snapshots?.documents?.forEach { doc ->
+                        val documents = snapshots.documents
+                        if (documents.isEmpty()) {
+                            messageList.clear()
+                            messageAdapter.notifyDataSetChanged()
+                            return@addSnapshotListener
+                        }
+
+                        val messagesToAdd = mutableListOf<Message>()
+                        var pendingFetches = 0
+                        var completedFetches = 0
+
+                        documents.forEach { doc ->
                             val senderId = doc.getString("senderId") ?: return@forEach
                             val text = doc.getString("text") ?: return@forEach
                             val timestamp = doc.getLong("timestamp")?.toString() ?: return@forEach
 
-                            // ❌ Don't show messages from blocked users
                             if (blockedUserIds.contains(senderId)) return@forEach
 
                             val messageType = if (senderId == currentUserId)
-                                Message.MessageType.SENT
-                            else
-                                Message.MessageType.RECEIVED
+                                Message.MessageType.SENT else Message.MessageType.RECEIVED
 
-                            messageList.add(Message(senderId, text, timestamp, messageType))
+                            val cachedName = senderNameCache[senderId]
+                            if (cachedName != null) {
+                                messagesToAdd.add(
+                                    Message(senderId, cachedName, text, timestamp, messageType)
+                                )
+                            } else {
+                                pendingFetches++
+                                db.collection("users").document(senderId).get()
+                                    .addOnSuccessListener { userDoc ->
+                                        val senderName = userDoc.getString("name") ?: "Unknown"
+                                        senderNameCache[senderId] = senderName
+
+                                        messagesToAdd.add(
+                                            Message(senderId, senderName, text, timestamp, messageType)
+                                        )
+
+                                        completedFetches++
+                                        if (completedFetches == pendingFetches) {
+                                            updateMessages(messagesToAdd)
+                                        }
+                                    }
+                                    .addOnFailureListener {
+                                        senderNameCache[senderId] = "Unknown"
+
+                                        messagesToAdd.add(
+                                            Message(senderId, "Unknown", text, timestamp, messageType)
+                                        )
+
+                                        completedFetches++
+                                        if (completedFetches == pendingFetches) {
+                                            updateMessages(messagesToAdd)
+                                        }
+                                    }
+                            }
                         }
 
-                        messageAdapter.notifyDataSetChanged()
-                        recyclerView.scrollToPosition(messageList.size - 1)
+                        // If no fetches needed, update immediately
+                        if (pendingFetches == 0) {
+                            updateMessages(messagesToAdd)
+                        }
                     }
             }
+    }
+
+    private fun updateMessages(messages: List<Message>) {
+        messageList.clear()
+        messageList.addAll(messages.sortedBy { it.timestamp.toLong() })
+        messageAdapter.notifyDataSetChanged()
+        recyclerView.scrollToPosition(messageList.size - 1)
     }
 
 

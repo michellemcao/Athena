@@ -26,9 +26,10 @@ class MessageAdapter(private val messageList: MutableList<Message>) :
         if (holder is SentMessageViewHolder) {
             holder.bind(message)
         } else if (holder is ReceivedMessageViewHolder) {
-            holder.bind(message)
+            holder.bind(message, position, messageList)
         }
     }
+
 
 
     override fun getItemCount(): Int = messageList.size
@@ -53,11 +54,31 @@ class MessageAdapter(private val messageList: MutableList<Message>) :
     // ViewHolder for RECEIVED messages
     class ReceivedMessageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val messageText: TextView = view.findViewById(R.id.messageText)
+        private val senderNameText: TextView = view.findViewById(R.id.senderNameTextView)
 
-        fun bind(message: Message) {
+        fun bind(message: Message, position: Int, messageList: List<Message>) {
             messageText.text = message.content
+
+            // Only show name if this is the first message OR the previous message was from a different sender
+            val showSenderName = when {
+                position == 0 -> true
+                else -> {
+                    val prevMessage = messageList[position - 1]
+                    prevMessage.sender != message.sender
+                }
+            }
+
+            if (showSenderName) {
+                senderNameText.visibility = View.VISIBLE
+                senderNameText.text = message.senderName
+            } else {
+                senderNameText.visibility = View.GONE
+            }
         }
+
+
     }
+
 
     class MessageSpacingDecoration(private val spacing: Int) : RecyclerView.ItemDecoration() {
         override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
