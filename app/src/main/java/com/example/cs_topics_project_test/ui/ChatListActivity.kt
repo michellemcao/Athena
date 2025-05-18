@@ -278,21 +278,20 @@ class ChatListActivity : AppCompatActivity() {
 
     private fun showCreateChatDialog() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Enter Recipient UID")
+        builder.setTitle("Enter Recipient Username")
 
         val input = EditText(this)
         input.inputType = InputType.TYPE_CLASS_TEXT
         builder.setView(input)
 
         builder.setPositiveButton("Create") { dialog, _ ->
-            val recipientUid = input.text.toString()
-            if (recipientUid.isNotEmpty()) {
-                // First check if recipient UID exists in Firebase
-                checkRecipientUidExists(recipientUid) { exists ->
-                    if (exists) {
+            val username = input.text.toString().trim()
+            if (username.isNotEmpty()) {
+                getUidByUsername(username) { recipientUid ->
+                    if (recipientUid != null) {
                         createNewChat(recipientUid)
                     } else {
-                        Toast.makeText(this, "Recipient UID not found!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Username not found!", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -306,19 +305,26 @@ class ChatListActivity : AppCompatActivity() {
         builder.show()
     }
 
-    private fun checkRecipientUidExists(recipientUid: String, callback: (Boolean) -> Unit) {
+    // 🔍 Look up user by username and return UID
+    private fun getUidByUsername(username: String, callback: (String?) -> Unit) {
         val db = FirebaseFirestore.getInstance()
-        db.collection("users")  // Assuming you store users in a "users" collection
-            .document(recipientUid)
+        db.collection("users")
+            .whereEqualTo("username", username)
+            .limit(1)
             .get()
-            .addOnSuccessListener { document ->
-                // Check if the document exists
-                callback(document.exists())
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    val doc = querySnapshot.documents[0]
+                    callback(doc.id)  // the UID is the document ID
+                } else {
+                    callback(null)
+                }
             }
             .addOnFailureListener {
-                callback(false)
+                callback(null)
             }
     }
+
 
     private fun createNewChat(recipientUid: String) {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
