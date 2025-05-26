@@ -15,12 +15,16 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.cs_topics_project_test.databinding.ActivityMainBinding
 import androidx.core.content.ContextCompat
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.util.Base64
+import android.widget.ImageView
 import com.example.cs_topics_project_test.task.TaskDataStructure
 import android.widget.TextView
 import com.example.cs_topics_project_test.login.SignInActivity
 import com.example.cs_topics_project_test.ui.ChatListActivity
 import com.example.cs_topics_project_test.ui.UserSettings
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class HomeActivity : AppCompatActivity() {
 
@@ -28,6 +32,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,17 +73,28 @@ class HomeActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         firebaseAuth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
         val currentUser = firebaseAuth.currentUser
 
-        // show user's name and email in nav header
+        // show user's name and email and pfp in nav header
         val headerView = navView.getHeaderView(0)
         val nameTextView = headerView.findViewById<TextView>(R.id.nameTextView)
         val emailTextView = headerView.findViewById<TextView>(R.id.textView)
+        val pfpImageView = headerView.findViewById<ImageView>(R.id.imageView)
         if (currentUser != null) {
             val name = currentUser.displayName
             val email = currentUser.email
             nameTextView.text = name
             emailTextView.text = email
+
+            firestore.collection("users").document(currentUser.uid).collection("profilePicture").document("pfpImg").get()
+                .addOnSuccessListener { document ->
+                    document.getString("pfp")?.let {
+                        val decoded = Base64.decode(it, Base64.DEFAULT)
+                        pfpImageView.setImageBitmap(BitmapFactory.decodeByteArray(decoded, 0, decoded.size))
+                    }
+                }
+
         }
 
 
