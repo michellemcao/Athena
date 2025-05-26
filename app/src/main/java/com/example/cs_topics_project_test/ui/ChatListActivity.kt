@@ -19,6 +19,7 @@ import android.util.Log
 import android.view.MenuItem
 import com.example.cs_topics_project_test.ui.ui.chat.Chat
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.firestore.FieldValue
 
 
 class ChatListActivity : AppCompatActivity() {
@@ -78,31 +79,86 @@ class ChatListActivity : AppCompatActivity() {
     }
 
     private fun showChatOptionsDialog(chat: Chat) {
-        // Call isUserBlocked with a callback to handle async result
-        isUserBlocked(chat) { isBlocked ->
-            val options = if (isBlocked) {
-                arrayOf("Delete Chat", "Unblock User") // Show Unblock option if user is blocked
-            } else {
-                arrayOf("Delete Chat", "Block User") // Otherwise, show Block option
-            }
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-            AlertDialog.Builder(this)
-                .setTitle("Options for ${chat.recipientName}")
-                .setItems(options) { _, which ->
-                    when (which) {
-                        0 -> showDeleteConfirmationDialog(chat) // Show confirmation before deleting
-                        1 -> {
-                            if (isBlocked) {
-                                unblockUser(chat)
-                            } else {
-                                blockUser(chat)
+        // Get the chat document to examine recipientID
+        db.collection("users").document(currentUserId)
+            .collection("chats").document(chat.cid)
+            .get()
+            .addOnSuccessListener { chatDoc ->
+                val recipientField = chatDoc.get("recipientID")
+
+                val isGroupChat = when (recipientField) {
+                    is List<*> -> recipientField.size > 1
+                    else -> false
+                }
+
+                if (isGroupChat) {
+                    val options = arrayOf("Delete Chat", "Leave Chat")
+
+                    AlertDialog.Builder(this)
+                        .setTitle("Group Options")
+                        .setItems(options) { _, which ->
+                            when (which) {
+                                0 -> showDeleteConfirmationDialog(chat)
+                                1 -> leaveGroupChat(chat)
                             }
                         }
+                        .show()
+                } else {
+                    // Individual chat
+                    isUserBlocked(chat) { isBlocked ->
+                        val options = if (isBlocked) {
+                            arrayOf("Delete Chat", "Unblock User")
+                        } else {
+                            arrayOf("Delete Chat", "Block User")
+                        }
+
+                        AlertDialog.Builder(this)
+                            .setTitle("Options for ${chat.recipientName}")
+                            .setItems(options) { _, which ->
+                                when (which) {
+                                    0 -> showDeleteConfirmationDialog(chat)
+                                    1 -> {
+                                        if (isBlocked) {
+                                            unblockUser(chat)
+                                        } else {
+                                            blockUser(chat)
+                                        }
+                                    }
+                                }
+                            }
+                            .show()
                     }
                 }
-                .show()
-        }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to load chat options", Toast.LENGTH_SHORT).show()
+            }
     }
+
+
+    private fun leaveGroupChat(chat: Chat) {
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val chatDocRef = db.collection("chats").document(chat.cid)
+
+        chatDocRef.update("recipientID", FieldValue.arrayRemove(currentUserId))
+            .addOnSuccessListener {
+                // Remove chat from this user's personal chat list
+                db.collection("users").document(currentUserId)
+                    .collection("chats").document(chat.cid)
+                    .delete()
+
+                Toast.makeText(this, "You left the group chat", Toast.LENGTH_SHORT).show()
+                // Update UI to remove chat from list
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to leave chat", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
+
 
     private fun isUserBlocked(chat: Chat, callback: (Boolean) -> Unit) {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return callback(false)
@@ -351,6 +407,7 @@ class ChatListActivity : AppCompatActivity() {
         val chatId = allParticipants.joinToString("_")
         val isGroup = recipientUids.size > 1
 
+
         db.collection("users").document(currentUserUid).get()
             .addOnSuccessListener { userDoc ->
                 val senderName = userDoc.getString("name") ?: "You"
@@ -385,6 +442,19 @@ class ChatListActivity : AppCompatActivity() {
                                         "isGroup" to isGroup
                                     )
 
+                                    val chatDocRef = db.collection("chats").document(chatId)
+
+                                    val chatDocData = hashMapOf(
+                                        "chatId" to chatId,
+                                        "recipientID" to allParticipants,       // all user UIDs in the group
+                                        "recipientName" to allParticipants.map { userNames[it] ?: "User" },
+                                        "timestamp" to System.currentTimeMillis(),
+                                        "isGroup" to isGroup
+                                    )
+
+                                    chatDocRef.set(chatDocData)
+
+
                                     db.collection("users").document(uid)
                                         .collection("chats").document(chatId)
                                         .set(chatData)
@@ -408,7 +478,7 @@ class ChatListActivity : AppCompatActivity() {
 
                                 val intent = ChatActivity.createIntent(
                                     this,
-                                    Chat(chatId, displayName, senderName),
+                                    Chat(chatId, displayName, senderName, isGroup),
                                     chatId
                                 )
                                 startActivity(intent)
