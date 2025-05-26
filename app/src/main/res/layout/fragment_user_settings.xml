@@ -25,7 +25,7 @@
         android:id="@+id/nameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="50dp"
         android:fontFamily="@font/roboto_bold"
         android:text="  Name:"
@@ -51,7 +51,7 @@
         android:id="@+id/usernameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="36dp"
         android:fontFamily="@font/roboto_bold"
         android:text="  Username:"
@@ -64,7 +64,7 @@
         android:id="@+id/profilePicture"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="25dp"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
@@ -76,7 +76,7 @@
         android:id="@+id/submit_user_settings"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/roundedbutton"
         android:backgroundTint="#b84c65"
@@ -84,7 +84,8 @@
         android:textColor="#fff1f2"
         app:layout_constraintEnd_toEndOf="@id/editProfileText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
+        app:layout_constraintTop_toBottomOf="@id/currentPw"
+        tools:layout_editor_absoluteY="595dp" />
 
     <EditText
         android:id="@+id/newName"
@@ -127,13 +128,52 @@
         android:textColor="#b84c65"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
         android:fontFamily="@font/work_sans_bold"
         android:text="Edit Profile"
         android:textSize="34sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/resetpwText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="36dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="  Reset Password:"
+        android:textColor="@color/pink_900"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
+    <EditText
+        android:id="@+id/currentPw"
+        android:layout_marginTop="10dp"
+        android:layout_width="179dp"
+        android:layout_height="37dp"
+        android:hint="  Current password"
+        android:background="@color/calendar_background"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="@id/editProfileText"
+        app:layout_constraintStart_toStartOf="@id/resetpwText"
+        app:layout_constraintTop_toBottomOf="@+id/resetpwText"
+        />
+
+    <EditText
+        android:id="@+id/newPw"
+        android:layout_marginTop="10dp"
+        android:layout_width="179dp"
+        android:layout_height="37dp"
+        android:hint="  New password"
+        android:background="@color/calendar_background"
+        android:inputType="textPassword"
+        app:layout_constraintStart_toEndOf="@id/currentPw"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/resetpwText"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

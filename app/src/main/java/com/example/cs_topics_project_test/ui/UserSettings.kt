@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.cs_topics_project_test.databinding.FragmentUserSettingsBinding
 import com.example.cs_topics_project_test.login.SignInActivity
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
@@ -76,6 +77,10 @@ class UserSettings : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.resetpwText.visibility = View.INVISIBLE
+        binding.currentPw.visibility = View.INVISIBLE
+        binding.newPw.visibility = View.INVISIBLE
+
         // text that shows user's name/username
         val prevName = binding.textView10
         val prevUsername = binding.usernameDisplay
@@ -99,7 +104,10 @@ class UserSettings : Fragment() {
                         pfp.setImageBitmap(BitmapFactory.decodeByteArray(decoded, 0, decoded.size))
                     }
                 }
-
+            // if the user page from settings, show reset pw stuff (but not if accessing from signup)
+            binding.resetpwText.visibility = View.VISIBLE
+            binding.currentPw.visibility = View.VISIBLE
+            binding.newPw.visibility = View.VISIBLE
         }
 
         // when upload pfp button clicked, open gallery to select pic (dont click save button to upload)
@@ -170,6 +178,29 @@ class UserSettings : Fragment() {
                                         }
                                 }
                             }
+                        }
+                }
+            }
+
+            // reset pw stuff
+            val currentpw = binding.currentPw.text.toString()
+            val newpw = binding.newPw.text.toString()
+            val email = user?.email
+            if (currentpw.isNotEmpty() && newpw.isNotEmpty()) {
+                if (email!=null) {
+                    val cred = EmailAuthProvider.getCredential(email, currentpw)
+                    user.reauthenticate(cred)
+                        .addOnSuccessListener {
+                        // if current pw is correct (able to reauthenticate), update pw to be new one
+                        user.updatePassword(newpw).addOnSuccessListener {
+                            Toast.makeText(requireContext(), "Password updated", Toast.LENGTH_SHORT).show()
+                        }
+                            .addOnFailureListener {
+                                Toast.makeText(requireContext(), "Password failed to update", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(requireContext(), "Current password incorrect", Toast.LENGTH_SHORT).show()
                         }
                 }
             }
