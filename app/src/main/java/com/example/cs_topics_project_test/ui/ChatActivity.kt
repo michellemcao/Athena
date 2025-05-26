@@ -81,6 +81,8 @@ class ChatActivity : AppCompatActivity() {
         val messageText = editTextMessage.text.toString()
         if (messageText.isEmpty()) return
 
+        val encryptedText = EncryptionHelper.encrypt(messageText)
+
         val currentUser = FirebaseAuth.getInstance().currentUser ?: return
         val currentUserId = currentUser.uid
 
@@ -145,7 +147,7 @@ class ChatActivity : AppCompatActivity() {
 
                                         val newMessage = hashMapOf(
                                             "senderId" to currentUserId,
-                                            "text" to messageText,
+                                            "text" to encryptedText,
                                             "timestamp" to System.currentTimeMillis()
                                         )
 
@@ -204,7 +206,13 @@ class ChatActivity : AppCompatActivity() {
 
                         documents.forEach { doc ->
                             val senderId = doc.getString("senderId") ?: return@forEach
-                            val text = doc.getString("text") ?: return@forEach
+                            val encryptedText = doc.getString("text") ?: return@forEach
+                            val text = try {
+                                EncryptionHelper.decrypt(encryptedText)
+                            } catch (e: Exception) {
+                                "[Decryption Error]" // fallback text
+                            }
+
                             val timestamp = doc.getLong("timestamp")?.toString() ?: return@forEach
 
                             if (blockedUserIds.contains(senderId)) return@forEach
