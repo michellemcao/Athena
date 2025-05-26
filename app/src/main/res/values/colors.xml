@@ -11,6 +11,7 @@
     <color name="pink_300">#FF6F61</color>
     <color name="pink_500">#FF4081</color>
     <color name="pink_700">#C51162</color>
+    <color name="pink_900">#830c4f</color>
     <color name="gray_200">#A8A0A0</color>
 
     <color name="calendar_primary">#FF0000</color>
@@ -24,6 +25,7 @@
     <color name="calendar_selected_week">#800080</color>
     <color name="calendar_selected_day_bar">#008080</color>
     <color name="signin_white">#FFFEF4</color>
+    <color name="signin_pink">#f7cdd0</color>
 
 
     <color name="calendar_background">#FFFFFF</color>
