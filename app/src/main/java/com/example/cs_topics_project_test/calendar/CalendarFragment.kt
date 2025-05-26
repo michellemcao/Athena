@@ -19,8 +19,13 @@ import com.example.cs_topics_project_test.task.TaskCompleted
 import com.example.cs_topics_project_test.task.TaskDataStructure
 import com.example.cs_topics_project_test.task.TaskListener
 import com.example.cs_topics_project_test.task.TaskManager
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.emitter.Emitter
+import nl.dionsegijn.konfetti.xml.KonfettiView
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class CalendarFragment : Fragment(), TaskListener {
 
@@ -29,6 +34,7 @@ class CalendarFragment : Fragment(), TaskListener {
     private lateinit var calendarAdapter: CalendarAdapter
     private lateinit var calendarAdapterCompleted: CalendarAdapterCompleted
     private var targetDate : Date = TaskManager.todayDate // place holder date
+    private lateinit var konfettiView: KonfettiView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,6 +65,8 @@ class CalendarFragment : Fragment(), TaskListener {
             append(todayDate)
             append(":")
         }
+
+        konfettiView = view.findViewById(R.id.konfettiView) // confetti!!
 
         // to update the date on calendar
         calendarView.setOnDateChangeListener {_, year, month, day ->
@@ -97,6 +105,17 @@ class CalendarFragment : Fragment(), TaskListener {
     }
 
     override fun onTaskCompleted(task: TaskCompleted) {
+        // creating confetti, explosion style
+        val party = Party(
+            speed = 0f,
+            maxSpeed = 30f,
+            damping = 0.9f,
+            spread = 360,
+            colors = listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def),
+            emitter = Emitter(duration = 100, TimeUnit.MILLISECONDS).max(100),
+            position = Position.Relative(0.5, 0.3)
+        )
+        konfettiView.start(party)
         calendarAdapterCompleted.addCompletedTask(task)
     }
 

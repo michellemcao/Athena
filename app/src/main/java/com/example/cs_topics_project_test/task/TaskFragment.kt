@@ -24,8 +24,15 @@ import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.function.Date
 import com.example.cs_topics_project_test.function.DateAndTime
 import com.example.cs_topics_project_test.function.Time
+import nl.dionsegijn.konfetti.core.Angle
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.Spread
+import nl.dionsegijn.konfetti.core.emitter.Emitter
+import nl.dionsegijn.konfetti.xml.KonfettiView
 import org.w3c.dom.Text
 import java.util.Calendar
+import java.util.concurrent.TimeUnit
 
 // to view tasks
 class TaskFragment : Fragment(), TaskListener {
@@ -39,6 +46,8 @@ class TaskFragment : Fragment(), TaskListener {
     private var isDueLaterVisible = true
     private var isPastDueVisible = true
     private var isCompletedVisible = true
+
+    private lateinit var konfettiView: KonfettiView
 
     /*private val todayDate: Date = Date(
         Calendar.getInstance().get(Calendar.YEAR),
@@ -98,6 +107,9 @@ class TaskFragment : Fragment(), TaskListener {
         val toggleDueLater: TextView = view.findViewById(R.id.toggleDueLater)
         val togglePastDue: TextView = view.findViewById(R.id.togglePastDue)
         val toggleCompleted: TextView = view.findViewById(R.id.toggleCompleted)
+
+        // declaring confetti object
+        konfettiView = view.findViewById(R.id.konfettiView)
 
         // buttons to sort tasks and their listeners
         val sortDueToday: ImageButton = view.findViewById(R.id.buttonDueTodaySort)
@@ -240,6 +252,18 @@ class TaskFragment : Fragment(), TaskListener {
     }
 
     override fun onTaskCompleted(task : TaskCompleted) {
+        // creating confetti, rain down style
+        val party = Party(
+            speed = 0f,
+            maxSpeed = 15f,
+            damping = 0.9f,
+            angle = Angle.BOTTOM,
+            spread = Spread.ROUND,
+            colors = listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def),
+            emitter = Emitter(duration = 3, TimeUnit.SECONDS).perSecond(100),
+            position = Position.Relative(0.0, 0.0).between(Position.Relative(1.0, 0.0))
+        )
+        konfettiView.start(party)
         completedAdapter.addCompletedTask(task)
     }
 

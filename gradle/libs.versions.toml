@@ -7,6 +7,7 @@ constraintlayoutVersion = "2.2.0"
 coreKtxVersion = "1.15.0"
 eazegraph = "1.2.2"
 firebaseBom = "33.9.0"
+konfettiXml = "2.0.5"
 kotlin = "2.1.0"
 coreKtx = "1.15.0"
 coreSplashscreen = "1.0.1"
@@ -53,6 +54,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+konfetti-xml = { module = "nl.dionsegijn:konfetti-xml", version.ref = "konfettiXml" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
 library = { module = "com.nineoldandroids:library", version.ref = "library" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }

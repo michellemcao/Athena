@@ -17,7 +17,6 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -28,6 +27,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -80,6 +80,6 @@ dependencies {
     implementation(libs.eazegraph)
     implementation(libs.library)
 
-
-
+    // For Confetti animation
+    implementation(libs.konfetti.xml)
 }
