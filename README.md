@@ -20,11 +20,12 @@
 - Finalize Color schemes
 
 ## Problems Faced
-- a disappearing navigation bar
+- a disappearing navigation bar: the background and foreground were set to the same color
 - a scaling problem
-- a gradle mess
-- _json_
-- a gradle mess, pt.2 (_local.properties deleted? huh??_)
+- a gradle mess: gradle rewrites itself in every device, but rewrites wrong about 60% of the time
+- _json_: very very important for firebase!
+- a gradle mess, pt.2 (_local.properties deleted? huh??_): configuration files delete themselves for no reason
+- a library unmaintained: library source code is not compilable with the new version of Android Studio causing major issues when running code
 
 ## The Method
 ### Process
