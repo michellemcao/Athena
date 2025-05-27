@@ -1,40 +1,50 @@
 package com.example.cs_topics_project_test.calendar
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CalendarView
 import android.widget.TextView
-import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.function.Date
-import com.example.cs_topics_project_test.task.Task
-import com.example.cs_topics_project_test.task.TaskAdapterList
-import com.example.cs_topics_project_test.task.TaskCompleted
-import com.example.cs_topics_project_test.task.TaskDataStructure
-import com.example.cs_topics_project_test.task.TaskListener
-import com.example.cs_topics_project_test.task.TaskManager
-import nl.dionsegijn.konfetti.core.Party
-import nl.dionsegijn.konfetti.core.Position
+import com.example.cs_topics_project_test.task.*
+import com.kizitonwose.calendar.core.*
+import com.kizitonwose.calendar.view.CalendarView
+import com.kizitonwose.calendar.core.CalendarDay
+import com.kizitonwose.calendar.view.ViewContainer
+import nl.dionsegijn.konfetti.core.*
 import nl.dionsegijn.konfetti.core.emitter.Emitter
 import nl.dionsegijn.konfetti.xml.KonfettiView
-import java.text.SimpleDateFormat
-import java.util.Locale
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.*
 import java.util.concurrent.TimeUnit
 
+@RequiresApi(Build.VERSION_CODES.O)
 class CalendarFragment : Fragment(), TaskListener {
 
-    // private lateinit var calendarView: CalendarView
-    // private lateinit var dateViewVar: TextView
     private lateinit var calendarAdapter: CalendarAdapter
     private lateinit var calendarAdapterCompleted: CalendarAdapterCompleted
-    private var targetDate : Date = TaskManager.todayDate // place holder date
     private lateinit var konfettiView: KonfettiView
+    private lateinit var dateViewVar: TextView
+    private lateinit var monthViewVar: TextView
+    private lateinit var calendarView: CalendarView
+    private lateinit var recyclerViewCalendar: RecyclerView
+    private lateinit var recyclerViewCalendarCompleted: RecyclerView
+
+    private var selectedDate: LocalDate = LocalDate.now()
+    private val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.getDefault())
+
+    private var targetDate: Date = TaskManager.todayDate
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,53 +59,121 @@ class CalendarFragment : Fragment(), TaskListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val calendarView = view.findViewById<CalendarView>(R.id.calendarView)
-        val dateViewVar = view.findViewById<TextView>(R.id.dateView)
-        val recyclerViewCalendar : RecyclerView = view.findViewById(R.id.recyclerViewCalendar)
-        val recyclerViewCalendarCompleted : RecyclerView = view.findViewById(R.id.recyclerViewCalendarCompleted)
+        calendarView = view.findViewById(R.id.calendarView)
+        dateViewVar = view.findViewById(R.id.dateView)
+        monthViewVar = view.findViewById(R.id.monthView)
+        konfettiView = view.findViewById(R.id.konfettiView)
 
-        val todayDateLong = calendarView.date
+        recyclerViewCalendar = view.findViewById(R.id.recyclerViewCalendar)
+        recyclerViewCalendarCompleted = view.findViewById(R.id.recyclerViewCalendarCompleted)
 
-        // Convert to a readable format
-        val sdf = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-        val todayDate: String = sdf.format(java.util.Date(todayDateLong))
-        //Toast.makeText(context, "Current date: " + currentDate, Toast.LENGTH_LONG).show();
-        dateViewVar.text = buildString {
-            append("Tasks for ")
-            append(todayDate)
-            append(":")
+        // Init Calendar range
+        var currentMonth = YearMonth.now()
+        val firstMonth = currentMonth.minusMonths(12)
+        val lastMonth = currentMonth.plusMonths(12)
+        val daysOfWeek = daysOfWeek()
+
+        calendarView.setup(firstMonth, lastMonth, daysOfWeek.first())
+        calendarView.scrollToMonth(currentMonth)
+
+        monthViewVar.text = buildString {
+            append(currentMonth.month.toString())
+            append(" ")
+            append(currentMonth.year.toString())
         }
 
-        konfettiView = view.findViewById(R.id.konfettiView) // confetti!!
+        // Initial UI
+        updateSelectedDate(LocalDate.now())
 
-        // to update the date on calendar
-        calendarView.setOnDateChangeListener {_, year, month, day ->
-            val date = (buildString {
-                append("Tasks for ")
-                append(month + 1)
-                append("/")
-                append(day)
-                append("/")
-                append(year)
-                append(":")
-            }) // date displayed in calendar_main in mm/dd/yyyy format
-            dateViewVar.text = date
+        val weekTitlesContainer = view.findViewById<ViewGroup>(R.id.titlesContainer) // editing the title of the weeks
+        weekTitlesContainer.children
+            .map { it as TextView }
+            .forEachIndexed { index, textView ->
+                val dayOfWeek = daysOfWeek[index]
+                val title = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                textView.text = title
+            }
 
-            targetDate = Date(year, month + 1, day)
+        // Bind calendar cells
+        calendarView.dayBinder = object : com.kizitonwose.calendar.view.MonthDayBinder<DayViewContainer> {
+            override fun create(view: View): DayViewContainer {
+                return DayViewContainer(view)
+            }
 
-            calendarAdapterCompleted = CalendarAdapterCompleted(TaskDataStructure.getTasksCompletedRange(targetDate), this)
-            calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate), this) //calendarAdapterCompleted)
+            override fun bind(container: DayViewContainer, day: CalendarDay) {
+                container.textView.text = day.date.dayOfMonth.toString()
 
-            recyclerViewCalendarCompleted.adapter = calendarAdapterCompleted
-            recyclerViewCalendarCompleted.layoutManager = LinearLayoutManager(activity)
+                when {
+                    day.date == LocalDate.now() && day.date == selectedDate -> {
+                        container.textView.setBackgroundResource(R.drawable.background_circle_today)
+                        container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                    }
+                    day.date == LocalDate.now() -> {
+                        container.textView.setBackgroundResource(R.drawable.background_circle_outline_today)
+                        container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.wintergreen))
+                    }
+                    day.date == selectedDate -> {
+                        container.textView.setBackgroundResource(R.drawable.background_circle_selected)
+                        container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
 
-            recyclerViewCalendar.adapter = calendarAdapter
-            recyclerViewCalendar.layoutManager = LinearLayoutManager(activity)
-            // Toast.makeText(activity, "Target Date: $targetDate", Toast.LENGTH_SHORT).show()
+                    }
+                    day.position == DayPosition.MonthDate -> {
+                        container.textView.setBackgroundResource(R.drawable.background_circle_outline)
+                        container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.bubblegum))
+                    }
+                    else -> {
+                        container.textView.setBackgroundResource(R.drawable.background_circle_outline_light)
+                        container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.cottoncandy))
+                    }
+                }
+
+                container.view.setOnClickListener {
+                    // updateSelectedDate(day.date)
+
+                    // if (selectedDate != day.date) {
+                    val oldDate = selectedDate
+                    updateSelectedDate(day.date)
+
+                    // Redraw both the old and new selected date
+                    calendarView.notifyDateChanged(oldDate)
+                    calendarView.notifyDateChanged(day.date)
+                    // }
+                }
+            }
         }
+
+        calendarView.monthScrollListener = { month ->
+            currentMonth = month.yearMonth
+            monthViewVar.text = buildString {
+                append(currentMonth.month.toString())
+                append(" ")
+                append(currentMonth.year.toString())
+            }
+            if (selectedDate.month != month.yearMonth.month) {
+                updateSelectedDate(month.yearMonth.atDay(1)) // Optional: update selected month
+                calendarView.notifyDateChanged(selectedDate)
+            }
+        }
+
+        // RecyclerView Adapters
+        calendarAdapterCompleted = CalendarAdapterCompleted(TaskDataStructure.getTasksCompletedRange(targetDate), this)
+        calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate), this)
+
+        recyclerViewCalendarCompleted.adapter = calendarAdapterCompleted
+        recyclerViewCalendarCompleted.layoutManager = LinearLayoutManager(activity)
+
+        recyclerViewCalendar.adapter = calendarAdapter
+        recyclerViewCalendar.layoutManager = LinearLayoutManager(activity)
+    }
+
+    private fun updateSelectedDate(newDate: LocalDate) {
+        selectedDate = newDate
+        targetDate = Date(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
+
+        dateViewVar.text = "Tasks for ${selectedDate.format(formatter)}:"
 
         calendarAdapterCompleted = CalendarAdapterCompleted(TaskDataStructure.getTasksCompletedRange(targetDate), this)
-        calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate), this) // calendarAdapterCompleted)
+        calendarAdapter = CalendarAdapter(TaskDataStructure.rangeDateTasks(targetDate), this)
 
         recyclerViewCalendarCompleted.adapter = calendarAdapterCompleted
         recyclerViewCalendarCompleted.layoutManager = LinearLayoutManager(activity)
@@ -123,21 +201,32 @@ class CalendarFragment : Fragment(), TaskListener {
         calendarAdapter.addTask(task)
     }
 
-    override fun onTaskPressed(task: Task, position: Int, taskList: MutableList<Task>, adapter: TaskAdapterList) {
-        return
-    }
+    override fun onTaskPressed(task: Task, position: Int, taskList: MutableList<Task>, adapter: TaskAdapterList) = Unit
+
     //super.onCreate(savedInstanceState)
-        // enableEdgeToEdge()
+    // enableEdgeToEdge()
 
-        //setContentView(R.layout.calendar_main)
+    //setContentView(R.layout.calendar_main)
 
-        //calendarView stuff
-        /*dateViewVar = findViewById(R.id.dateView)
-        calendarView.setOnDateChangeListener {_, year, month, day ->
-            val date = ("%02d".format(month+1) + "/"
-                    + "%02d".format(day) + "/"
-                    + "%02d".format(year)) // date displayed in calendar_main in mm/dd/yyyy format
-            dateViewVar.text = date
+    //calendarView stuff
+    /*dateViewVar = findViewById(R.id.dateView)
+    calendarView.setOnDateChangeListener {_, year, month, day ->
+        val date = ("%02d".format(month+1) + "/"
+                + "%02d".format(day) + "/"
+                + "%02d".format(year)) // date displayed in calendar_main in mm/dd/yyyy format
+        dateViewVar.text = date
+    }*/
 
+
+    inner class DayViewContainer(view: View) : ViewContainer(view) {
+        val textView: TextView = view.findViewById<TextView>(R.id.calendarDayText)
+        /*val textView: TextView = TextView(view.context).apply {
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        }
+
+
+        init {
+            (view as ViewGroup).addView(textView)
         }*/
+    }
 }

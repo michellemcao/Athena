@@ -44,4 +44,11 @@
     <color name="Python">#66BB6A</color>
     <color name="CPP">#EF5350</color>
     <color name="Java">#29B6F6</color>
+
+    <!--CALENDAR COLORS-->
+    <color name="bubblegum">#F3A2BE</color> <!--primary color-->
+    <color name="cottoncandy">#FFD3DD</color>
+    <color name="candyfloss">#F0F9F8</color>
+    <color name="mint">#C6E6E3</color>
+    <color name="wintergreen">#81BFB7</color>
 </resources>

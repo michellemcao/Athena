@@ -82,4 +82,7 @@ dependencies {
 
     // For Confetti animation
     implementation(libs.konfetti.xml)
+
+    // For Calendar implementation with https://github.com/kizitonwose/Calendar
+    implementation(libs.view)
 }
