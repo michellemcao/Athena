@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.cs_topics_project_test.HomeActivity
@@ -87,25 +88,27 @@ class SignInActivity : AppCompatActivity() {
         }
 
         // forgot password
-        // TODO check that they have an email in firebase, check if currentuser does this
-        // TODO error, keeps saying to put email when email box filled
-        // TODO add a back button too oops
         binding.forgotpwButton.setOnClickListener {
             // redirect to forgot password page
             setContentView(R.layout.forgot_pw)
+
             // send password reset email
             findViewById<Button>(R.id.submit_forgotPW).setOnClickListener {
-                val email = findViewById<TextView>(R.id.editTextTextEmailAddress).text.toString();
-                val user = firebaseAuth.currentUser
+                val email = findViewById<TextView>(R.id.editTextTextEmailAddress).text.toString().trim()
+
                 // if email exists send
-                if (email.isNotEmpty() && user != null) {
+                if (email.isNotEmpty()) {
                     // firebase sends verification email
-                    firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
-                        if (task.isSuccessful) Toast.makeText(this,"Password reset email sent", Toast.LENGTH_SHORT).show()
+                    firebaseAuth.sendPasswordResetEmail(email).addOnSuccessListener {
+                        Toast.makeText(this,"Password reset email sent", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this, SignInActivity::class.java))
                     }
                 } else {
                     Toast.makeText(this, "Please put your email", Toast.LENGTH_SHORT).show()
                 }
+            }
+            findViewById<Button>(R.id.backButton).setOnClickListener {
+                startActivity(Intent(this, SignInActivity::class.java))
             }
         }
     }
