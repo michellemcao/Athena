@@ -80,6 +80,10 @@ dependencies {
     implementation(libs.eazegraph)
     implementation(libs.library)
 
+    // for pfp
+    implementation(libs.glide)
+
+
 
 
 }

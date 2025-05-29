@@ -321,7 +321,7 @@ class ChatListActivity : AppCompatActivity() {
                     val displayName = recipientNames.filter { it != "You" }.joinToString(", ")
 
                     val senderName = "You" // can also pull from profile if needed
-                    val chat = Chat(chatId, displayName, senderName)
+                    val chat = Chat(chatId, displayName, senderName, isGroup)
                     newChatList.add(chat)
 
                     // When all chats are processed
