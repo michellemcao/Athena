@@ -118,11 +118,13 @@ class CalendarFragment : Fragment(), TaskListener {
 
                     }
                     day.position == DayPosition.MonthDate -> {
-                        container.textView.setBackgroundResource(R.drawable.background_circle_outline)
+                        // container.textView.setBackgroundResource(R.drawable.background_circle_outline)
+                        container.textView.setBackgroundResource(R.drawable.background_circle_white)
                         container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.bubblegum))
                     }
                     else -> {
-                        container.textView.setBackgroundResource(R.drawable.background_circle_outline_light)
+                        // container.textView.setBackgroundResource(R.drawable.background_circle_outline_light)
+                        container.textView.setBackgroundResource(R.drawable.background_circle_white)
                         container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.cottoncandy))
                     }
                 }

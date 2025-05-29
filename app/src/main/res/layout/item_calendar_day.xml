@@ -11,6 +11,5 @@
         android:gravity="center"
         android:textColor="@color/cottoncandy"
         android:textSize="18sp"
-        android:background="@drawable/background_circle_outline_light"
         tools:text="22" />
 </FrameLayout>
