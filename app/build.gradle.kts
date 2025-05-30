@@ -82,6 +82,8 @@ dependencies {
 
     // for pfp
     implementation(libs.glide)
+    implementation(libs.circleimageview)
+
 
 
 

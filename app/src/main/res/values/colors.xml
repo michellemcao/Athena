@@ -44,4 +44,11 @@
     <color name="Python">#66BB6A</color>
     <color name="CPP">#EF5350</color>
     <color name="Java">#29B6F6</color>
+
+    <color name ="blackberry_bg">#090617</color>
+    <color name="blackberry_1">#4F3F8E</color>
+    <color name="blackberry_2">#6E58C6</color>
+    <color name="blackberry_3">#8E71FF</color>
+
+
 </resources>

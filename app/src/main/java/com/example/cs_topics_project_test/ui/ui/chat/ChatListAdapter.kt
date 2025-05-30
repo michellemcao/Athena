@@ -12,6 +12,11 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
+import com.google.firebase.firestore.FirebaseFirestore
+import com.bumptech.glide.Glide
+import android.util.Base64
+import android.graphics.BitmapFactory
+
 
 class ChatListAdapter(
     private val chatList: MutableList<Chat>,
@@ -44,20 +49,70 @@ class ChatListAdapter(
         fun bind(chat: Chat) {
             chatName.text = chat.recipientName
 
-            // need to define how to tell if it's a group chat
             val isGroupChat = chat.isGroup
 
+            if (isGroupChat) {
+                profilePicture.setImageResource(R.drawable.baseline_groups_24)
+            } else {
+                val db = FirebaseFirestore.getInstance()
+                val username = chat.recipientUsername
+                Log.d("ChatAdapter", "Searching user with username: $username")
 
-            // Set the appropriate icon
-                if (isGroupChat) {
-                    profilePicture.setImageResource(R.drawable.baseline_groups_24)
+                if (username != null) {
+                    db.collection("users")
+                        .whereEqualTo("username", username)
+                        .limit(1)
+                        .get()
+                        .addOnSuccessListener { result ->
+                            if (!result.isEmpty) {
+                                val userDoc = result.documents[0]
+                                val uid = userDoc.id
+
+                                db.collection("users")
+                                    .document(uid)
+                                    .collection("profilePicture")
+                                    .document("pfpImg")
+                                    .get()
+                                    .addOnSuccessListener { pfpDoc ->
+                                        val pfpBase64 = pfpDoc.getString("pfp")
+                                        if (!pfpBase64.isNullOrEmpty()) {
+                                            try {
+                                                val decodedBytes = Base64.decode(pfpBase64, Base64.DEFAULT)
+                                                val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                                                Glide.with(profilePicture.context)
+                                                    .load(bitmap)
+                                                    .circleCrop()
+                                                    .placeholder(R.drawable.ic_pfp_circular)
+                                                    .into(profilePicture)
+
+                                            } catch (e: IllegalArgumentException) {
+                                                profilePicture.setImageResource(R.drawable.ic_pfp_circular)
+                                            }
+                                        } else {
+                                            profilePicture.setImageResource(R.drawable.ic_pfp_circular)
+                                        }
+                                    }
+                                    .addOnFailureListener {
+                                        profilePicture.setImageResource(R.drawable.ic_pfp_circular)
+                                    }
+                            } else {
+                                profilePicture.setImageResource(R.drawable.ic_pfp_circular)
+                            }
+                        }
+                        .addOnFailureListener {
+                            profilePicture.setImageResource(R.drawable.ic_pfp_circular)
+                        }
                 } else {
-                    profilePicture.setImageResource(R.drawable.ic_profile_picture)
+                    profilePicture.setImageResource(R.drawable.ic_pfp_circular)
                 }
+            }
 
             itemView.setOnClickListener { onItemClick(chat) }
             optionsButton.setOnClickListener { onOptionsClick(chat) }
         }
+
+
+
     }
 }
 

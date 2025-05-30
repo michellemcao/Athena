@@ -6,6 +6,7 @@ import android.os.Parcelable
 data class Chat(
     val cid: String = "",
     val recipientName: String = "",
+    val recipientUsername: String?, // only for individual chats, for now
     val senderName: String = "",
     val isGroup: Boolean = false
 ) : Parcelable
