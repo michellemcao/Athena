@@ -162,28 +162,32 @@ class ChatListActivity : AppCompatActivity() {
 
     private fun isUserBlocked(chat: Chat, callback: (Boolean) -> Unit) {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return callback(false)
-        val chatId = chat.cid  // Use the chat ID to retrieve the recipient ID from Firestore
+        val chatId = chat.cid
 
-        // Get the recipient ID directly from Firestore
         db.collection("users").document(currentUserUid)
             .collection("chats").document(chatId)
             .get()
             .addOnSuccessListener { document ->
-                val recipientId = document.getString("recipientID")
+                val recipientList = document.get("recipientID") as? List<*>
+                val recipientId = recipientList?.firstOrNull { it != currentUserUid } as? String
+
                 if (recipientId != null) {
-                    // Check if the recipient is blocked
                     val blockedUserDoc = db.collection("users").document(currentUserUid)
                         .collection("blockedUsers").document(recipientId)
 
-                    blockedUserDoc.get().addOnSuccessListener { blockedDoc ->
-                        callback(blockedDoc.exists())  // Pass true if blocked, false otherwise
-                    }
+                    blockedUserDoc.get()
+                        .addOnSuccessListener { blockedDoc ->
+                            callback(blockedDoc.exists())
+                        }
+                        .addOnFailureListener {
+                            callback(false)
+                        }
                 } else {
-                    callback(false)  // If recipient ID is not found, treat as not blocked
+                    callback(false) // Couldn't determine recipient
                 }
             }
             .addOnFailureListener {
-                callback(false)  // If fetch fails, treat as not blocked
+                callback(false)
             }
     }
 
@@ -192,14 +196,14 @@ class ChatListActivity : AppCompatActivity() {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val chatId = chat.cid  // Use the chat ID to retrieve the recipient ID from Firestore
 
-        // Get the recipient ID directly from Firestore
         db.collection("users").document(currentUserUid)
             .collection("chats").document(chatId)
             .get()
             .addOnSuccessListener { document ->
-                val recipientId = document.getString("recipientID")
+                val recipientList = document.get("recipientID") as? List<*>
+                val recipientId = recipientList?.firstOrNull { it != currentUserUid } as? String
+
                 if (recipientId != null) {
-                    // Remove the recipient from the blockedUsers collection
                     db.collection("users").document(currentUserUid)
                         .collection("blockedUsers").document(recipientId)
                         .delete()
@@ -258,16 +262,13 @@ class ChatListActivity : AppCompatActivity() {
         val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val chatId = chat.cid
 
-        val blockData = hashMapOf(
-            "blocked" to true,
-            "timestamp" to System.currentTimeMillis()
-        )
-
         db.collection("users").document(currentUserUid)
             .collection("chats").document(chatId)
             .get()
             .addOnSuccessListener { document ->
-                val recipientId = document.getString("recipientID")
+                val recipientList = document.get("recipientID") as? List<*>
+                val recipientId = recipientList?.firstOrNull { it != currentUserUid } as? String
+
                 if (recipientId != null) {
                     val blockData = hashMapOf(
                         "blocked" to true,
@@ -291,7 +292,6 @@ class ChatListActivity : AppCompatActivity() {
                 Toast.makeText(this, "Failed to fetch chat info", Toast.LENGTH_SHORT).show()
             }
     }
-
 
 
     private fun fetchChats() {
