@@ -48,7 +48,9 @@ import com.example.cs_topics_project_test.notes.NotesAdapter
 class NotesFragment : Fragment() {
 
     private lateinit var notesAdapter: NotesAdapter
-    private val notesList = mutableListOf<Note>() // You can later use NoteManager.notes for shared data
+    //private val notesList = mutableListOf<Note>() // You can later use NoteManager.notes for shared data
+    private val notesList = NoteManager.notes
+
     private val EDIT_NOTE_REQUEST = 1
     private val NEW_NOTE_REQUEST = 2
 
