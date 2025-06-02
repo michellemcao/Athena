@@ -41,7 +41,8 @@
             android:name=".task.TaskActivity">
         </activity>
 
-        <activity android:name=".notes.NoteEditorActivity" />
+        <activity android:name=".notes.NoteEditorActivity" >
+        </activity>
 
 
         <meta-data
