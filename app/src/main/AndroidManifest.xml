@@ -41,6 +41,9 @@
             android:name=".task.TaskActivity">
         </activity>
 
+        <activity android:name=".notes.NoteEditorActivity" />
+
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
