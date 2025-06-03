@@ -5,5 +5,5 @@
     <!-- outline of the circle-->
     <stroke
         android:width="2dp"
-        android:color="@color/mint" />
+        android:color="@color/today" />
 </shape>

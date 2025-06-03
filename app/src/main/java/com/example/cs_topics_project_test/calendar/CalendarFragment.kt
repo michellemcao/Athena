@@ -69,8 +69,8 @@ class CalendarFragment : Fragment(), TaskListener {
 
         // Init Calendar range
         var currentMonth = YearMonth.now()
-        val firstMonth = currentMonth.minusMonths(12)
-        val lastMonth = currentMonth.plusMonths(12)
+        val firstMonth = currentMonth.minusMonths(2)
+        val lastMonth = currentMonth.plusMonths(24)
         val daysOfWeek = daysOfWeek()
 
         calendarView.setup(firstMonth, lastMonth, daysOfWeek.first())
@@ -94,7 +94,7 @@ class CalendarFragment : Fragment(), TaskListener {
                 textView.text = title
             }
 
-        // Bind calendar cells
+        // Format and code for calendar cells
         calendarView.dayBinder = object : com.kizitonwose.calendar.view.MonthDayBinder<DayViewContainer> {
             override fun create(view: View): DayViewContainer {
                 return DayViewContainer(view)
@@ -110,7 +110,7 @@ class CalendarFragment : Fragment(), TaskListener {
                     }
                     day.date == LocalDate.now() -> {
                         container.textView.setBackgroundResource(R.drawable.background_circle_outline_today)
-                        container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.wintergreen))
+                        container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.today))
                     }
                     day.date == selectedDate -> {
                         container.textView.setBackgroundResource(R.drawable.background_circle_selected)
@@ -119,14 +119,22 @@ class CalendarFragment : Fragment(), TaskListener {
                     }
                     day.position == DayPosition.MonthDate -> {
                         // container.textView.setBackgroundResource(R.drawable.background_circle_outline)
-                        container.textView.setBackgroundResource(R.drawable.background_circle_white)
-                        container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.bubblegum))
+                        container.textView.setBackgroundResource(R.drawable.background_circle_default)
+                        container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.month_current))
                     }
                     else -> {
                         // container.textView.setBackgroundResource(R.drawable.background_circle_outline_light)
-                        container.textView.setBackgroundResource(R.drawable.background_circle_white)
-                        container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.cottoncandy))
+                        container.textView.setBackgroundResource(R.drawable.background_circle_default)
+                        container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.month_next))
                     }
+                }
+
+                // mark the dates that have uncompleted tasks!
+                var schematicsDate : Date = Date(day.date.year, day.date.monthValue, day.date.dayOfMonth)
+                if (TaskDataStructure.rangeDateTasks(schematicsDate).isNotEmpty()) {
+                    container.taskDotView.visibility = View.VISIBLE
+                } else {
+                    container.taskDotView.visibility = View.GONE
                 }
 
                 container.view.setOnClickListener {
@@ -145,6 +153,7 @@ class CalendarFragment : Fragment(), TaskListener {
         }
 
         calendarView.monthScrollListener = { month ->
+            val oldDate = selectedDate
             currentMonth = month.yearMonth
             monthViewVar.text = buildString {
                 append(currentMonth.month.toString())
@@ -153,6 +162,7 @@ class CalendarFragment : Fragment(), TaskListener {
             }
             if (selectedDate.month != month.yearMonth.month) {
                 updateSelectedDate(month.yearMonth.atDay(1)) // Optional: update selected month
+                calendarView.notifyDateChanged(oldDate)
                 calendarView.notifyDateChanged(selectedDate)
             }
         }
@@ -168,6 +178,7 @@ class CalendarFragment : Fragment(), TaskListener {
         recyclerViewCalendar.layoutManager = LinearLayoutManager(activity)
     }
 
+    // updating tasks shown for specific date
     private fun updateSelectedDate(newDate: LocalDate) {
         selectedDate = newDate
         targetDate = Date(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
@@ -222,6 +233,7 @@ class CalendarFragment : Fragment(), TaskListener {
 
     inner class DayViewContainer(view: View) : ViewContainer(view) {
         val textView: TextView = view.findViewById<TextView>(R.id.calendarDayText)
+        val taskDotView: View = view.findViewById<View>(R.id.taskDueDot)
         /*val textView: TextView = TextView(view.context).apply {
             layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         }

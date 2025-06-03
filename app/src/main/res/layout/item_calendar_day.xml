@@ -9,7 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:textColor="@color/cottoncandy"
         android:textSize="18sp"
         tools:text="22" />
+
+    <View
+        android:id="@+id/taskDueDot"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="end|center_vertical"
+        android:background="@drawable/highlight_task_due"
+        android:visibility="gone"
+        />
 </FrameLayout>

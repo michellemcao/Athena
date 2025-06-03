@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#e6f798" /> <!-- Use the teal_700 color -->
+    <corners android:radius="4dp" /> <!-- Rounded corners for the background -->
+</shape>

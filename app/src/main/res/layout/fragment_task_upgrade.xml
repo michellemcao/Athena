@@ -234,9 +234,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
+        android:layout_margin="4dp"
         android:layout_gravity="bottom"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@color/pink_200"
+        android:background="@drawable/edit_task_background"
         android:visibility="gone" >
 
         <LinearLayout
@@ -277,20 +278,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="M/D/YYYY"
-                    android:padding="8dp"
+                    android:padding="4dp"
+                    android:layout_margin="2dp"
                     android:textSize="10sp"
                     android:gravity="center"
-                    android:background="@android:drawable/editbox_background_normal"/>
+                    android:background="@drawable/date_selector_background"/>
 
                 <TextView
                     android:id="@+id/textViewTime"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:hint="X:XX AM"
-                    android:padding="8dp"
+                    android:padding="4dp"
+                    android:layout_margin="2dp"
                     android:textSize="10sp"
                     android:gravity="center"
-                    android:background="@android:drawable/editbox_background_normal"/>
+                    android:background="@drawable/date_selector_background"/>
             </LinearLayout>
         </LinearLayout>
 
