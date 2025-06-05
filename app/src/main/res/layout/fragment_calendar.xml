@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/linearCalendar"
@@ -43,7 +42,7 @@
         android:layout_marginStart="160dp"
         android:layout_marginEnd="160dp"
         android:text="Tasks for mm/dd/yyyy:"
-        android:textColor="@color/wintergreen"
+        style="@style/CalendarDate"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -104,7 +103,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="4dp"
         android:text="MONTH 20XX"
-        android:textColor="@color/wintergreen"
+        style="@style/CalendarTitle"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"

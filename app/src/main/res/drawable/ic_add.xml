@@ -6,7 +6,7 @@
 
     <!-- Circle background -->
     <path
-        android:fillColor="#008080"
+        android:fillColor="@color/chat_accent"
     android:pathData="M12,2a10,10 0 1,0 0,20a10,10 0 1,0 0,-20" />
 
     <!-- Plus sign -->
