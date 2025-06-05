@@ -142,7 +142,7 @@ class HomeFragment : Fragment() {
         val tasks = TaskManager.tasksDueToday
         for(i in 0..tasks.size-1){
             if(!tasks[i].isTaskCompleted()){
-                todo=todo+" -"+tasks[i].getTaskName()+"\n"
+                todo=todo+" •"+tasks[i].getTaskName()+"\n"
             }
         }
         val unfinished : TextView=view.findViewById(R.id.unfinished)
