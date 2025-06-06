@@ -1,19 +1,24 @@
 package com.example.cs_topics_project_test.notes
 
-
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.cs_topics_project_test.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.*
 
 class NoteEditorActivity : AppCompatActivity() {
 
     private lateinit var editTitle: EditText
     private lateinit var editContent: EditText
-    private var position: Int = -1
+    private lateinit var db: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
+    private var docId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,22 +28,69 @@ class NoteEditorActivity : AppCompatActivity() {
         editContent = findViewById(R.id.editContent)
         val buttonSave: Button = findViewById(R.id.buttonSave)
 
+        db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
+
+
         // Load existing note data if editing
         val intent = intent
+        docId = intent.getStringExtra("docId") // get docId if editing
         editTitle.setText(intent.getStringExtra("title") ?: "")
         editContent.setText(intent.getStringExtra("content") ?: "")
-        position = intent.getIntExtra("position", -1)
 
         buttonSave.setOnClickListener {
-            val title = editTitle.text.toString()
-            val content = editContent.text.toString()
+            val title = editTitle.text.toString().trim()
+            val content = editContent.text.toString().trim()
+
+            if (title.isEmpty() && content.isEmpty()) {
+                Toast.makeText(this, "Cannot save empty note", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val userId = auth.currentUser?.uid
+            if (userId == null) {
+                Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val note = hashMapOf(
+                "title" to title,
+                "content" to content,
+                "timestamp" to Date()
+            )
+
+            val notesRef = db.collection("users")
+                .document(userId)
+                .collection("notes")
 
             val resultIntent = Intent()
             resultIntent.putExtra("title", title)
             resultIntent.putExtra("content", content)
-            resultIntent.putExtra("position", position)
-            setResult(Activity.RESULT_OK, resultIntent)
-            finish() // Close this activity and return to NotesFragment
+
+            if (docId == null) {
+                // NEW note
+                notesRef.add(note)
+                    .addOnSuccessListener { docRef ->
+                        resultIntent.putExtra("docId", docRef.id)
+                        setResult(Activity.RESULT_OK, resultIntent)
+                        finish()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Failed to save note", Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                // EDITING existing note
+                notesRef.document(docId!!).set(note)
+                    .addOnSuccessListener {
+                        resultIntent.putExtra("docId", docId)
+                        setResult(Activity.RESULT_OK, resultIntent)
+                        finish()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Failed to update note", Toast.LENGTH_SHORT).show()
+                    }
+            }
         }
+
     }
 }
