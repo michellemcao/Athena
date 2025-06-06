@@ -16,7 +16,7 @@
         <activity
             android:name=".chat.ChatActivity"
             android:exported="false"
-            android:parentActivityName=".ui.ChatListActivity" />
+            android:parentActivityName=".chat.ChatListActivity" />
         <activity
             android:name=".login.MainActivity"
             android:exported="true"
