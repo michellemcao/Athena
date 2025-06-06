@@ -110,68 +110,69 @@ class ChatActivity : AppCompatActivity() {
                 var isBlocked = false
 
                 for (recipientId in recipientIds) {
-                    // Check if current user blocked recipient
-                    db.collection("users").document(currentUserId)
-                        .collection("blockedUsers").document(recipientId)
+                    // Fetch recipient's name for display
+                    db.collection("users").document(recipientId)
                         .get()
-                        .addOnSuccessListener { blockedDoc ->
-                            if (blockedDoc.exists()) {
-                                Toast.makeText(this, "You have blocked $recipientId", Toast.LENGTH_SHORT).show()
-                                isBlocked = true
-                            }
+                        .addOnSuccessListener { recipientDoc ->
+                            val recipientName = recipientDoc.getString("name") ?: "This user"
 
-                            // Check if recipient blocked current user
-                            db.collection("users").document(recipientId)
-                                .collection("blockedUsers").document(currentUserId)
+                            // Check if current user blocked recipient
+                            db.collection("users").document(currentUserId)
+                                .collection("blockedUsers").document(recipientId)
                                 .get()
-                                .addOnSuccessListener { blockedByRecipientDoc ->
-                                    if (blockedByRecipientDoc.exists()) {
-                                        db.collection("users").document(recipientId)
-                                            .get()
-                                            .addOnSuccessListener { recipientDoc ->
-                                                val recipientName = recipientDoc.getString("name") ?: "This user"
+                                .addOnSuccessListener { blockedDoc ->
+                                    if (blockedDoc.exists()) {
+                                        Toast.makeText(this, "You have blocked $recipientName", Toast.LENGTH_SHORT).show()
+                                        isBlocked = true
+                                    }
+
+                                    // Check if recipient blocked current user
+                                    db.collection("users").document(recipientId)
+                                        .collection("blockedUsers").document(currentUserId)
+                                        .get()
+                                        .addOnSuccessListener { blockedByRecipientDoc ->
+                                            if (blockedByRecipientDoc.exists()) {
                                                 Toast.makeText(this, "$recipientName has blocked you", Toast.LENGTH_SHORT).show()
                                                 isBlocked = true
                                             }
-                                            .addOnFailureListener {
-                                                Toast.makeText(this, "You cannot message this user", Toast.LENGTH_SHORT).show()
-                                                isBlocked = true
+
+                                            checksDone++
+                                            if (checksDone == recipientIds.size && !isBlocked) {
+
+                                                val isGroupChat = recipientIds.size > 1
+
+                                                val newMessage = hashMapOf(
+                                                    "senderId" to currentUserId,
+                                                    "text" to encryptedText,
+                                                    "timestamp" to System.currentTimeMillis()
+                                                )
+
+                                                if (isGroupChat) {
+                                                    val senderName = FirebaseAuth.getInstance().currentUser?.displayName ?: "Unknown"
+                                                    newMessage["senderName"] = senderName
+                                                }
+
+                                                db.collection("chats").document(chatId)
+                                                    .collection("messages")
+                                                    .add(newMessage)
+                                                    .addOnSuccessListener {
+                                                        editTextMessage.setText("")
+                                                    }
+                                                    .addOnFailureListener { exception ->
+                                                        Log.e("ChatActivity", "Error sending message", exception)
+                                                    }
                                             }
-                                    }
-
-                                    // After checking all recipients
-                                    checksDone++
-                                    if (checksDone == recipientIds.size && !isBlocked) {
-
-                                        val isGroupChat = recipientIds.size > 1 // true if more than one recipient
-
-                                        val newMessage = hashMapOf(
-                                            "senderId" to currentUserId,
-                                            "text" to encryptedText,
-                                            "timestamp" to System.currentTimeMillis()
-                                        )
-
-                                        db.collection("chats").document(chatId)
-                                            .collection("messages")
-                                            .add(newMessage)
-                                            .addOnSuccessListener {
-                                                editTextMessage.setText("")
-                                            }
-                                            .addOnFailureListener { exception ->
-                                                Log.e("ChatActivity", "Error sending message", exception)
-                                            }
-
-                                        if (isGroupChat) {
-                                            val senderName = FirebaseAuth.getInstance().currentUser?.displayName ?: "Unknown"
-                                            newMessage["senderName"] = senderName
                                         }
-                                    }
-
                                 }
+                        }
+                        .addOnFailureListener {
+                            Log.e("ChatActivity", "Failed to fetch recipient name", it)
+                            checksDone++
                         }
                 }
             }
     }
+
 
 
 

@@ -7,6 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 import android.graphics.Rect
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class MessageAdapter(private val messageList: MutableList<Message>) :
@@ -55,29 +58,55 @@ class MessageAdapter(private val messageList: MutableList<Message>) :
     class ReceivedMessageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val messageText: TextView = view.findViewById(R.id.messageText)
         private val senderNameText: TextView = view.findViewById(R.id.senderNameTextView)
+        private val profileImageView: ImageView = view.findViewById(R.id.profileImageView)
 
         fun bind(message: Message, position: Int, messageList: List<Message>) {
             messageText.text = message.content
 
-            // Only show name if this is the first message OR the previous message was from a different sender
-            val showSenderName = when {
-                position == 0 -> true
-                else -> {
-                    val prevMessage = messageList[position - 1]
-                    prevMessage.sender != message.sender
-                }
-            }
+            // Determine whether to show sender name & profile picture
+            val showSenderInfo = position == 0 || messageList[position - 1].sender != message.sender
 
-            if (showSenderName) {
+            if (showSenderInfo) {
                 senderNameText.visibility = View.VISIBLE
                 senderNameText.text = message.senderName
+                profileImageView.visibility = View.VISIBLE
+
+                // Load profile picture from Firebase
+                val db = FirebaseFirestore.getInstance()
+                db.collection("users")
+                    .document(message.sender)
+                    .collection("profilePicture")
+                    .document("pfpImg")
+                    .get()
+                    .addOnSuccessListener { doc ->
+                        val base64Image = doc.getString("pfp")
+                        if (!base64Image.isNullOrEmpty()) {
+                            try {
+                                val decodedBytes = android.util.Base64.decode(base64Image, android.util.Base64.DEFAULT)
+                                val bitmap = android.graphics.BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                                Glide.with(profileImageView.context)
+                                    .load(bitmap)
+                                    .circleCrop()
+                                    .placeholder(R.drawable.ic_pfp_circular)
+                                    .into(profileImageView)
+                            } catch (e: Exception) {
+                                profileImageView.setImageResource(R.drawable.ic_pfp_circular)
+                            }
+                        } else {
+                            profileImageView.setImageResource(R.drawable.ic_pfp_circular)
+                        }
+                    }
+                    .addOnFailureListener {
+                        profileImageView.setImageResource(R.drawable.ic_pfp_circular)
+                    }
             } else {
                 senderNameText.visibility = View.GONE
+                profileImageView.visibility = View.INVISIBLE // Hide but keep space so layout doesn't jump
             }
         }
 
-
     }
+
 
 
     class MessageSpacingDecoration(private val spacing: Int) : RecyclerView.ItemDecoration() {
