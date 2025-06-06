@@ -1,6 +1,8 @@
 # Athena Productivity
 
-// insert sales pitch here
+Athena’s team aesthetically blends productivity with communication to develop an innovational Android App. We’ve got security. We’ve got storage. We’ve got texting your bestie. We’ve got tasks. We’ve got notes. We’ve got funky graphics and a foolproof philosophy to keep you productive. <br>
+We’ve got ATHENA PRODUCTIVITY. A bold new way to task.
+
 ## Progress
 ### Completed: 
 - Preliminary UI
