@@ -1,25 +1,17 @@
 # Athena Productivity
+Athena’s team is where aesthetic design meets serious getting-things-done. We built an Android app with (mostly) everything: airtight security (we're talking encryption: yes we had to learn how to do that), cloud storage, chatting with your bestie while being "productive" (scrolling on reels with your laptop open), task lists that actually get checked off, notes you’ll actually read later, and graphics with just the right amount of pixels.
 
-Athena’s team aesthetically blends productivity with communication to develop an innovational Android App. We’ve got security. We’ve got storage. We’ve got texting your bestie. We’ve got tasks. We’ve got notes. We’ve got funky graphics and a foolproof philosophy to keep you productive. <br>
-We’ve got ATHENA PRODUCTIVITY. A bold new way to task.
+So, why settle for “just productivity” when you can have ATHENA PRODUCTIVITY? A bold new way to task—because multitasking deserves a little flair.
 
 ## Progress
 ### Completed: 
-- Preliminary UI
 - Calendar
 - Firebase User Profiles
-- To-do List (UI + Local Data)
-- Chat Feature (UI + Firebase Data integration)
-
-### In-Progress
-- Chat Feature (Storing Chat Data + handling group chats w/ unique user IDs)
-- To-do list feature (Firebase Data integration for storage)
+- To-do List (UI + Local Data, Firebase Data integration for storage)
+- Chat Feature (UI + Firebase Data integration, Storing Chat Data + handling group chats w/ unique user IDs)
 - Calendar (sync with to-do list based on due dates)
 - Home page
-
-### To-do:
-- Data Storage w/ SQL
-- Finalize Color schemes
+- Color theme toggles
 
 ## Problems Faced
 - a disappearing navigation bar: the background and foreground were set to the same color
