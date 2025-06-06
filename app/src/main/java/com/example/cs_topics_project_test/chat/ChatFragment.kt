@@ -1,4 +1,4 @@
-package com.example.cs_topics_project_test.ui.chat
+package com.example.cs_topics_project_test.chat
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -1,6 +1,5 @@
-package com.example.cs_topics_project_test.ui.chat
+package com.example.cs_topics_project_test.chat
 
-import android.os.Parcel
 import kotlinx.parcelize.Parcelize
 import android.os.Parcelable
 

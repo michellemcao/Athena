@@ -1,4 +1,4 @@
-package com.example.cs_topics_project_test.ui.ui.chat
+package com.example.cs_topics_project_test.chat
 
 import android.view.LayoutInflater
 import android.view.View

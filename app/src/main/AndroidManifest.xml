@@ -12,9 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
-        <activity android:name=".ui.ChatListActivity" />
+        <activity android:name=".chat.ChatListActivity" />
         <activity
-            android:name=".ui.ChatActivity"
+            android:name=".chat.ChatActivity"
             android:exported="false"
             android:parentActivityName=".ui.ChatListActivity" />
         <activity

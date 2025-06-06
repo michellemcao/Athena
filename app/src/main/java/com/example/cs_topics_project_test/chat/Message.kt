@@ -1,4 +1,4 @@
-package com.example.cs_topics_project_test.ui.ui.chat
+package com.example.cs_topics_project_test.chat
 data class Message(
     val sender: String,
     val senderName: String,

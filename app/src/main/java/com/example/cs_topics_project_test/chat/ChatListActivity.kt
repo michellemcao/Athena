@@ -1,4 +1,4 @@
-package com.example.cs_topics_project_test.ui
+package com.example.cs_topics_project_test.chat
 
 import android.os.Bundle
 import android.text.InputType
@@ -10,15 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
-import com.example.cs_topics_project_test.ui.ui.chat.ChatListAdapter
 import androidx.appcompat.widget.Toolbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import android.util.Log
 import android.view.MenuItem
-import com.example.cs_topics_project_test.ui.ui.chat.Chat
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FieldValue
 
 

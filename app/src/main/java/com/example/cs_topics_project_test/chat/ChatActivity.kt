@@ -1,4 +1,4 @@
-package com.example.cs_topics_project_test.ui
+package com.example.cs_topics_project_test.chat
 
 import android.content.Context
 import android.content.Intent
@@ -12,9 +12,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import com.example.cs_topics_project_test.R
-import com.example.cs_topics_project_test.ui.ui.chat.MessageAdapter
-import com.example.cs_topics_project_test.ui.ui.chat.Chat
-import com.example.cs_topics_project_test.ui.ui.chat.Message
+import com.example.cs_topics_project_test.ui.EncryptionHelper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 
