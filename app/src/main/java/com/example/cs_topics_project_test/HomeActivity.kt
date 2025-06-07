@@ -38,8 +38,9 @@ class HomeActivity : AppCompatActivity() {
         // TaskDataStructure.cleanUpTasks()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        //setContentView(binding.root)
         //setContentView(R.layout.activity_main)
+
 
         // Set the toolbar using the correct binding reference
         setSupportActionBar(binding.toolbar)
