@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.bumptech.glide.Glide
 import android.util.Base64
 import android.graphics.BitmapFactory
+import com.google.firebase.firestore.Source
 
 
 class ChatListAdapter(
@@ -59,7 +60,7 @@ class ChatListAdapter(
                     db.collection("users")
                         .whereEqualTo("username", username)
                         .limit(1)
-                        .get()
+                        .get(Source.SERVER)
                         .addOnSuccessListener { result ->
                             if (!result.isEmpty) {
                                 val userDoc = result.documents[0]
@@ -69,7 +70,7 @@ class ChatListAdapter(
                                     .document(uid)
                                     .collection("profilePicture")
                                     .document("pfpImg")
-                                    .get()
+                                    .get(Source.SERVER) // Force fresh
                                     .addOnSuccessListener { pfpDoc ->
                                         val pfpBase64 = pfpDoc.getString("pfp")
                                         if (!pfpBase64.isNullOrEmpty()) {
@@ -80,6 +81,7 @@ class ChatListAdapter(
                                                     .load(bitmap)
                                                     .circleCrop()
                                                     .placeholder(R.drawable.ic_pfp_circular)
+                                                    .skipMemoryCache(true)
                                                     .into(profilePicture)
 
                                             } catch (e: IllegalArgumentException) {
