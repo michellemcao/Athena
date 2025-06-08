@@ -56,45 +56,45 @@
 
 
     <!--header-->
-    <color name="toolbar">#e98851</color>
-    <color name="header">#c05933</color>
+    <color name="toolbar">@color/pink_500</color>
+    <color name="header">@color/pink_700</color>
 
     <!--nav bar gradient colors-->
-    <color name="start_color">#9a964b</color>
-    <color name="center_color">#A96F3F</color>
-    <color name="end_color">#b84732</color>
+    <color name="start_color">#8e71ff</color>
+    <color name="center_color">#534198</color>
+    <color name="end_color">#181231</color>
 
     <!--home fragment gradient-->
-    <color name="gradient_dark">#f7cb3a</color>
-    <color name="gradient_medium">#f5d85c</color>
-    <color name="gradient_light">#f9ea7b</color>
-    <color name="background">#fcfece</color>
-    <color name="home_text">#b92a37</color>
+    <color name="gradient_dark">#181231</color>
+    <color name="gradient_medium">#271e4b</color>
+    <color name="gradient_light">#352a64</color>
+    <color name="background">#090617</color>
+    <color name="home_text">#ffffff</color>
 
     <!--home fragment graph-->
-    <color name="due_later">#f0c655</color>
-    <color name="due_past">#c05933</color>
-    <color name="due_today">#9a964b</color>
+    <color name="due_later">#8e71ff</color>
+    <color name="due_past">#f2bf6c</color>
+    <color name="due_today">#09A6F3</color>
 
     <!-- color used for all of the icon tints-->
-    <color name="icon">#e98851</color>
+    <color name="icon">#624db2</color>
 
     <!--calendar colors-->
-    <color name="month_current">#d07f2e</color>
-    <color name="month_next">#f3b328</color>
-    <color name="today">#c0d462</color>
-    <color name="completed_text">#b84732</color>
+    <color name="month_current">#ffffff</color>
+    <color name="month_next">#44367e</color>
+    <color name="today">#7059cb</color>
+    <color name="completed_text">#624db2</color>
 
     <!--settings colors-->
-    <color name="settings_light">#e98851</color>
-    <color name="settings_dark">#c05933</color>
-    <color name="thumb">#94a344</color>
-    <color name="track">#c3d272</color>
+    <color name="settings_light">#090617</color>
+    <color name="settings_dark">#7f65e5</color>
+    <color name="thumb">#624db2</color>
+    <color name="track">#e5d8f5</color>
 
     <!--chat color-->
-    <color name="chat_accent">#c0d462</color>
+    <color name="chat_accent">#624db2</color>
 
     <!--edit date background color-->
-    <color name="edit_task">#c0d462</color>
-    <color name="edit_date">#e6f798</color>
+    <color name="edit_task">#44367e</color>
+    <color name="edit_date">#624db2</color>
 </resources>

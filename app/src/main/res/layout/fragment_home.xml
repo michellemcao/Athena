@@ -11,7 +11,6 @@
 
     <Button
         android:id="@+id/bt"
-        style="@style/DadJokeButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="10dp"

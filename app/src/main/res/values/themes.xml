@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color -->
         <item name="colorPrimary">@color/toolbar</item>
 
@@ -32,9 +32,9 @@
     </style>
 
     <!--Dad Joke Button Style -->
-    <style name="DadJokeButton" parent="Widget.AppCompat.Button">
+    <!--<style name="DadJokeButton" parent="Widget.AppCompat.Button">
         <item name="android:backgroundTint">@color/gradient_medium</item>
-    </style>
+    </style>-->
 
     <style name="HomeViewBackgroundLight">
         <item name="android:background">@color/gradient_light</item>
@@ -53,15 +53,15 @@
     </style>
 
     <!--Nav Bar icons and text-->
-    <style name="NavigationViewIcons" parent="Widget.MaterialComponents.NavigationView">
+    <!--<style name="NavigationViewIcons" parent="Widget.MaterialComponents.NavigationView">
         <item name="itemIconTint">@color/icon</item>
         <item name="itemTextColor">@color/icon</item>
-    </style>
+    </style>-->
 
     <!--Floating Action Button Background Color-->
-    <style name="FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+    <!--<style name="FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="android:backgroundTint">@color/chat_accent</item>
-    </style>
+    </style>-->
 
     <!--Calendar Title (Week Titles)-->
     <style name="CalendarTitle">

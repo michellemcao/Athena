@@ -15,6 +15,9 @@ import kotlin.random.Random
 import org.eazegraph.lib.charts.PieChart
 import org.eazegraph.lib.models.PieModel
 import android.graphics.Color
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import com.example.cs_topics_project_test.themes.ThemeManager
 
 
 class HomeFragment : Fragment() {
@@ -113,6 +116,7 @@ class HomeFragment : Fragment() {
         "What do you call a pig who knows how to use a knife?")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        applyThemeColors()
 
         val chart = view.findViewById<PieChart>(R.id.piechart)
         configChartView(chart)
@@ -156,21 +160,17 @@ class HomeFragment : Fragment() {
         chart.clearChart()
 
         chart.addPieSlice(
-            PieModel("Tasks Due Later",countlater,
-                Color.parseColor("#E8A5B0")
-            )
+            PieModel("Tasks Due Later",countlater, ThemeManager.currentThemeColors!!.dueLater)
         )
 
         chart.addPieSlice(
-            PieModel("Tasks Past Due",countpast,
-                Color.parseColor("#E65069")
-            )
+            PieModel("Tasks Past Due",countpast, // ContextCompat.getColor(requireContext(),
+                ThemeManager.currentThemeColors!!.duePast)
         )
 
         chart.addPieSlice(
-            PieModel("Tasks Due Today", counttoday,
-                Color.parseColor("#E28291")
-            )
+            PieModel("Tasks Due Today", counttoday, // ContextCompat.getColor(requireContext(),
+                ThemeManager.currentThemeColors!!.dueToday)
         )
         chart.startAnimation()
 
@@ -188,22 +188,39 @@ class HomeFragment : Fragment() {
         chart.clearChart()
 
         chart.addPieSlice(
-            PieModel("done",countdone,
-                Color.parseColor("#B8E6A4")
-            )
+            PieModel("done",countdone, ThemeManager.currentThemeColors!!.dueToday)
         )
 
 
 
 
         chart.addPieSlice(
-            PieModel("not done", countnotdone,
-                Color.parseColor("#CF475D")
-            )
+            PieModel("not done", countnotdone, ThemeManager.currentThemeColors!!.duePast)
         )
         chart.startAnimation()
 
 
+    }
+
+    private fun applyThemeColors() {
+        val theme = ThemeManager.currentThemeColors ?: return
+        view?.let { root ->
+            root.setBackgroundColor(theme.background)
+
+            val jokeButton = root.findViewById<Button>(R.id.bt)
+            jokeButton.setBackgroundColor(theme.gradientMedium)
+            jokeButton.setTextColor(theme.homeText)
+
+            root.findViewById<View>(R.id.view).setBackgroundColor(theme.gradientDark)
+            root.findViewById<View>(R.id.view6).setBackgroundColor(theme.gradientMedium)
+            root.findViewById<View>(R.id.view2).setBackgroundColor(theme.gradientLight)
+
+            root.findViewById<TextView>(R.id.textView3).setTextColor(theme.homeText)
+            root.findViewById<TextView>(R.id.textView4).setTextColor(theme.homeText)
+            root.findViewById<TextView>(R.id.tv6).setTextColor(theme.homeText)
+            root.findViewById<TextView>(R.id.textView2).setTextColor(theme.homeText)
+            root.findViewById<TextView>(R.id.unfinished).setTextColor(theme.homeText)
+        }
     }
 
 }

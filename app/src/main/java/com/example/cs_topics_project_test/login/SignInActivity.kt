@@ -14,6 +14,7 @@ import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.databinding.ActivitySignInBinding
 import com.example.cs_topics_project_test.task.TaskDataStructure
 import com.example.cs_topics_project_test.task.TaskManager
+import com.example.cs_topics_project_test.themes.ThemeManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
 import org.w3c.dom.Text
@@ -53,6 +54,10 @@ class SignInActivity : AppCompatActivity() {
                             TaskDataStructure.init()
                             TaskDataStructure.initializeDatabase()
                             // TaskManager.init()
+                            // retrieve user color scheme here
+                            val themeName = ThemeManager.currentThemeName // default mango
+                            ThemeManager.loadTheme(this, themeName) // load once for the whole app
+                            Toast.makeText(this, "Theme loaded!", Toast.LENGTH_SHORT).show()
                             startActivity(Intent(this, HomeActivity::class.java))
                             /*
                             //  if sign in successful, go to page to put name/username, store to firebase

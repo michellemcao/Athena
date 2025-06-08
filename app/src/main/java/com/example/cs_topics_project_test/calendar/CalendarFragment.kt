@@ -1,10 +1,13 @@
 package com.example.cs_topics_project_test.calendar
 
+import android.content.res.Resources
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.function.Date
 import com.example.cs_topics_project_test.task.*
+import com.example.cs_topics_project_test.themes.ThemeManager
 import com.kizitonwose.calendar.core.*
 import com.kizitonwose.calendar.view.CalendarView
 import com.kizitonwose.calendar.core.CalendarDay
@@ -59,6 +63,8 @@ class CalendarFragment : Fragment(), TaskListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        applyThemeColors()
+
         calendarView = view.findViewById(R.id.calendarView)
         dateViewVar = view.findViewById(R.id.dateView)
         monthViewVar = view.findViewById(R.id.monthView)
@@ -96,42 +102,70 @@ class CalendarFragment : Fragment(), TaskListener {
 
         // Format and code for calendar cells
         calendarView.dayBinder = object : com.kizitonwose.calendar.view.MonthDayBinder<DayViewContainer> {
+
             override fun create(view: View): DayViewContainer {
                 return DayViewContainer(view)
             }
 
             override fun bind(container: DayViewContainer, day: CalendarDay) {
                 container.textView.text = day.date.dayOfMonth.toString()
+                val theme = ThemeManager.currentThemeColors!!
+                // val drawableSolid = ContextCompat.getDrawable(requireContext(), R.drawable.background_circle_default)?.mutate()
+                // val drawableOutline = ContextCompat.getDrawable(requireContext(), R.drawable.background_circle_outline)?.mutate()
+
+                // resetting cell style bind
+                container.textView.background = null
+                // container.textView.setTextColor(theme.defaultText)
 
                 when {
                     day.date == LocalDate.now() && day.date == selectedDate -> {
-                        container.textView.setBackgroundResource(R.drawable.background_circle_today)
+                        val drawableSolid = ContextCompat.getDrawable(requireContext(), R.drawable.background_circle_default)?.mutate()
+                        drawableSolid!!.setTint(theme.today)
+                        container.textView.background = drawableSolid
+                        // container.textView.setBackgroundResource(R.drawable.background_circle_today)
                         container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                     }
                     day.date == LocalDate.now() -> {
-                        container.textView.setBackgroundResource(R.drawable.background_circle_outline_today)
-                        container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.today))
+                        val drawableOutline = ContextCompat.getDrawable(requireContext(), R.drawable.background_circle_outline)?.mutate()
+                        if (drawableOutline is GradientDrawable) {
+                            drawableOutline.setStroke(2.dpToPx(), theme.today) // replace with your color
+                            container.textView.background = drawableOutline
+                        }
+                        // drawableOutline!!.setTint(theme.today)
+                        // container.textView.background = drawableOutline
+                        // container.textView.setBackgroundResource(R.drawable.background_circle_outline_today)
+                        container.textView.setTextColor(theme.today)
                     }
                     day.date == selectedDate -> {
-                        container.textView.setBackgroundResource(R.drawable.background_circle_selected)
+                        val drawableSolid = ContextCompat.getDrawable(requireContext(), R.drawable.background_circle_default)?.mutate()
+                        drawableSolid!!.setTint(theme.monthCurrent)
+                        container.textView.background = drawableSolid
+                        // container.textView.setBackgroundResource(R.drawable.background_circle_selected)
                         container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-
                     }
                     day.position == DayPosition.MonthDate -> {
+                        // drawableOutline!!.setTint(theme.monthCurrent)
+                        // container.textView.background = drawableOutline
                         // container.textView.setBackgroundResource(R.drawable.background_circle_outline)
-                        container.textView.setBackgroundResource(R.drawable.background_circle_default)
-                        container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.month_current))
+                        // container.textView.setBackgroundResource(R.drawable.background_circle_default)
+                        container.textView.setTextColor(theme.monthCurrent)
                     }
                     else -> {
+                        // drawableOutline!!.setTint(theme.monthNext)
+                        // container.textView.background = drawableOutline
                         // container.textView.setBackgroundResource(R.drawable.background_circle_outline_light)
-                        container.textView.setBackgroundResource(R.drawable.background_circle_default)
-                        container.textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.month_next))
+                        // container.textView.setBackgroundResource(R.drawable.background_circle_default)
+                        container.textView.setTextColor(theme.monthNext)
                     }
                 }
 
                 // mark the dates that have uncompleted tasks!
+
                 var schematicsDate : Date = Date(day.date.year, day.date.monthValue, day.date.dayOfMonth)
                 if (TaskDataStructure.rangeDateTasks(schematicsDate).isNotEmpty()) {
+                    val dot = ContextCompat.getDrawable(requireContext(), R.drawable.highlight_task_due)?.mutate()
+                    dot!!.setTint(theme.gradientMedium)
+                    container.taskDotView.background = dot
                     container.taskDotView.visibility = View.VISIBLE
                 } else {
                     container.taskDotView.visibility = View.GONE
@@ -243,4 +277,23 @@ class CalendarFragment : Fragment(), TaskListener {
             (view as ViewGroup).addView(textView)
         }*/
     }
+
+    private fun applyThemeColors() {
+        val theme = ThemeManager.currentThemeColors ?: return
+        view?.let { root ->
+            // root.setBackgroundColor(theme.background)
+
+            root.findViewById<TextView>(R.id.dateView).setTextColor(theme.today)
+            root.findViewById<TextView>(R.id.monthView).setTextColor(theme.today)
+            val titlesContainer = root.findViewById<ViewGroup>(R.id.titlesContainer)
+            for (i in 0 until titlesContainer.childCount) {
+                val child = titlesContainer.getChildAt(i)
+                if (child is TextView) {
+                    child.setTextColor(theme.today)
+                }
+            }
+        }
+    }
+
+    private fun Int.dpToPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 }
