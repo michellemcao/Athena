@@ -2,6 +2,7 @@ package com.example.cs_topics_project_test.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -16,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.cs_topics_project_test.databinding.FragmentUserSettingsBinding
 import com.example.cs_topics_project_test.login.SignInActivity
+import com.example.cs_topics_project_test.themes.ThemeManager
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
@@ -76,6 +78,8 @@ class UserSettings : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        applyTheme()
 
         binding.resetpwText.visibility = View.INVISIBLE
         binding.currentPw.visibility = View.INVISIBLE
@@ -227,5 +231,22 @@ class UserSettings : Fragment() {
             .addOnFailureListener {
                 Toast.makeText(requireContext(), "Failed to upload image", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun applyTheme() {
+        val theme = ThemeManager.currentThemeColors!!
+
+        binding.root.setBackgroundColor(theme.background)
+        binding.editProfileText.setTextColor(theme.settingsLight)
+        binding.uploadpfp.setTextColor(theme.settingsDark)
+        binding.nameLabel.setTextColor(theme.settingsDark)
+        binding.textView10.setTextColor(theme.settingsDark)
+        binding.usernameLabel.setTextColor(theme.settingsDark)
+        binding.usernameDisplay.setTextColor(theme.settingsDark)
+        binding.resetpwText.setTextColor(theme.settingsDark)
+        binding.textViewConfetti.setTextColor(theme.settingsDark)
+
+        binding.submitUserSettings.backgroundTintList = ColorStateList.valueOf(theme.settingsLight)
+        binding.submitUserSettings.setTextColor(theme.background)
     }
 }

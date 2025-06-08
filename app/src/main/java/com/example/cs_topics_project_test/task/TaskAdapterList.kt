@@ -1,5 +1,6 @@
 package com.example.cs_topics_project_test.task
 
+import android.content.res.ColorStateList
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.function.DateAndTime
 import com.example.cs_topics_project_test.function.Time
+import com.example.cs_topics_project_test.themes.ThemeManager
 import java.util.Calendar
 
 class TaskAdapterList(private val tasks: MutableList<Task>, private val listener: TaskListener) : RecyclerView.Adapter<TaskAdapterList.TaskViewHolder>() {
@@ -35,6 +37,7 @@ class TaskAdapterList(private val tasks: MutableList<Task>, private val listener
         holder.taskName.text = task.getTaskName()
         holder.taskDescription.text = task.getTaskDescription()
         holder.taskCheckBox.isChecked = task.isTaskCompleted()
+        holder.taskCheckBox.buttonTintList = ColorStateList.valueOf(ThemeManager.currentThemeColors!!.completedText)
         holder.taskDueDate.text = task.getDueDate().toString()
         holder.taskDueTime.text = task.getDueTime().toString()
         holder.taskCheckBox.setOnCheckedChangeListener { _, isChecked ->

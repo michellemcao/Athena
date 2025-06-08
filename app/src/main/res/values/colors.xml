@@ -23,7 +23,7 @@
     <color name="calendar_focused_date">#FFA500</color>
     <color name="calendar_unfocused_date">#808080</color>
     <color name="calendar_selected_week">#800080</color>
-    <color name="calendar_selected_day_bar">#008080</color>
+    <color name="calendar_selected_day_bar">#c0d462</color> <!--#008080-->
     <color name="signin_white">#FFFEF4</color>
     <color name="signin_pink">#f7cdd0</color>
 
@@ -53,4 +53,55 @@
     <color name="blackberry_3">#8E71FF</color>
 
 
+
+    <!--CALENDAR COLORS-->
+    <color name="bubblegum">#F3A2BE</color> <!--primary color-->
+    <color name="cottoncandy">#FFD3DD</color>
+    <color name="candyfloss">#F0F9F8</color>
+    <color name="mint">#C6E6E3</color>
+    <color name="wintergreen">#81BFB7</color>
+
+
+    <!--header-->
+    <color name="toolbar">@color/pink_500</color>
+    <color name="header">@color/pink_700</color>
+
+    <!--nav bar gradient colors-->
+    <color name="start_color">#8e71ff</color>
+    <color name="center_color">#534198</color>
+    <color name="end_color">#181231</color>
+
+    <!--home fragment gradient-->
+    <color name="gradient_dark">#181231</color>
+    <color name="gradient_medium">#271e4b</color>
+    <color name="gradient_light">#352a64</color>
+    <color name="background">#090617</color>
+    <color name="home_text">#ffffff</color>
+
+    <!--home fragment graph-->
+    <color name="due_later">#8e71ff</color>
+    <color name="due_past">#f2bf6c</color>
+    <color name="due_today">#09A6F3</color>
+
+    <!-- color used for all of the icon tints-->
+    <color name="icon">#624db2</color>
+
+    <!--calendar colors-->
+    <color name="month_current">#ffffff</color>
+    <color name="month_next">#44367e</color>
+    <color name="today">#7059cb</color>
+    <color name="completed_text">#624db2</color>
+
+    <!--settings colors-->
+    <color name="settings_light">#090617</color>
+    <color name="settings_dark">#7f65e5</color>
+    <color name="thumb">#624db2</color>
+    <color name="track">#e5d8f5</color>
+
+    <!--chat color-->
+    <color name="chat_accent">#624db2</color>
+
+    <!--edit date background color-->
+    <color name="edit_task">#44367e</color>
+    <color name="edit_date">#624db2</color>
 </resources>

@@ -3,8 +3,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#FFFFFF">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/linearCalendarTask"
@@ -22,7 +21,8 @@
             android:id="@+id/checkBoxTask"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            style="@style/CompletedCheckBox"/>
 
         <TextView
             android:id="@+id/textViewTaskName"
@@ -43,7 +43,7 @@
         app:layout_constraintTop_toBottomOf="@id/linearCalendarTask"
         app:layout_constraintEnd_toStartOf="@id/textViewTaskCompletedDate"
         android:text="Completed On:"
-        android:textColor="@color/pink_700"/>
+        style="@style/CompletedTasks"/>
 
     <TextView
         android:id="@+id/textViewTaskCompletedDate"
@@ -53,5 +53,5 @@
         app:layout_constraintTop_toBottomOf="@id/linearCalendarTask"
         app:layout_constraintEnd_toEndOf="@id/linearCalendarTask"
         android:text="M/D/YYYY X:XX AM"
-        android:textColor="@color/pink_700"/>
+        style="@style/CompletedTasks"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

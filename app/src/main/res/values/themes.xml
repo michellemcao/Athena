@@ -1,22 +1,102 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Primary brand color (pink). -->
-        <item name="colorPrimary">@color/pink_500</item>
-        <item name="colorPrimaryVariant">@color/pink_700</item>
-        <item name="colorOnPrimary">@android:color/white</item>
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/toolbar</item>
 
-        <!-- Secondary brand color -->
-        <item name="colorSecondary">@color/pink_200</item>
-        <item name="colorSecondaryVariant">@color/pink_300</item>
-        <item name="colorOnSecondary">@android:color/white</item>
+        <!--<item name="android:background">@color/background</item>-->
 
         <!-- Status bar color -->
-        <item name="android:statusBarColor">@color/pink_700</item>
+        <item name="android:statusBarColor">@color/header</item>
 
         <!-- Customize your theme here -->
         <item name="android:windowBackground">@android:color/white</item>
+
+        <!--NAV BAR HEADER-->
+        <item name="startGradientColor">@color/start_color</item>
+        <item name="centerGradientColor">@color/center_color</item>
+        <item name="endGradientColor">@color/end_color</item>
+
+        <!--EDIT TASK BACKGROUND-->
+        <item name="editTaskBackground">@color/edit_task</item>
+        <item name="editDateBackground">@color/edit_date</item>
     </style>
+
+    <!--HOME FRAGMENT THEME-->
+    <style name="HeaderTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/home_text</item>
+    </style>
+
+    <style name="SubHeaderTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/home_text</item>
+    </style>
+
+    <!--Dad Joke Button Style -->
+    <!--<style name="DadJokeButton" parent="Widget.AppCompat.Button">
+        <item name="android:backgroundTint">@color/gradient_medium</item>
+    </style>-->
+
+    <style name="HomeViewBackgroundLight">
+        <item name="android:background">@color/gradient_light</item>
+    </style>
+
+    <style name="HomeViewBackgroundMedium">
+        <item name="android:background">@color/gradient_medium</item>
+    </style>
+
+    <style name="HomeViewBackgroundDark">
+        <item name="android:background">@color/gradient_dark</item>
+    </style>
+
+    <style name="HomeViewBackground">
+        <item name="android:background">@color/background</item>
+    </style>
+
+    <!--Nav Bar icons and text-->
+    <!--<style name="NavigationViewIcons" parent="Widget.MaterialComponents.NavigationView">
+        <item name="itemIconTint">@color/icon</item>
+        <item name="itemTextColor">@color/icon</item>
+    </style>-->
+
+    <!--Floating Action Button Background Color-->
+    <!--<style name="FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:backgroundTint">@color/chat_accent</item>
+    </style>-->
+
+    <!--Calendar Title (Week Titles)-->
+    <style name="CalendarTitle">
+        <item name="android:textColor">@color/today</item>
+    </style>
+
+    <style name="CalendarDate">
+        <item name="android:textColor">@color/today</item>
+    </style>
+
+    <style name="CompletedTasks" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/completed_text</item>
+    </style>
+
+    <style name="CompletedCheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:buttonTint">@color/today</item>
+    </style>
+
+    <!--Upload Picture Style -->
+    <style name="UploadPictureButton" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/settings_dark</item>
+    </style>
+
+    <style name="SettingsTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/settings_dark</item>
+    </style>
+
+    <style name="SettingsHeaderTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/settings_light</item>
+    </style>
+
+    <style name="SaveButton" parent="Widget.AppCompat.Button">
+        <item name="android:backgroundTint">@color/settings_light</item>
+    </style>
+
 
     <!-- AppBar overlay style -->
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
@@ -24,5 +104,6 @@
     <!-- Popup overlay style -->
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 
-
+    <!--<style name="AppTheme_Mango" parent="AppTheme" />
+    <style name="AppTheme_Blueberry" parent="AppTheme" />-->
 </resources>

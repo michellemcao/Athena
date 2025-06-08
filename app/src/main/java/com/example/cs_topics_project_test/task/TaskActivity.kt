@@ -10,12 +10,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.function.Date
 import com.example.cs_topics_project_test.function.DateAndTime
 import com.example.cs_topics_project_test.function.Time
+import com.example.cs_topics_project_test.themes.ThemeManager
 import java.util.Calendar
 
 // to add new task
@@ -30,6 +33,13 @@ class TaskActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task)
 
+        val theme = ThemeManager.currentThemeColors!!
+        window.statusBarColor = theme.header
+
+        val rootView = findViewById<ConstraintLayout>(R.id.background)
+        rootView.setBackgroundColor(theme.background)
+
+
         // val tasks = mutableListOf<Task>()
         taskAdapter = TaskAdapterActivity(localTasks)
 
@@ -41,6 +51,11 @@ class TaskActivity : AppCompatActivity() {
         val textViewDate: TextView = findViewById(R.id.textViewDate) // the task due date
         val textViewTime: TextView = findViewById(R.id.textViewTime) // the task due time
         val buttonBack: Button = findViewById(R.id.buttonBack) // to go back to TaskFragment page
+
+        val bg = ContextCompat.getDrawable(this, R.drawable.date_selector_background)?.mutate()
+        bg!!.setTint(theme.editDate)
+        textViewDate.background = bg
+        textViewTime.background = bg
 
         // default date and time values to make sure the change actually happens
         var dueDate = TaskManager.todayDate

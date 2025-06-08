@@ -22,7 +22,8 @@
                 android:id="@+id/checkBoxTask"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top" />
+                android:layout_gravity="top"
+                style="@style/CompletedCheckBox"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -60,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Completed On:"
-                android:textColor="@color/pink_700"/>
+                style="@style/CompletedTasks"/>
 
             <TextView
                 android:id="@+id/textViewTaskCompletedDate"
@@ -68,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text="M/D/YYYY X:XX AM"
-                android:textColor="@color/pink_700"/>
+                style="@style/CompletedTasks"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
