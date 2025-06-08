@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.function.Date
 import com.example.cs_topics_project_test.task.*
+import com.example.cs_topics_project_test.themes.ThemeColors
 import com.example.cs_topics_project_test.themes.ThemeManager
 import com.kizitonwose.calendar.core.*
 import com.kizitonwose.calendar.view.CalendarView
@@ -231,12 +232,13 @@ class CalendarFragment : Fragment(), TaskListener {
 
     override fun onTaskCompleted(task: TaskCompleted) {
         // creating confetti, explosion style
+        val theme = ThemeManager.currentThemeColors!!
         val party = Party(
             speed = 0f,
             maxSpeed = 30f,
             damping = 0.9f,
             spread = 360,
-            colors = listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def),
+            colors = listOf(theme.startColor, theme.header, theme.gradientLight, theme.today),
             emitter = Emitter(duration = 100, TimeUnit.MILLISECONDS).max(100),
             position = Position.Relative(0.5, 0.3)
         )
@@ -281,7 +283,7 @@ class CalendarFragment : Fragment(), TaskListener {
     private fun applyThemeColors() {
         val theme = ThemeManager.currentThemeColors ?: return
         view?.let { root ->
-            // root.setBackgroundColor(theme.background)
+            root.setBackgroundColor(theme.background)
 
             root.findViewById<TextView>(R.id.dateView).setTextColor(theme.today)
             root.findViewById<TextView>(R.id.monthView).setTextColor(theme.today)

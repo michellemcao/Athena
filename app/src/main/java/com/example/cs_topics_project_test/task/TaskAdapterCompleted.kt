@@ -1,5 +1,6 @@
 package com.example.cs_topics_project_test.task
 
+import android.content.res.ColorStateList
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.function.DateAndTime
 import com.example.cs_topics_project_test.function.Time
+import com.example.cs_topics_project_test.themes.ThemeManager
 import java.util.Calendar
 
 class TaskAdapterCompleted(private val tasks: MutableList<TaskCompleted>, private val listener: TaskListener) : RecyclerView.Adapter<TaskAdapterCompleted.TaskViewHolder>() {
@@ -20,6 +22,7 @@ class TaskAdapterCompleted(private val tasks: MutableList<TaskCompleted>, privat
         val taskName: TextView = itemView.findViewById(R.id.textViewTaskName)
         val taskCheckBox: CheckBox = itemView.findViewById(R.id.checkBoxTask)
         val taskDescription: TextView = itemView.findViewById(R.id.textViewTaskDescription)
+        val taskCompletedOn: TextView = itemView.findViewById(R.id.taskCompletedOn)
         val taskCompletedDate: TextView = itemView.findViewById(R.id.textViewTaskCompletedDate)
     }
 
@@ -34,7 +37,10 @@ class TaskAdapterCompleted(private val tasks: MutableList<TaskCompleted>, privat
         holder.taskName.text = task.getTaskName()
         holder.taskDescription.text = task.getTaskDescription()
         holder.taskCheckBox.isChecked = task.isTaskCompleted()
-        holder.taskCompletedDate.text = task.getTaskCompletedDate().toString() // ??
+        holder.taskCheckBox.buttonTintList = ColorStateList.valueOf(ThemeManager.currentThemeColors!!.completedText)
+        holder.taskCompletedDate.text = task.getTaskCompletedDate().toString()
+        holder.taskCompletedDate.setTextColor(ThemeManager.currentThemeColors!!.completedText)
+        holder.taskCompletedOn.setTextColor(ThemeManager.currentThemeColors!!.completedText)
         holder.taskCheckBox.setOnCheckedChangeListener { _, isChecked ->
             if (!isChecked) {
                 task.taskNotCompleted()
