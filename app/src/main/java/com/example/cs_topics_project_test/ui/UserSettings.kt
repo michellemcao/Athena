@@ -121,6 +121,36 @@ class UserSettings : Fragment() {
             imageLauncher.launch(intent)
         }
 
+        binding.blackberry.setOnClickListener {
+            ThemeManager.loadTheme(binding.root.context, "blackberry")
+            updateFirestoreTheme("blackberry")
+            applyTheme()
+        }
+
+        binding.cherry.setOnClickListener {
+            ThemeManager.loadTheme(binding.root.context, "cherry")
+            updateFirestoreTheme("cherry")
+            applyTheme()
+        }
+
+        binding.lime.setOnClickListener {
+            ThemeManager.loadTheme(binding.root.context, "lime")
+            updateFirestoreTheme("lime")
+            applyTheme()
+        }
+
+        binding.mango.setOnClickListener {
+            ThemeManager.loadTheme(binding.root.context, "mango")
+            updateFirestoreTheme("mango")
+            applyTheme()
+        }
+
+        binding.peach.setOnClickListener {
+            ThemeManager.loadTheme(binding.root.context, "peach")
+            updateFirestoreTheme("peach")
+            applyTheme()
+        }
+
         // when save button clicked
         binding.submitUserSettings.setOnClickListener {
             // name is the new inputted name, trim to get rid of leading/trailing whitespace
@@ -244,9 +274,25 @@ class UserSettings : Fragment() {
         binding.usernameLabel.setTextColor(theme.settingsDark)
         binding.usernameDisplay.setTextColor(theme.settingsDark)
         binding.resetpwText.setTextColor(theme.settingsDark)
-        binding.textViewConfetti.setTextColor(theme.settingsDark)
 
         binding.submitUserSettings.backgroundTintList = ColorStateList.valueOf(theme.settingsLight)
         binding.submitUserSettings.setTextColor(theme.background)
+    }
+
+    private fun updateFirestoreTheme(themeName: String) {
+        val user = firebaseAuth.currentUser
+        if (user != null) {
+            val data = mapOf("theme" to themeName)
+
+            firestore.collection("users").document(user.uid)
+                .set(data, SetOptions.merge()) // merge so it doesn't overwrite other fields
+                /*.addOnSuccessListener {
+                    Toast.makeText(this, "Theme updated to $themeName", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Failed to update theme: ${e.message}", Toast.LENGTH_SHORT).show()
+                }*/
+        }
+        Toast.makeText(requireContext(), "Exit app and Sign In again for full theme update!", Toast.LENGTH_SHORT).show()
     }
 }

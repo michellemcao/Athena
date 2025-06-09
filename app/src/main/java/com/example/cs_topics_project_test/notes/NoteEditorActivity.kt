@@ -30,6 +30,7 @@ class NoteEditorActivity : AppCompatActivity() {
         editTitle = findViewById(R.id.editTitle)
         editContent = findViewById(R.id.editContent)
         val buttonSave: Button = findViewById(R.id.buttonSave)
+        val buttonBack: Button = findViewById(R.id.buttonBack)
 
         // val color = ContextCompat.getColor(this, ThemeManager.currentThemeColors!!.toolbar)
         val color = ThemeManager.currentThemeColors!!.toolbar
@@ -45,6 +46,10 @@ class NoteEditorActivity : AppCompatActivity() {
         docId = intent.getStringExtra("docId") // get docId if editing
         editTitle.setText(intent.getStringExtra("title") ?: "")
         editContent.setText(intent.getStringExtra("content") ?: "")
+
+        buttonBack.setOnClickListener {
+            finish()
+        }
 
         buttonSave.setOnClickListener {
             val title = editTitle.text.toString().trim()

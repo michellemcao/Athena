@@ -7,10 +7,11 @@ import androidx.core.graphics.toColorInt
 
 object ThemeManager {
     var currentThemeColors: ThemeColors? = null
-    var currentThemeName: String = "mango"
+    var currentThemeName: String = "cherry"
 
     fun loadTheme(context: Context, themeName: String) {
-        val json = context.assets.open("colors/mango.json")
+        currentThemeName = themeName
+        val json = context.assets.open("colors/$themeName.json")
             .bufferedReader().use { it.readText() }
         val obj = JSONObject(json)
 

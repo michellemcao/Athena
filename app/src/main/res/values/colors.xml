@@ -104,4 +104,11 @@
     <!--edit date background color-->
     <color name="edit_task">#44367e</color>
     <color name="edit_date">#624db2</color>
+
+    <!--settings color toggle scheme-->
+    <color name="blackberry">#4F3F8E</color>
+    <color name="cherry">#b84c65</color>
+    <color name="lime">#bddb76</color>
+    <color name="mango">#f5d85c</color>
+    <color name="peach">#ffc285</color>
 </resources>
