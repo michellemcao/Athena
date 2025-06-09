@@ -15,6 +15,7 @@ data class ThemeColors(
     val gradientMedium: Int,
     val gradientLight: Int,
     val background: Int,
+    val backgroundCalendarTasks: Int, // background 2.0
     val homeText: Int,
     // the home fragment graphs
     val dueLater: Int,

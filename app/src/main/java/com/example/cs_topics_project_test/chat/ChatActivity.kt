@@ -2,6 +2,7 @@ package com.example.cs_topics_project_test.chat
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.example.cs_topics_project_test.R
+import com.example.cs_topics_project_test.themes.ThemeManager
 import com.example.cs_topics_project_test.ui.EncryptionHelper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
@@ -41,11 +45,18 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
+        val theme = ThemeManager.currentThemeColors!!
+
+        window.statusBarColor = theme.header
+
+        // findViewById<Toolbar>(R.id.toolbar).setBackgroundColor(colors.toolbar)
+
         val chat: Chat = intent.getParcelableExtra(EXTRA_CHAT)
             ?: throw IllegalArgumentException("Chat must be provided")
 
         title = chat.recipientName // Assuming `Chat` has a `senderName` property
         val toolbar: Toolbar = findViewById(R.id.toolbarChat)
+        toolbar.setBackgroundColor(theme.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -56,6 +67,13 @@ class ChatActivity : AppCompatActivity() {
 
         editTextMessage = findViewById(R.id.editTextMessage)
         sendButton = findViewById(R.id.sendButton)
+
+        // val color = ContextCompat.getColor(this, theme.toolbar)
+        editTextMessage.backgroundTintList = ColorStateList.valueOf(theme.toolbar)
+
+        // val drawableSend = ContextCompat.getDrawable(this, R.drawable.ic_send)?.mutate()
+        // drawableSend!!.setTint(theme.chatAccent)
+        sendButton.imageTintList =  ColorStateList.valueOf(theme.chatAccent) // ContextCompat.getColorStateList(this, theme.chatAccent)
 
         chatId = intent.getStringExtra("CHAT_ID")
             ?: throw IllegalArgumentException("Chat ID must be provided")

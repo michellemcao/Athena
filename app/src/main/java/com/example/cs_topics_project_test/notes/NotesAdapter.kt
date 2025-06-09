@@ -4,8 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
+import com.example.cs_topics_project_test.themes.ThemeManager
+import kotlinx.coroutines.withContext
 
 /*// Define an Adapter for Notes
 class NotesAdapter(private var notesList: MutableList<Note>) :
@@ -42,6 +45,7 @@ class NotesAdapter(
 ) : RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
 
     inner class NoteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val noteBg: View = view.findViewById(R.id.noteBackground)
         val noteTitle: TextView = view.findViewById(R.id.noteTitle)
         val noteContent: TextView = view.findViewById(R.id.noteContent)
 
@@ -63,8 +67,15 @@ class NotesAdapter(
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = notesList[position]
+        val theme = ThemeManager.currentThemeColors!!
+        val bg = ContextCompat.getDrawable(holder.itemView.context, R.drawable.edit_task_background)?.mutate()
+        bg!!.setTint(theme.gradientLight)
+        holder.noteBg.background = bg
+        // holder.noteBg.setBackgroundColor(theme.gradientDark)
         holder.noteTitle.text = note.title
+        holder.noteTitle.setTextColor(theme.homeText)
         holder.noteContent.text = note.content
+        holder.noteContent.setTextColor(theme.homeText)
     }
 
     override fun getItemCount(): Int = notesList.size

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
+import com.example.cs_topics_project_test.themes.ThemeManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -30,6 +31,8 @@ class NotesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        view.setBackgroundColor(ThemeManager.currentThemeColors!!.background)
 
         notesAdapter = NotesAdapter(notesList) { note, position ->
             val intent = Intent(requireContext(), NoteEditorActivity::class.java)

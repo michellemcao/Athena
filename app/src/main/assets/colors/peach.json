@@ -8,6 +8,7 @@
   "gradient_medium": "#ffd29f",
   "gradient_light": "#ffe5bf",
   "background": "#fff3e0",
+  "background_calendar_tasks": "#ffffff",
   "home_text": "#e38b4d",
   "due_later": "#ffc273",
   "due_past": "#ff9a6e",

@@ -1,5 +1,6 @@
 package com.example.cs_topics_project_test.chat
 
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 import android.graphics.Rect
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.example.cs_topics_project_test.themes.ThemeManager
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -44,13 +47,16 @@ class MessageAdapter(private val messageList: MutableList<Message>) :
     // ViewHolder for SENT messages
     class SentMessageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val messageText: TextView = view.findViewById(R.id.messageText)
+        private val messageBackground: View = view.findViewById(R.id.sentMessageBackground)
 
         fun bind(message: Message) {
             messageText.text = message.content
             val displayMetrics = itemView.context.resources.displayMetrics
             val maxWidth = (displayMetrics.widthPixels * 0.7).toInt() // 70% of screen width
             messageText.maxWidth = maxWidth
-
+            val bg = ContextCompat.getDrawable(itemView.context, R.drawable.sent_message_background)?.mutate()
+            bg!!.setTint(ThemeManager.currentThemeColors!!.chatAccent)
+            messageBackground.background = bg
         }
     }
 

@@ -24,6 +24,7 @@ object ThemeManager {
             gradientMedium = obj.getString("gradient_medium").toColorInt(),
             gradientLight = obj.getString("gradient_light").toColorInt(),
             background = obj.getString("background").toColorInt(),
+            backgroundCalendarTasks = obj.getString("background_calendar_tasks").toColorInt(),
             homeText = obj.getString("home_text").toColorInt(),
             dueLater = obj.getString("due_later").toColorInt(),
             duePast = obj.getString("due_past").toColorInt(),

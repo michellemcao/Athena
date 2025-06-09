@@ -8,6 +8,7 @@
   "gradient_medium": "#f5d85c",
   "gradient_light": "#f9ea7b",
   "background": "#fcfece",
+  "background_calendar_tasks": "#ffffff",
   "home_text": "#b92a37",
   "due_later": "#f0c655",
   "due_past": "#c05933",
@@ -22,6 +23,6 @@
   "settings_dark": "#c05933",
   "thumb": "#94a344",
   "track": "#c3d272",
-  "edit_task": "#c0d462",
-  "edit_date": "#e6f798"
+  "edit_task": "#e6f798",
+  "edit_date": "#c0d462"
 }

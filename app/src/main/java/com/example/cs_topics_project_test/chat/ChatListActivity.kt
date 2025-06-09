@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import android.util.Log
 import android.view.MenuItem
+import com.example.cs_topics_project_test.themes.ThemeManager
 import com.google.firebase.firestore.FieldValue
 
 
@@ -31,8 +32,13 @@ class ChatListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_list)
 
+        val theme = ThemeManager.currentThemeColors!!
+
+        window.statusBarColor = theme.header
+
         // Set up the toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbarChat)
+        toolbar.setBackgroundColor(theme.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Chat"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

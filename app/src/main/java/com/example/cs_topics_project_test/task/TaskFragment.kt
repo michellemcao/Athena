@@ -3,6 +3,7 @@ package com.example.cs_topics_project_test.task
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -73,7 +74,7 @@ class TaskFragment : Fragment(), TaskListener {
         super.onViewCreated(view, savedInstanceState)
 
         // Toast.makeText(activity, "Today's Date: $todayDate", Toast.LENGTH_SHORT).show()
-        view.setBackgroundColor(ThemeManager.currentThemeColors!!.background)
+        view.setBackgroundColor(ThemeManager.currentThemeColors!!.backgroundCalendarTasks)
 
         completedAdapter = TaskAdapterCompleted(TaskManager.tasksCompleted, this)
         // taskListAdapter = TaskListAdapter(TaskManager.tasks) // takes task from global TaskManager
@@ -294,11 +295,14 @@ class TaskFragment : Fragment(), TaskListener {
         val textViewDate: TextView = layout.findViewById<TextView>(R.id.textViewDate) // the task due date
         val textViewTime: TextView = layout.findViewById<TextView>(R.id.textViewTime) // the task due time
 
-        // styles for date and time picker
+        // styles for date and time picker, edit name and description as well
+        val color = theme.editDate
         val bg = ContextCompat.getDrawable(requireContext(), R.drawable.date_selector_background)?.mutate()
-        bg!!.setTint(theme.editDate)
+        bg!!.setTint(color)
         textViewDate.background = bg
         textViewTime.background = bg
+        editTextTaskName.backgroundTintList = ColorStateList.valueOf(color)
+        editTextTaskDescription.backgroundTintList = ColorStateList.valueOf(color)
 
         // setting all options to default value
         editTextTaskName.setText(task.getTaskName())

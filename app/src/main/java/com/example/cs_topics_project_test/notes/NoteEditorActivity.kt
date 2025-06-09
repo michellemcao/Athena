@@ -2,12 +2,15 @@ package com.example.cs_topics_project_test.notes
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.cs_topics_project_test.R
+import com.example.cs_topics_project_test.themes.ThemeManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
@@ -27,6 +30,11 @@ class NoteEditorActivity : AppCompatActivity() {
         editTitle = findViewById(R.id.editTitle)
         editContent = findViewById(R.id.editContent)
         val buttonSave: Button = findViewById(R.id.buttonSave)
+
+        // val color = ContextCompat.getColor(this, ThemeManager.currentThemeColors!!.toolbar)
+        val color = ThemeManager.currentThemeColors!!.toolbar
+        editTitle.backgroundTintList = ColorStateList.valueOf(color)
+        editContent.backgroundTintList = ColorStateList.valueOf(color)
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()

@@ -14,8 +14,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="10dp"
-        android:background="#D98EAA"
-        android:backgroundTint="#E6A4BB"
         android:clickable="true"
         android:contextClickable="true"
         android:fontFamily="sans-serif"
