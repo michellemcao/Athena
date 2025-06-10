@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.function.DateAndTime
@@ -37,6 +38,7 @@ class CalendarAdapterCompleted(private val tasks: MutableList<TaskCompleted>, pr
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = tasks[position]
         holder.taskName.text = task.getTaskName()
+        if (ThemeManager.currentThemeName == "blackberry") holder.taskName.setTextColor("#FFFFFF".toColorInt())
         holder.taskCheckBox.isChecked = task.isTaskCompleted()
         holder.taskCheckBox.buttonTintList = ColorStateList.valueOf(ThemeManager.currentThemeColors!!.completedText)
         holder.taskCompletedDate.text = task.getTaskCompletedDate().toString()

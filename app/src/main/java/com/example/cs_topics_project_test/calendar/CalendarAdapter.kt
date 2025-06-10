@@ -1,6 +1,7 @@
 package com.example.cs_topics_project_test.calendar
 
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import com.example.cs_topics_project_test.task.TaskListener
 import com.example.cs_topics_project_test.task.TaskManager
 import com.example.cs_topics_project_test.themes.ThemeManager
 import java.util.Calendar
+import androidx.core.graphics.toColorInt
 
 class CalendarAdapter(private val tasks: MutableList<Task>, private val listener: TaskListener) : RecyclerView.Adapter<CalendarAdapter.TaskViewHolder>() {
 
@@ -46,6 +48,11 @@ class CalendarAdapter(private val tasks: MutableList<Task>, private val listener
             if (isChecked) task.taskCompleted()
             else task.taskNotCompleted()
         }*/
+        if (ThemeManager.currentThemeName == "blackberry") {
+            val color = "#FFFFFF".toColorInt()
+            holder.taskName.setTextColor(color)
+            holder.taskDueTime.setTextColor(color)
+        }
         holder.taskCheckBox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 task.taskCompleted()

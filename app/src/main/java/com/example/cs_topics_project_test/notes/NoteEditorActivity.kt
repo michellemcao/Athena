@@ -6,10 +6,13 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.example.cs_topics_project_test.R
+import com.example.cs_topics_project_test.task.TaskManager
 import com.example.cs_topics_project_test.themes.ThemeManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,13 +30,17 @@ class NoteEditorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_note_editor)
 
+        val theme = ThemeManager.currentThemeColors!!
+        val rootView = findViewById<LinearLayout>(R.id.background)
+        rootView.setBackgroundColor(theme.backgroundNotes)
+
         editTitle = findViewById(R.id.editTitle)
         editContent = findViewById(R.id.editContent)
         val buttonSave: Button = findViewById(R.id.buttonSave)
         val buttonBack: Button = findViewById(R.id.buttonBack)
 
         // val color = ContextCompat.getColor(this, ThemeManager.currentThemeColors!!.toolbar)
-        val color = ThemeManager.currentThemeColors!!.toolbar
+        val color = theme.toolbar
         editTitle.backgroundTintList = ColorStateList.valueOf(color)
         editContent.backgroundTintList = ColorStateList.valueOf(color)
 
