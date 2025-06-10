@@ -1,247 +1,252 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/HomeViewBackground"
-    tools:context=".HomeActivity">
+    android:fillViewport="true">
 
-    <Button
-        android:id="@+id/uploadpfp"
-        android:layout_width="112dp"
-        android:layout_height="32dp"
-        android:background="@android:color/transparent"
-        android:fontFamily="@font/roboto"
-        style="@style/UploadPictureButton"
-        android:text="Upload Image"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@id/profilePicture"
-        app:layout_constraintStart_toStartOf="@id/profilePicture"
-        app:layout_constraintTop_toBottomOf="@id/profilePicture" />
-
-    <TextView
-        android:id="@+id/nameLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="  Name:"
-        style="@style/SettingsTextView"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/uploadpfp" />
-
-    <EditText
-        android:id="@+id/username"
-        android:layout_marginTop="10dp"
-        android:layout_width="179dp"
-        android:layout_height="37dp"
-        android:hint="  Enter new username"
-        android:background="@color/calendar_background"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="@id/editProfileText"
-        app:layout_constraintStart_toStartOf="@id/usernameLabel"
-        app:layout_constraintTop_toBottomOf="@+id/usernameLabel"
-         />
-
-    <TextView
-        android:id="@+id/usernameLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="36dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="  Username:"
-        style="@style/SettingsTextView"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newName" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/profilePicture"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="25dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editProfileText"
-        app:shapeAppearanceOverlay="@style/CircleImageView"
-        app:srcCompat="@drawable/ic_profile_picture" />
-
-    <Button
-        android:id="@+id/submit_user_settings"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/roundedbutton"
-        style="@style/SaveButton"
-        android:text="Save"
-        android:textColor="#fff1f2"
-        app:layout_constraintEnd_toEndOf="@id/editProfileText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/themeLayout"
-         />
-
-    <EditText
-        android:id="@+id/newName"
-        android:layout_width="179dp"
-        android:layout_height="37dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/calendar_background"
-        android:hint="  Enter new name"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@id/editProfileText"
-        app:layout_constraintStart_toStartOf="@id/nameLabel"
-        app:layout_constraintTop_toBottomOf="@+id/nameLabel" />
-
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:fontFamily="@font/roboto"
-        android:text="TextView"
-        style="@style/SettingsTextView"
-        android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/nameLabel"
-        app:layout_constraintStart_toEndOf="@+id/nameLabel" />
-
-    <TextView
-        android:id="@+id/usernameDisplay"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="TextView"
-        android:textSize="18sp"
-        android:fontFamily="@font/roboto"
-        style="@style/SettingsTextView"
-        app:layout_constraintBaseline_toBaselineOf="@+id/usernameLabel"
-        app:layout_constraintStart_toEndOf="@id/usernameLabel" />
-
-    <TextView
-        android:id="@+id/editProfileText"
-        style="@style/SettingsHeaderTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/work_sans_bold"
-        android:text="Edit Profile"
-        android:textSize="34sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/resetpwText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="36dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="  Reset Password:"
-        style="@style/SettingsTextView"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
-
-    <EditText
-        android:id="@+id/currentPw"
-        android:layout_marginTop="10dp"
-        android:layout_width="179dp"
-        android:layout_height="37dp"
-        android:hint="  Current password"
-        android:background="@color/calendar_background"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="@id/editProfileText"
-        app:layout_constraintStart_toStartOf="@id/resetpwText"
-        app:layout_constraintTop_toBottomOf="@+id/resetpwText"
-        />
-
-    <EditText
-        android:id="@+id/newPw"
-        android:layout_marginTop="10dp"
-        android:layout_width="179dp"
-        android:layout_height="37dp"
-        android:hint="  New password"
-        android:background="@color/calendar_background"
-        android:inputType="textPassword"
-        app:layout_constraintStart_toEndOf="@id/currentPw"
-        android:layout_marginStart="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/resetpwText"
-        />
-
-    <TextView
-        android:id="@+id/textViewThemeToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="  Theme Toggle"
-        style="@style/SettingsTextView"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentPw" />
-
-    <LinearLayout
-        android:id="@+id/themeLayout"
-        android:layout_height="50dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/textViewThemeToggle"
-        android:gravity="center"
-        >
-        <Button
-            android:id="@+id/blackberry"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:text="black berry"
-            android:textSize="13sp"
-            android:background="@drawable/background_circle_default"
-            android:backgroundTint="@color/blackberry"/>
-        <Button
-            android:id="@+id/cherry"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:text="cherry"
-            android:textSize="13sp"
-            android:background="@drawable/background_circle_default"
-            android:backgroundTint="@color/cherry"/>
-        <Button
-            android:id="@+id/lime"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:text="lime"
-            android:textSize="13sp"
-            android:background="@drawable/background_circle_default"
-            android:backgroundTint="@color/lime"/>
-        <Button
-            android:id="@+id/mango"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:text="mango"
-            android:textSize="13sp"
-            android:background="@drawable/background_circle_default"
-            android:backgroundTint="@color/mango"/>
-        <Button
-            android:id="@+id/peach"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:text="peach"
-            android:textSize="13sp"
-            android:background="@drawable/background_circle_default"
-            android:backgroundTint="@color/peach"/>
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
+        tools:context=".HomeActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/uploadpfp"
+            android:layout_width="112dp"
+            android:layout_height="32dp"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/roboto"
+            style="@style/UploadPictureButton"
+            android:text="Upload Image"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@id/profilePicture"
+            app:layout_constraintStart_toStartOf="@id/profilePicture"
+            app:layout_constraintTop_toBottomOf="@id/profilePicture" />
+
+        <TextView
+            android:id="@+id/nameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="50dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="  Name:"
+            style="@style/SettingsTextView"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/uploadpfp" />
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_marginTop="10dp"
+            android:layout_width="179dp"
+            android:layout_height="37dp"
+            android:hint="  Enter new username"
+            android:background="@color/calendar_background"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="@id/editProfileText"
+            app:layout_constraintStart_toStartOf="@id/usernameLabel"
+            app:layout_constraintTop_toBottomOf="@+id/usernameLabel"
+             />
+
+        <TextView
+            android:id="@+id/usernameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="36dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="  Username:"
+            style="@style/SettingsTextView"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/newName" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/profilePicture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="25dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editProfileText"
+            app:shapeAppearanceOverlay="@style/CircleImageView"
+            app:srcCompat="@drawable/ic_profile_picture" />
+
+        <Button
+            android:id="@+id/submit_user_settings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/roundedbutton"
+            style="@style/SaveButton"
+            android:text="Save"
+            android:textColor="#fff1f2"
+            app:layout_constraintEnd_toEndOf="@id/editProfileText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/themeLayout"
+             />
+
+        <EditText
+            android:id="@+id/newName"
+            android:layout_width="179dp"
+            android:layout_height="37dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/calendar_background"
+            android:hint="  Enter new name"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="@id/editProfileText"
+            app:layout_constraintStart_toStartOf="@id/nameLabel"
+            app:layout_constraintTop_toBottomOf="@+id/nameLabel" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/roboto"
+            android:text="TextView"
+            style="@style/SettingsTextView"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/nameLabel"
+            app:layout_constraintStart_toEndOf="@+id/nameLabel" />
+
+        <TextView
+            android:id="@+id/usernameDisplay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="TextView"
+            android:textSize="18sp"
+            android:fontFamily="@font/roboto"
+            style="@style/SettingsTextView"
+            app:layout_constraintBaseline_toBaselineOf="@+id/usernameLabel"
+            app:layout_constraintStart_toEndOf="@id/usernameLabel" />
+
+        <TextView
+            android:id="@+id/editProfileText"
+            style="@style/SettingsHeaderTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/work_sans_bold"
+            android:text="Edit Profile"
+            android:textSize="34sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/resetpwText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="36dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="  Reset Password:"
+            style="@style/SettingsTextView"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/username" />
+
+        <EditText
+            android:id="@+id/currentPw"
+            android:layout_marginTop="10dp"
+            android:layout_width="179dp"
+            android:layout_height="37dp"
+            android:hint="  Current password"
+            android:background="@color/calendar_background"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toEndOf="@id/editProfileText"
+            app:layout_constraintStart_toStartOf="@id/resetpwText"
+            app:layout_constraintTop_toBottomOf="@+id/resetpwText"
+            />
+
+        <EditText
+            android:id="@+id/newPw"
+            android:layout_marginTop="10dp"
+            android:layout_width="179dp"
+            android:layout_height="37dp"
+            android:hint="  New password"
+            android:background="@color/calendar_background"
+            android:inputType="textPassword"
+            app:layout_constraintStart_toEndOf="@id/currentPw"
+            android:layout_marginStart="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/resetpwText"
+            />
+
+        <TextView
+            android:id="@+id/textViewThemeToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="50dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="  Theme Toggle"
+            style="@style/SettingsTextView"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/currentPw" />
+
+        <LinearLayout
+            android:id="@+id/themeLayout"
+            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/textViewThemeToggle"
+            android:gravity="center"
+            >
+            <Button
+                android:id="@+id/blackberry"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="black berry"
+                android:textSize="13sp"
+                android:background="@drawable/background_circle_default"
+                android:backgroundTint="@color/blackberry"/>
+            <Button
+                android:id="@+id/cherry"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:text="cherry"
+                android:textSize="13sp"
+                android:background="@drawable/background_circle_default"
+                android:backgroundTint="@color/cherry"/>
+            <Button
+                android:id="@+id/lime"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:text="lime"
+                android:textSize="13sp"
+                android:background="@drawable/background_circle_default"
+                android:backgroundTint="@color/lime"/>
+            <Button
+                android:id="@+id/mango"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:text="mango"
+                android:textSize="13sp"
+                android:background="@drawable/background_circle_default"
+                android:backgroundTint="@color/mango"/>
+            <Button
+                android:id="@+id/peach"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:text="peach"
+                android:textSize="13sp"
+                android:background="@drawable/background_circle_default"
+                android:backgroundTint="@color/peach"/>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

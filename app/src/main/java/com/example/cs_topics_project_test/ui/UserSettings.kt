@@ -274,6 +274,7 @@ class UserSettings : Fragment() {
         binding.usernameLabel.setTextColor(theme.settingsDark)
         binding.usernameDisplay.setTextColor(theme.settingsDark)
         binding.resetpwText.setTextColor(theme.settingsDark)
+        binding.textViewThemeToggle.setTextColor(theme.settingsDark)
 
         binding.submitUserSettings.backgroundTintList = ColorStateList.valueOf(theme.settingsLight)
         binding.submitUserSettings.setTextColor(theme.backgroundSettings)
