@@ -14,8 +14,10 @@ import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.databinding.ActivitySignInBinding
 import com.example.cs_topics_project_test.task.TaskDataStructure
 import com.example.cs_topics_project_test.task.TaskManager
+import com.example.cs_topics_project_test.themes.ThemeManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
 import org.w3c.dom.Text
 
 class SignInActivity : AppCompatActivity() {
@@ -53,7 +55,30 @@ class SignInActivity : AppCompatActivity() {
                             TaskDataStructure.init()
                             TaskDataStructure.initializeDatabase()
                             // TaskManager.init()
-                            startActivity(Intent(this, HomeActivity::class.java))
+                            // retrieve user color scheme here
+                            // val themeName = ThemeManager.currentThemeName // default mango
+                            var themeName = "cherry"
+                            val firestore = FirebaseFirestore.getInstance()
+                            val ref = firestore.collection("users").document(user.uid)
+                            // Get the document
+                            ref.get()
+                                .addOnSuccessListener { document ->
+                                    if (document != null && document.exists()) {
+                                        // Retrieve specific field
+                                        themeName = document.getString("theme").toString()
+                                        Toast.makeText(this, "Saved theme: $themeName", Toast.LENGTH_SHORT).show()
+                                    }
+                                    ThemeManager.loadTheme(this, themeName)
+                                    startActivity(Intent(this, HomeActivity::class.java))
+                                }
+                                .addOnFailureListener { exception ->
+                                    println("Error getting document: $exception")
+                                    ThemeManager.loadTheme(this, "cherry")
+                                    startActivity(Intent(this, HomeActivity::class.java))
+                                }
+                            // ThemeManager.loadTheme(this, themeName) // load once for the whole app
+                            Toast.makeText(this, "Theme loaded!", Toast.LENGTH_SHORT).show()
+                            // startActivity(Intent(this, HomeActivity::class.java))
                             /*
                             //  if sign in successful, go to page to put name/username, store to firebase
                             setContentView(R.layout.signin_userinfo)

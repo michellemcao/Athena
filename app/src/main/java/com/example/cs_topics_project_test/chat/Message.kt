@@ -1,6 +1,7 @@
-package com.example.cs_topics_project_test.ui.ui.chat
+package com.example.cs_topics_project_test.chat
 data class Message(
     val sender: String,
+    val senderName: String,
     val content: String,
     val timestamp: String,
     var messageType: MessageType
@@ -10,5 +11,5 @@ data class Message(
         RECEIVED
     }
 
-    constructor() : this("", "", "", MessageType.SENT)
+    constructor() : this("", "", "", "", MessageType.SENT)
 }

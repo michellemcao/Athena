@@ -28,10 +28,12 @@
 
             <TextView
                 android:id="@+id/titleTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center"
                 android:layout_height="wrap_content"
                 android:text="Athena"
                 android:textSize="24sp"
+                android:paddingBottom="8dp"
                 app:layout_constraintBottom_toTopOf="@+id/recyclerView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -57,9 +59,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:menu="@menu/activity_main_drawer"
-        app:headerLayout="@layout/nav_header_main"
-        app:itemIconTint="@color/pink_500"
-        app:itemTextColor="@color/pink_500"/>
+        app:headerLayout="@layout/nav_header_main" />
 
     <!--michelle stuff-->
     <com.google.android.material.floatingactionbutton.FloatingActionButton

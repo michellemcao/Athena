@@ -17,7 +17,6 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -81,6 +80,15 @@ dependencies {
     implementation(libs.eazegraph)
     implementation(libs.library)
 
+    // for pfp
+    implementation(libs.glide)
+    implementation(libs.circleimageview)
 
 
+
+    // For Confetti animation
+    implementation(libs.konfetti.xml)
+
+    // For Calendar implementation with https://github.com/kizitonwose/Calendar
+    implementation(libs.view)
 }

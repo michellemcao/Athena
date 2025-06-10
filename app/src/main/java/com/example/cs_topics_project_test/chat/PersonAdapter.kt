@@ -1,4 +1,4 @@
-package com.example.cs_topics_project_test.ui.chat
+package com.example.cs_topics_project_test.chat
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,8 +6,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cs_topics_project_test.R
-import com.example.cs_topics_project_test.ui.chat.Person
-import com.example.cs_topics_project_test.ui.ChatActivity
 import android.content.Intent
 
 

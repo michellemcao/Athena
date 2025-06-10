@@ -93,6 +93,7 @@ class SignUp : Fragment() {
         val userData = hashMapOf(
             "uid" to userUid,
             "email" to email,
+            "theme" to "cherry"
             // You can add more user data here (e.g., name, profile picture, etc.)
         )
 

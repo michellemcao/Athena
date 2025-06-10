@@ -3,6 +3,7 @@ package com.example.cs_topics_project_test.task
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,8 +26,16 @@ import com.example.cs_topics_project_test.R
 import com.example.cs_topics_project_test.function.Date
 import com.example.cs_topics_project_test.function.DateAndTime
 import com.example.cs_topics_project_test.function.Time
+import com.example.cs_topics_project_test.themes.ThemeManager
+import nl.dionsegijn.konfetti.core.Angle
+import nl.dionsegijn.konfetti.core.Party
+import nl.dionsegijn.konfetti.core.Position
+import nl.dionsegijn.konfetti.core.Spread
+import nl.dionsegijn.konfetti.core.emitter.Emitter
+import nl.dionsegijn.konfetti.xml.KonfettiView
 import org.w3c.dom.Text
 import java.util.Calendar
+import java.util.concurrent.TimeUnit
 
 // to view tasks
 class TaskFragment : Fragment(), TaskListener {
@@ -39,6 +49,8 @@ class TaskFragment : Fragment(), TaskListener {
     private var isDueLaterVisible = true
     private var isPastDueVisible = true
     private var isCompletedVisible = true
+
+    private lateinit var konfettiView: KonfettiView
 
     /*private val todayDate: Date = Date(
         Calendar.getInstance().get(Calendar.YEAR),
@@ -62,7 +74,7 @@ class TaskFragment : Fragment(), TaskListener {
         super.onViewCreated(view, savedInstanceState)
 
         // Toast.makeText(activity, "Today's Date: $todayDate", Toast.LENGTH_SHORT).show()
-
+        view.setBackgroundColor(ThemeManager.currentThemeColors!!.backgroundTasks)
 
         completedAdapter = TaskAdapterCompleted(TaskManager.tasksCompleted, this)
         // taskListAdapter = TaskListAdapter(TaskManager.tasks) // takes task from global TaskManager
@@ -87,8 +99,7 @@ class TaskFragment : Fragment(), TaskListener {
         val buttonNewTaskToggle: Button = view.findViewById(R.id.buttonNewTaskToggle)
 
         // recycler view variable declaration
-        val recyclerViewDueToday: RecyclerView =
-            view.findViewById(R.id.recyclerViewDueToday) // recyclerView to display tasks that are due today
+        val recyclerViewDueToday: RecyclerView = view.findViewById(R.id.recyclerViewDueToday) // recyclerView to display tasks that are due today
         val recyclerViewDueLater: RecyclerView = view.findViewById(R.id.recyclerViewDueLater)
         val recyclerViewPastDue: RecyclerView = view.findViewById(R.id.recyclerViewPastDue)
         val recyclerViewCompleted: RecyclerView = view.findViewById(R.id.recyclerViewCompleted)
@@ -98,6 +109,9 @@ class TaskFragment : Fragment(), TaskListener {
         val toggleDueLater: TextView = view.findViewById(R.id.toggleDueLater)
         val togglePastDue: TextView = view.findViewById(R.id.togglePastDue)
         val toggleCompleted: TextView = view.findViewById(R.id.toggleCompleted)
+
+        // declaring confetti object
+        konfettiView = view.findViewById(R.id.konfettiView)
 
         // buttons to sort tasks and their listeners
         val sortDueToday: ImageButton = view.findViewById(R.id.buttonDueTodaySort)
@@ -240,6 +254,19 @@ class TaskFragment : Fragment(), TaskListener {
     }
 
     override fun onTaskCompleted(task : TaskCompleted) {
+        // creating confetti, rain down style
+        val theme = ThemeManager.currentThemeColors!!
+        val party = Party(
+            speed = 0f,
+            maxSpeed = 15f,
+            damping = 0.9f,
+            angle = Angle.BOTTOM,
+            spread = Spread.ROUND,
+            colors = listOf(theme.startColor, theme.header, theme.gradientLight, theme.today), // listOf(0xfce18a, 0xff726d, 0xf4306d, 0xb48def), // change
+            emitter = Emitter(duration = 3, TimeUnit.SECONDS).perSecond(100),
+            position = Position.Relative(0.0, 0.0).between(Position.Relative(1.0, 0.0))
+        )
+        konfettiView.start(party)
         completedAdapter.addCompletedTask(task)
     }
 
@@ -257,10 +284,25 @@ class TaskFragment : Fragment(), TaskListener {
 
         layout.visibility = View.VISIBLE
 
+        // stylistic elements
+        val theme = ThemeManager.currentThemeColors!!
+        val bgTask = ContextCompat.getDrawable(requireContext(), R.drawable.edit_task_background)?.mutate()
+        bgTask!!.setTint(theme.editTask)
+        layout.background = bgTask
+
         val editTextTaskName: EditText = layout.findViewById<EditText>(R.id.editTextTaskName) // the task name
         val editTextTaskDescription: EditText = layout.findViewById<EditText>(R.id.editTextTaskDescription) // the task description
         val textViewDate: TextView = layout.findViewById<TextView>(R.id.textViewDate) // the task due date
         val textViewTime: TextView = layout.findViewById<TextView>(R.id.textViewTime) // the task due time
+
+        // styles for date and time picker, edit name and description as well
+        val color = theme.editDate
+        val bg = ContextCompat.getDrawable(requireContext(), R.drawable.date_selector_background)?.mutate()
+        bg!!.setTint(color)
+        textViewDate.background = bg
+        textViewTime.background = bg
+        editTextTaskName.backgroundTintList = ColorStateList.valueOf(color)
+        editTextTaskDescription.backgroundTintList = ColorStateList.valueOf(color)
 
         // setting all options to default value
         editTextTaskName.setText(task.getTaskName())

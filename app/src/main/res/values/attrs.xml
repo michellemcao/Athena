@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="startGradientColor" format="color" />
+    <attr name="centerGradientColor" format="color" />
+    <attr name="endGradientColor" format="color" />
+    <attr name="editTaskBackground" format="color" />
+    <attr name="editDateBackground" format="color" />
+</resources>
