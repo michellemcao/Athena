@@ -14,13 +14,19 @@ data class ThemeColors(
     val gradientDark: Int,
     val gradientMedium: Int,
     val gradientLight: Int,
-    val background: Int,
-    val backgroundCalendarTasks: Int, // background 2.0
     val homeText: Int,
     // the home fragment graphs
     val dueLater: Int,
     val duePast: Int,
     val dueToday: Int,
+
+    // all the backgrounds
+    val background: Int,
+    val backgroundCalendar: Int, // background 2.0
+    val backgroundTasks: Int,
+    val backgroundNotes: Int,
+    val backgroundSettings: Int,
+    val backgroundChat: Int,
 
     // icon tints
     val icon: Int,

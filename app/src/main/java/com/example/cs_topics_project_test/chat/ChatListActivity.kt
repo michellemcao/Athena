@@ -50,6 +50,7 @@ class ChatListActivity : AppCompatActivity() {
 
         // Set up RecyclerView
         recyclerView = findViewById(R.id.recyclerView)
+        recyclerView.setBackgroundColor(theme.backgroundChat)
 
         adapter = ChatListAdapter(
             chatList,

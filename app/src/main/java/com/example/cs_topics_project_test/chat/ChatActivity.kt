@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -49,6 +51,11 @@ class ChatActivity : AppCompatActivity() {
 
         window.statusBarColor = theme.header
 
+        val chatBackground = findViewById<RelativeLayout>(R.id.chatBackground)
+        chatBackground.setBackgroundColor(theme.backgroundChat)
+
+        val messageInputLayout = findViewById<LinearLayout>(R.id.messageInputLayout)
+        messageInputLayout.setBackgroundColor(theme.backgroundChat)
         // findViewById<Toolbar>(R.id.toolbar).setBackgroundColor(colors.toolbar)
 
         val chat: Chat = intent.getParcelableExtra(EXTRA_CHAT)

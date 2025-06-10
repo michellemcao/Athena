@@ -32,7 +32,7 @@ class NotesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.setBackgroundColor(ThemeManager.currentThemeColors!!.background)
+        view.setBackgroundColor(ThemeManager.currentThemeColors!!.backgroundNotes)
 
         notesAdapter = NotesAdapter(notesList) { note, position ->
             val intent = Intent(requireContext(), NoteEditorActivity::class.java)

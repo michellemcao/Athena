@@ -74,7 +74,7 @@ class TaskFragment : Fragment(), TaskListener {
         super.onViewCreated(view, savedInstanceState)
 
         // Toast.makeText(activity, "Today's Date: $todayDate", Toast.LENGTH_SHORT).show()
-        view.setBackgroundColor(ThemeManager.currentThemeColors!!.backgroundCalendarTasks)
+        view.setBackgroundColor(ThemeManager.currentThemeColors!!.backgroundTasks)
 
         completedAdapter = TaskAdapterCompleted(TaskManager.tasksCompleted, this)
         // taskListAdapter = TaskListAdapter(TaskManager.tasks) // takes task from global TaskManager

@@ -266,7 +266,7 @@ class UserSettings : Fragment() {
     private fun applyTheme() {
         val theme = ThemeManager.currentThemeColors!!
 
-        binding.root.setBackgroundColor(theme.background)
+        binding.root.setBackgroundColor(theme.backgroundSettings)
         binding.editProfileText.setTextColor(theme.settingsLight)
         binding.uploadpfp.setTextColor(theme.settingsDark)
         binding.nameLabel.setTextColor(theme.settingsDark)
@@ -276,7 +276,7 @@ class UserSettings : Fragment() {
         binding.resetpwText.setTextColor(theme.settingsDark)
 
         binding.submitUserSettings.backgroundTintList = ColorStateList.valueOf(theme.settingsLight)
-        binding.submitUserSettings.setTextColor(theme.background)
+        binding.submitUserSettings.setTextColor(theme.backgroundSettings)
     }
 
     private fun updateFirestoreTheme(themeName: String) {

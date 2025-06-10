@@ -39,7 +39,7 @@ class TaskActivity : AppCompatActivity() {
         window.statusBarColor = theme.header
 
         val rootView = findViewById<ConstraintLayout>(R.id.background)
-        rootView.setBackgroundColor(theme.background)
+        rootView.setBackgroundColor(theme.backgroundTasks)
 
 
         // val tasks = mutableListOf<Task>()

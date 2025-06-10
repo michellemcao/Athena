@@ -283,7 +283,7 @@ class CalendarFragment : Fragment(), TaskListener {
     private fun applyThemeColors() {
         val theme = ThemeManager.currentThemeColors ?: return
         view?.let { root ->
-            root.setBackgroundColor(theme.backgroundCalendarTasks)
+            root.setBackgroundColor(theme.backgroundCalendar)
 
             root.findViewById<TextView>(R.id.dateView).setTextColor(theme.today)
             root.findViewById<TextView>(R.id.monthView).setTextColor(theme.today)
