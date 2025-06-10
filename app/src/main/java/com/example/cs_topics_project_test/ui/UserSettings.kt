@@ -3,6 +3,7 @@ package com.example.cs_topics_project_test.ui
 import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -264,6 +265,7 @@ class UserSettings : Fragment() {
     }
 
     private fun applyTheme() {
+        ThemeManager.loadTheme(binding.root.context, ThemeManager.currentThemeName)
         val theme = ThemeManager.currentThemeColors!!
 
         binding.root.setBackgroundColor(theme.backgroundSettings)
