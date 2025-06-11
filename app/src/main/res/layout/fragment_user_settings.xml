@@ -82,7 +82,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/roundedbutton"
             style="@style/SaveButton"
             android:text="Save"
@@ -207,46 +207,36 @@
                 android:id="@+id/blackberry"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:text="black berry"
                 android:textSize="13sp"
-                android:background="@drawable/background_circle_default"
-                android:backgroundTint="@color/blackberry"/>
+                android:background="@drawable/icon_theme_blackberry" />
             <Button
                 android:id="@+id/cherry"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="8dp"
-                android:text="cherry"
                 android:textSize="13sp"
-                android:background="@drawable/background_circle_default"
-                android:backgroundTint="@color/cherry"/>
+                android:background="@drawable/icon_theme_cherry" />
             <Button
                 android:id="@+id/lime"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="8dp"
-                android:text="lime"
                 android:textSize="13sp"
-                android:background="@drawable/background_circle_default"
-                android:backgroundTint="@color/lime"/>
+                android:background="@drawable/icon_theme_lime"/>
             <Button
                 android:id="@+id/mango"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="8dp"
-                android:text="mango"
                 android:textSize="13sp"
-                android:background="@drawable/background_circle_default"
-                android:backgroundTint="@color/mango"/>
+                android:background="@drawable/icon_theme_mango"/>
             <Button
                 android:id="@+id/peach"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="8dp"
-                android:text="peach"
                 android:textSize="13sp"
-                android:background="@drawable/background_circle_default"
-                android:backgroundTint="@color/peach"/>
+                android:background="@drawable/icon_theme_peach"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
